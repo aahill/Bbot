@@ -1,0 +1,77 @@
+
+#+TITLE: Braitenbot Summer
+#+DATE: <2015-08-10 Mon>
+#+AUTHOR: Jake Brawer, Aaron Hill
+#+EMAIL: jabrawer@vassar.edu, aahill@vassar.edu
+#+DESCRIPTION: 
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:2 num:t toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_UP:   
+#+LINK_HOME:
+#+startup: beamer
+#+LaTeX_CLASS: beamer
+#+LaTeX_CLASS_OPTIONS: [smaller]
+#+LaTeX_CLASS_OPTIONS: [aspectratio=169]
+#+BEAMER_FRAME_LEVEL: 2 
+#+COLUMNS: %40ITEM %10BEAMER_env(Env) %9BEAMER_envargs(Env Args) %4BEAMER_col(Col) %10BEAMER_extra(Extra)
+#+latex_header: \mode<beamer>{\usetheme{Madrid}}
+* What I Did This Summer
+** Important Summer Accomplishments 
+- Added to, debugged, and validated code ( although this will be an ongoing process).
+  - Most important addition is an algorithm that automates the performance-wise ranking and crossing of a gen.
+- Developed tractable hypothesis(es) and corresponding experiment(s).
+- Ran and analyzed preliminary experiments (in simulation), confirming evolution is possible in our model, among other things.
+- Collected and organized code into a comprehensable document that will facilitate validation and future additions
+
+** Crossing Algorithm 
+Designed an algorithm that crosses organisms based on task performance.
+- Organisms are placed in pools of two with the top two performers in the highest pool, the next two in the second highest, etc.
+- After orgs are crossed (starting with the highets pool) they are placed in successive pools for more chances to reproduce.
+  - Result is top perfromers mate multiple times with potentially many different orgs
+  
+** Hypothesis  
+Given the mutability of the distribution and number of crossover points, we propose the following hypothesis:\\ 
+
+*** H_1                                                             :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+The distribution of crossover points influences the robustness of an organism's traits, and thus, is directly related to evolvability, fitness, and modualrity.\\
+
+** Experiments 
+I ran multiple simulated populations in order to verify that the model is sensitive to selection pressures.
+- Selected for number of 'functional' threads.
+- Altered a number of genomic parameters across populations to determine how they would affect selection. 
+   
+** Results
+#+ATTR_LATEX: :height 7.5 cm :width 12.0 cm
+#+RESULTS:
+[[file:/home/jake/org/selection-comparison-1.png]]
+
+** Take Home 
+- Adaptive evolution is possible 
+- Due to many factors, including small population size,there is not much variation in the population
+  - This is mitigated in part by a very high mutation rate (An order of magnitude larger than the default)
+- Very high mutation rates are required because of the large amount of noncoding DNA
+  - Likewise, more adding more crossover points did not affect performance significantly due to being distributed amongst noncoding regions.
+
+***                                                          :B_block:
+:PROPERTIES:
+:BEAMER_env: block
+:END:
+ Possible experiment/I.V.: alter noncoding region size and see how fitness modularity are affected. 
+* Next steps
+** Next Steps 
+- Firm up experimental parameters 
+  - What does it mean for an org to be viable?
+  - Max number of threads?
+- Run populations in simulation with smaller non-coding regions (Is this more or less adaptive?)
+- Complete/tweak experimental protocol
+- Run experiments
+ 
+ 

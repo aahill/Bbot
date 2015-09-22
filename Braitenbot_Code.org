@@ -3,6 +3,11 @@
 #+EMAIL: jabrawer@vassar.edu, aahill@vassar.edu
 #+LaTeX_CLASS_OPTIONS: [a4paper]
 #+BABEL: :session *python* :cache yes :results output graphics :exports both :tangle yes 
+* Assorted Notes
+** Why development? (According to Josh Bongard)
+Mutations that manifest early in development have a greater affect than mutations that happen later
+- thus evolution can confer big medium or small changes, due to development.
+  - "Smaller changes are more likely to be beneficial"
 * What needs to be done
 ** TODO Tweak is_viable algorithm
 Are we really generating "viable" organisms?
@@ -1231,15 +1236,14 @@ class Thread:
           self.create_threads(thread_length)
           self.generate_thread_instructions()
           self.build_thread_coordinates()
-
           <<Class Methods>>
 
   <<Other Methods>>
-
 #+END_SRC
 
 *** Class Methods
 
+#+NAME: Class Methods
 #+BEGIN_SRC python :noweb yes
 <<set_file_name>>
 <<save_to_file>>
@@ -1558,6 +1562,12 @@ the set of all connected pins in a given thread.\\
 
 #+END_SRC
 *** Other Methods
+#+NAME: Other Methods
+#+BEGIN_SRC python :noewb yes
+<<reproduce>>
+<<generate_viable>
+
+#+END_SRC
 **** Method: reproduce
 *Input:* org1: an Organism\\
 org2: an Organism\\
@@ -1571,7 +1581,7 @@ from the successive locus in recessive parent’s InstructionSet. This switch wi
  crossover_point value of 1 is encountered. A new Organism is then instantiated with the resultant
  recombinant genome, and is saved to a new directory (bearing its name) located at path.\\
 
-#+NAME: 
+#+NAME: reproduce
 #+BEGIN_SRC python
   def reproduce(org1, org2, path):
       dom = random.choice([org1, org2])  # Parent whose crossover points are being used
@@ -1953,4 +1963,4 @@ def calculateStdError(list_of_vals, average):
                 writer.writeheader()
                 writer.writerow(data_dict)
 #+END_SRC
-
+ 

@@ -1,0 +1,112 @@
+% Created 2015-09-11 Fri 13:09
+\documentclass[aspectratio=169]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fixltx2e}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{marvosym}
+\usepackage{wasysym}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\tolerance=1000
+\mode<beamer>{\usetheme{Madrid}}
+\usetheme{default}
+\author{Jake Brawer, Aaron Hill}
+\date{\textit{<2015-08-10 Mon>}}
+\title{Braitenbot Summer}
+\hypersetup{
+  pdfkeywords={},
+  pdfsubject={},
+  pdfcreator={Emacs 24.5.1 (Org mode 8.2.10)}}
+\begin{document}
+
+\maketitle
+\begin{frame}{Outline}
+\tableofcontents
+\end{frame}
+
+\section{What I Did This Summer}
+\label{sec-1}
+\begin{frame}[label=sec-1-1]{Important Summer Accomplishments}
+\begin{itemize}
+\item Added to, debugged, and validated code ( although this will be an ongoing process).
+\begin{itemize}
+\item Most important addition is an algorithm that automates the performance-wise ranking and crossing of a gen.
+\end{itemize}
+\item Developed tractable hypothesis(es) and corresponding experiment(s).
+\item Ran and analyzed preliminary experiments (in simulation), confirming evolution is possible in our model, among other things.
+\item Collected and organized code into a comprehensable document that will facilitate validation and future additions
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label=sec-1-2]{Crossing Algorithm}
+Designed an algorithm that crosses organisms based on task performance.
+\begin{itemize}
+\item Organisms are placed in pools of two with the top two performers in the highest pool, the next two in the second highest, etc.
+\item After orgs are crossed (starting with the highets pool) they are placed in successive pools for more chances to reproduce.
+\begin{itemize}
+\item Result is top perfromers mate multiple times with potentially many different orgs
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label=sec-1-3]{Hypothesis}
+Given the mutability of the distribution and number of crossover points, we propose the following hypothesis:\\
+
+\begin{block}{H$_{\text{1}}$}
+The distribution of crossover points influences the robustness of an organism's traits, and thus, is directly related to evolvability, fitness, and modualrity.\\
+\end{block}
+\end{frame}
+
+\begin{frame}[label=sec-1-4]{Experiments}
+I ran multiple simulated populations in order to verify that the model is sensitive to selection pressures.
+\begin{itemize}
+\item Selected for number of 'functional' threads.
+\item Altered a number of genomic parameters across populations to determine how they would affect selection.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label=sec-1-5]{Results}
+\includegraphics[width=12.0 cm,height=7.5 cm]{/home/jake/org/selection-comparison-1.png}
+\end{frame}
+
+\begin{frame}[label=sec-1-6]{Take Home}
+\begin{itemize}
+\item Adaptive evolution is possible
+\item Due to many factors, including small population size,there is not much variation in the population
+\begin{itemize}
+\item This is mitigated in part by a very high mutation rate (An order of magnitude larger than the default)
+\end{itemize}
+\item Very high mutation rates are required because of the large amount of noncoding DNA
+\begin{itemize}
+\item Likewise, more adding more crossover points did not affect performance significantly due to being distributed amongst noncoding regions.
+\end{itemize}
+\end{itemize}
+
+\begin{block}{}
+Possible experiment/I.V.: alter noncoding region size and see how fitness modularity are affected. 
+\end{block}
+\end{frame}
+\section{Next steps}
+\label{sec-2}
+\begin{frame}[label=sec-2-1]{Next Steps}
+\begin{itemize}
+\item Firm up experimental parameters 
+\begin{itemize}
+\item What does it mean for an org to be viable?
+\item Max number of threads?
+\end{itemize}
+\item Run populations in simulation with smaller non-coding regions (Is this more or less adaptive?)
+\item Complete/tweak experimental protocol
+\item Run experiments
+\end{itemize}
+\end{frame}
+% Emacs 24.5.1 (Org mode 8.2.10)
+\end{document}
