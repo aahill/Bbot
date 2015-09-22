@@ -239,4 +239,26 @@ def reproduce(org1, org2, path):
     #if is_same_genome(dom, child1): print 'THEYRE SAME'
     #else: print 'THYRE DIFF'
     return child1
-<<generate_viable>
+def generate_viable():
+    # writes a 'progress bar' to the console
+    def progress(x):
+        out = '\r %s organisms tested' % x  # The output
+        print out,
+
+    genomes_tested = 0
+    finished = False
+    while not finished:
+        test = Organism(0, 0)
+        if test.is_viable():
+            print "-------------------------------------//"
+            print "connections: "
+            for thread in test.threads:
+                print "new thread connections:"
+                for connection in thread.connected_pins:
+                    print connection.group_id, connection.number
+            print "-------------------------------------//"
+            finished = True
+        else:
+            del test
+            genomes_tested += 1
+            progress(genomes_tested)

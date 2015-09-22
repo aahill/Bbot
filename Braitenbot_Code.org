@@ -1565,7 +1565,7 @@ the set of all connected pins in a given thread.\\
 #+NAME: Other Methods
 #+BEGIN_SRC python :noewb yes
 <<reproduce>>
-<<generate_viable>
+<<generate_viable>>
 
 #+END_SRC
 **** Method: reproduce
