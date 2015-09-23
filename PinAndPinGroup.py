@@ -287,7 +287,7 @@ class Group5(PinGroup):
     def call_match_and_remove_pin(self, pin, pin_list1, pin_list2=None):
         super(Group5, self).match_and_remove_pin(pin, pin_list1, pin_list2)
 
-class group6(pingroup):
+class group6(PinGroup):
 
     def __init__(self):
         #pingroup.__init__(self)
