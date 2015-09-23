@@ -1694,7 +1694,8 @@ def generate_viable():
 #+BEGIN_SRC python :noweb yes :tangle RankAndCrossGeneration.py
 <<RankAndCrossImports>>
 <<calculateStdError>>
-<<thresholdedCrossGenration>>
+<<thresholdedCrossGeneration>>
+
 #+END_SRC
 ** Imports
 #+NAME:RankAndCrossImports
