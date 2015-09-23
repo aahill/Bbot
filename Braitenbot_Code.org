@@ -1249,7 +1249,7 @@ class Thread:
 <<save_to_file>>
 <<create_threads>>
 <<generate_thread_instructions>>
-<build_thread_coordinates>>
+<<build_thread_coordinates>>
 <<is_viable>>
 #+END_SRC
 **** set file name
