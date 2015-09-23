@@ -1148,7 +1148,7 @@ For each Base in InstructionSet, there is 2/20000 of the Base being mutated.
 
 #+END_SRC
 ** Imports
-#+NAME: ThreadAndOrganis_Imports 
+#+NAME: ThreadAndOrganism_Imports 
 #+BEGIN_SRC python 
 from BaseAndInstructionSet import *
 from Decoder import Decoder
