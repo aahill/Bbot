@@ -331,7 +331,7 @@ class group6(PinGroup):
         self.call_match_and_remove_pin(target_pin, self.n6, self.t6)
         return target_pin
 
-    def call_match_and_remove_pin(self, pin, pin_list1, pin_list2=none):
+    def call_match_and_remove_pin(self, pin, pin_list1, pin_list2=None):
         super(group6, self).match_and_remove_pin(pin, pin_list1, pin_list2)
 
 
