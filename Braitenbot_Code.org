@@ -1255,7 +1255,7 @@ class Thread:
 **** set file name
 *Input:*  None\\
 *Output:* A unique string for identifying a particular organism, containing generational info as well as the name of the Organism’s parents.\\
-#+NAME; set_file_name
+#+NAME: set_file_name
 #+BEGIN_SRC python 
     """
     creates the string for the organism's filename

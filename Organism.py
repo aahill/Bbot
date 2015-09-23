@@ -61,6 +61,26 @@ class Organism:
         self.create_threads(thread_length)
         self.generate_thread_instructions()
         self.build_thread_coordinates()
+        """
+        creates the string for the organism's filename
+        """
+        def set_file_name(self):
+            #if self.parent1 is not None and self.parent2 is not None:
+            try:
+                filename = (str(self.generation) + "_" +
+                            str(self.generational_index) + "_" +
+                            str(self.parent1_generation) + "_" +
+                            str(self.parent1_generational_index) + "_" +
+                            str(self.parent2_generation) + "_" +
+                            str(self.parent2_generational_index))
+            except AttributeError:
+                filename = (str(self.generation) + "_" +
+                            str(self.generational_index) + "_" +
+                            str(" ") + "_" +
+                            str(" ") + "_" +
+                            str(" ") + "_" +
+                            str(" "))
+            return filename
         
         def save_to_file(self, path):
             dir = os.mkdir(path+"/"+self.filename)
@@ -74,7 +94,7 @@ class Organism:
                 new_thread = Thread(self.decoder)
                 try:
                     # get the chars from each base in the segment of the instruction code being examined
-                    thread_binary = ([self.genome[i].char for i in range(genome_index, genome_index+thread_length)])
+                    thread_binary = ([self.genome[i].char for i in range(genome_index, \ genome_index+thread_length)])
                     new_thread.binary = thread_binary
                     self.threads.append(new_thread)
                 # in the event of not having enough bases to create an entire thread
