@@ -1,5 +1,5 @@
 import random
-import Base
+from BaseAndInstructionSet import *
 
 class Decoder:
     def __init__(self):

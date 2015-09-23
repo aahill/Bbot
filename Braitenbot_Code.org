@@ -635,8 +635,7 @@ class GroupFr(MotorSensorPinGroup):
 #+NAME: Decoder_Imports
 #+BEGIN_SRC python 
 import random
-import Base
-
+from BaseAndInstructionSet import *
 #+END_SRC
 ** Class: Decoder
 *Input:* None\\
