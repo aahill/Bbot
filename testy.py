@@ -1,5 +1,5 @@
 # Need these to test match_and_remove_pins
-class pin:
+class Pin:
     # group_id represents the group the pin belongs to
     # number identifies the pin number within the group
     def __init__(self, group_id, number, group):

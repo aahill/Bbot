@@ -103,7 +103,7 @@ import random
 
 #+NAME: Pin
 #+BEGIN_SRC python 
-  class pin:
+  class Pin:
       # group_id represents the group the pin belongs to
       # number identifies the pin number within the group
       def __init__(self, group_id, number, group):
@@ -320,7 +320,7 @@ class Group1(PinGroup):
 #+END_SRC
 
 *** Class:Group2
-#+NAME Group2
+#+NAME: Group2
 #+BEGIN_SRC python :noweb yes 
 
 class Group2(PinGroup):
@@ -514,7 +514,7 @@ class Group5(PinGroup):
 *** Class:Group6 
 #+NAME: Group6
 #+BEGIN_SRC python :noweb yes 
-class group6(pingroup):
+class Group6(pinGroup):
 
     def __init__(self):
         #pingroup.__init__(self)
@@ -558,7 +558,7 @@ class group6(pingroup):
         self.call_match_and_remove_pin(target_pin, self.n6, self.t6)
         return target_pin
 
-    def call_match_and_remove_pin(self, pin, pin_list1, pin_list2=none):
+    def call_match_and_remove_pin(self, pin, pin_list1, pin_list2=None):
         super(group6, self).match_and_remove_pin(pin, pin_list1, pin_list2)
 
 #+END_SRC
@@ -1235,7 +1235,7 @@ class Thread:
           self.create_threads(thread_length)
           self.generate_thread_instructions()
           self.build_thread_coordinates()
-          <<Class Methods>>
+      <<Class Methods>>
 
   <<Other Methods>>
 #+END_SRC
@@ -1963,3 +1963,4 @@ def calculateStdError(list_of_vals, average):
                 writer.writerow(data_dict)
 #+END_SRC
  
+

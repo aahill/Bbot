@@ -1,6 +1,6 @@
 import random
 
-class pin:
+class Pin:
     # group_id represents the group the pin belongs to
     # number identifies the pin number within the group
     def __init__(self, group_id, number, group):
@@ -149,6 +149,47 @@ class Group1(PinGroup):
         super(Group1, self).match_and_remove_pin(pin, pin_list1, pin_list2)
 
 
+class Group2(PinGroup):
+    def __init__(self):
+        super(PinGroup, self).__init__()
+        self.type = "standard"
+        # list of available pins in group 2
+        self.e2 = [Pin("e2", i, self) for i in range(4)]
+        self.i2 = [Pin("i2", i, self) for i in range(3)]
+        self.n2 = [Pin("n2", i, self) for i in range(4)]
+
+    def get_input(self, pin_index):
+        all_inputs = self.e2 + self.i2
+        target_pin = all_inputs[pin_index]
+        self.call_match_and_remove_pin(target_pin, self.e2, self.i2)
+        return target_pin
+
+    def get_output(self, pin_index):
+        target_pin = self.n2[pin_index]
+        self.call_match_and_remove_pin(target_pin, self.n2)
+        return target_pin
+
+    """
+    return a random available input
+    """
+    def get_random_input(self):
+        # put all available pins in a list
+        available_inputs = [pin for pin in self.e2 + self.i2 if pin.available is True]
+        target_pin = random.choice(available_inputs)
+        self.call_match_and_remove_pin(target_pin, self.e2, self.i2)
+        return target_pin
+
+    """
+    return a random available output
+    """
+    def get_random_output(self):
+        # put all available pins in a list
+        target_pin = random.choice([pin for pin in self.n2 if pin.available is True])
+        self.call_match_and_remove_pin(target_pin, self.n2)
+        return target_pin
+
+    def call_match_and_remove_pin(self, pin, pin_list1, pin_list2=None):
+        super(Group2, self).match_and_remove_pin(pin, pin_list1, pin_list2)
 
 class Group3(PinGroup):
     def __init__(self):
@@ -287,7 +328,7 @@ class Group5(PinGroup):
     def call_match_and_remove_pin(self, pin, pin_list1, pin_list2=None):
         super(Group5, self).match_and_remove_pin(pin, pin_list1, pin_list2)
 
-class group6(pingroup):
+class Group6(pinGroup):
 
     def __init__(self):
         #pingroup.__init__(self)
@@ -331,7 +372,7 @@ class group6(pingroup):
         self.call_match_and_remove_pin(target_pin, self.n6, self.t6)
         return target_pin
 
-    def call_match_and_remove_pin(self, pin, pin_list1, pin_list2=none):
+    def call_match_and_remove_pin(self, pin, pin_list1, pin_list2=None):
         super(group6, self).match_and_remove_pin(pin, pin_list1, pin_list2)
 
 
