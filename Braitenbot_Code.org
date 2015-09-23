@@ -1716,6 +1716,7 @@ global_quartiles = {}
          average-- The average of the list of vals
 This outputs the standard error of the list of vals, which will then be stored in a csv 
 along with other statistical info. Useful for result analysis later on.
+#+NAME: calculateStdError
 #+BEGIN_SRC python
 def calculateStdError(list_of_vals, average):
     stddev = 0.0
@@ -1760,6 +1761,7 @@ def calculateStdError(list_of_vals, average):
 #OUTPUT: Calculates performance thresholds based on the mean pop. performance
         #orgs < Q1 dont reproduce, Q1<= org < Q2 can reproduce once, Q2 <= org <Q3
         #twice, etc.
+#+NAME: evaluateGenerationPeformance
 #+BEGIN_SRC python 
     def evaluateGenerationPerformance(gen_directory):
         global global_quartiles
