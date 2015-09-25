@@ -1,6 +1,6 @@
 from BaseAndInstructionSet import *
 from Decoder import Decoder
-from PinAndPingroup import *
+from PinAndPinGroup import *
 import random
 import os
 import jsonpickle
@@ -100,7 +100,7 @@ class Organism:
             new_thread = Thread(self.decoder)
             try:
                 # get the chars from each base in the segment of the instruction code being examined
-                thread_binary = ([self.genome[i].char for i in range(genome_index, \ genome_index+thread_length)])
+                thread_binary = ([self.genome[i].char for i in range(genome_index,  genome_index+thread_length)])
                 new_thread.binary = thread_binary
                 self.threads.append(new_thread)
             # in the event of not having enough bases to create an entire thread

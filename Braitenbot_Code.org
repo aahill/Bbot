@@ -514,17 +514,17 @@ class Group5(PinGroup):
 *** Class:Group6 
 #+NAME: Group6
 #+BEGIN_SRC python :noweb yes 
-class Group6(pinGroup):
+class Group6(PinGroup):
 
     def __init__(self):
         #pingroup.__init__(self)
-        super(pingroup, self).__init__()
+        super(PinGroup, self).__init__()
         self.type = "standard"
         # list of available pins in group 6
-        self.e6 = [pin("e6", i, self) for i in range(4)]
-        self.i6 = [pin("i6", i, self) for i in range(3)]
-        self.t6 = [pin("t6", i, self) for i in range(4)]
-        self.n6 = [pin("n6", i, self) for i in range(4)]
+        self.e6 = [Pin("e6", i, self) for i in range(4)]
+        self.i6 = [Pin("i6", i, self) for i in range(3)]
+        self.t6 = [Pin("t6", i, self) for i in range(4)]
+        self.n6 = [Pin("n6", i, self) for i in range(4)]
 
     def get_input(self, pin_index):
         all_inputs = self.e6 + self.i6
@@ -544,7 +544,7 @@ class Group6(pinGroup):
     returns a random available input
     """
     def get_random_input(self):
-        available_inputs = [pin for pin in self.e6 + self.i6 if pin.available is true]
+        available_inputs = [pin for pin in self.e6 + self.i6 if pin.available is True]
         target_pin = random.choice(available_inputs)
         self.call_match_and_remove_pin(target_pin, self.e6, self.i6)
         return target_pin
@@ -553,13 +553,13 @@ class Group6(pinGroup):
     returns a random available input
     """
     def get_random_output(self):
-        available_outputs = [pin for pin in self.n6 + self.t6 if pin.available is true]
+        available_outputs = [pin for pin in self.n6 + self.t6 if pin.available is True]
         target_pin = random.choice(available_outputs)
         self.call_match_and_remove_pin(target_pin, self.n6, self.t6)
         return target_pin
 
     def call_match_and_remove_pin(self, pin, pin_list1, pin_list2=None):
-        super(group6, self).match_and_remove_pin(pin, pin_list1, pin_list2)
+        super(Group6, self).match_and_remove_pin(pin, pin_list1, pin_list2)
 
 #+END_SRC
 *** Classes: Motor And Sensor Groups
@@ -1151,7 +1151,7 @@ For each Base in InstructionSet, there is 2/20000 of the Base being mutated.
 #+BEGIN_SRC python 
 from BaseAndInstructionSet import *
 from Decoder import Decoder
-from PinAndPingroup import *
+from PinAndPinGroup import *
 import random
 import os
 import jsonpickle
@@ -1299,7 +1299,7 @@ class Thread:
             new_thread = Thread(self.decoder)
             try:
                 # get the chars from each base in the segment of the instruction code being examined
-                thread_binary = ([self.genome[i].char for i in range(genome_index, \ genome_index+thread_length)])
+                thread_binary = ([self.genome[i].char for i in range(genome_index,  genome_index+thread_length)])
                 new_thread.binary = thread_binary
                 self.threads.append(new_thread)
             # in the event of not having enough bases to create an entire thread

@@ -328,17 +328,17 @@ class Group5(PinGroup):
     def call_match_and_remove_pin(self, pin, pin_list1, pin_list2=None):
         super(Group5, self).match_and_remove_pin(pin, pin_list1, pin_list2)
 
-class Group6(pinGroup):
+class Group6(PinGroup):
 
     def __init__(self):
         #pingroup.__init__(self)
-        super(pingroup, self).__init__()
+        super(PinGroup, self).__init__()
         self.type = "standard"
         # list of available pins in group 6
-        self.e6 = [pin("e6", i, self) for i in range(4)]
-        self.i6 = [pin("i6", i, self) for i in range(3)]
-        self.t6 = [pin("t6", i, self) for i in range(4)]
-        self.n6 = [pin("n6", i, self) for i in range(4)]
+        self.e6 = [Pin("e6", i, self) for i in range(4)]
+        self.i6 = [Pin("i6", i, self) for i in range(3)]
+        self.t6 = [Pin("t6", i, self) for i in range(4)]
+        self.n6 = [Pin("n6", i, self) for i in range(4)]
 
     def get_input(self, pin_index):
         all_inputs = self.e6 + self.i6
@@ -358,7 +358,7 @@ class Group6(pinGroup):
     returns a random available input
     """
     def get_random_input(self):
-        available_inputs = [pin for pin in self.e6 + self.i6 if pin.available is true]
+        available_inputs = [pin for pin in self.e6 + self.i6 if pin.available is True]
         target_pin = random.choice(available_inputs)
         self.call_match_and_remove_pin(target_pin, self.e6, self.i6)
         return target_pin
@@ -367,13 +367,13 @@ class Group6(pinGroup):
     returns a random available input
     """
     def get_random_output(self):
-        available_outputs = [pin for pin in self.n6 + self.t6 if pin.available is true]
+        available_outputs = [pin for pin in self.n6 + self.t6 if pin.available is True]
         target_pin = random.choice(available_outputs)
         self.call_match_and_remove_pin(target_pin, self.n6, self.t6)
         return target_pin
 
     def call_match_and_remove_pin(self, pin, pin_list1, pin_list2=None):
-        super(group6, self).match_and_remove_pin(pin, pin_list1, pin_list2)
+        super(Group6, self).match_and_remove_pin(pin, pin_list1, pin_list2)
 
 
 class GroupPl(MotorSensorPinGroup):
