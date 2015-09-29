@@ -1,5 +1,7 @@
 __author__ = 'JakeBrawer'
-from json_load_file import json_load_file
+#from json_load_file import json_load_file
+import json
+import jsonpickle
 import random
 from  Organism import *
 import HoboAnalysis
@@ -9,6 +11,12 @@ import datetime
 import csv
 import gc
 global_quartiles = {}
+def json_load_file(filename):
+    f = open(filename)
+    json_str = f.read()
+    obj = jsonpickle.decode(json_str)
+    return obj
+
 def calculateStdError(list_of_vals, average):
     stddev = 0.0
     diffsquared = 0.0
