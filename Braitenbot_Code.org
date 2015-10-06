@@ -2010,7 +2010,7 @@ def calculateStdError(list_of_vals, average):
 Pretty much the same as [[RankAndCrossGeneration]] except it selects for the number of active threads and NOT for perfromance.
 *Used for simulations*
 #+NAME: RankAndCrossByThreadCount
-#+BEGIN_SRC python
+#+BEGIN_SRC python :tangle RankAndCrossGenerationByThreadCount.py
 
 __author__ = 'JakeBrawer'
 from json_load_file import json_load_file
@@ -2073,6 +2073,7 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
                         org = json_load_file(root + '/' + f)
                         #print  root + '/'+ f
                         print org.filename
+                        print "genome length", len(org.genome) 
                         # This stores the number of active threads per org in org.performance_1,
                         # which is used to rank the organism later on.
                         thread_count = 0
@@ -2259,14 +2260,13 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
 #+END_SRC
 ** Some tests in simulation 
 #+BEGIN_SRC python :noweb yes :results output pp
-  path = ""
 
   <<RankAndCrossByThreadCount>>
   def initial_gen(number_of_orgs, path):
       orgs = 0
       tested = 0
       while orgs < number_of_orgs:
-          org = Organism.Organism(1, orgs,525,2,True,75)
+          org = Organism.Organism(1, orgs,420,2,True,60)
           if org.is_viable():
               org.save_to_file(path)
               orgs += 1
@@ -2278,15 +2278,13 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
                       print connection.group_id, connection.number
               print "-------------------------------------//"
           tested += 1
-          #progress(tested)
-
-  initial_gen(10, "/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Smaller_Introns_Populations/Default_1/Gen1")
+          #progress(tested_gen(10, "/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/coding_region_30/Default_3/Gen1")
 
   gen = 1
   while (gen < 11):
-      path1 = "/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Smaller_Introns_Populations/Default_1/Gen"+str(gen)
-      path2 = "/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Smaller_Introns_Populations/Default_1/Gen"+str(gen+1)
-      thresholdedCrossGeneration("/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Smaller_Introns_Populations/Default_1", path1, path2)
+      path1 = "/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/coding_region_30/Default_3/Gen"+str(gen)
+      path2 = "/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/coding_region_30/Default_3/Gen"+str(gen+1)
+      thresholdedCrossGeneration("/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/coding_region_30/Default_3", path1, path2)
       gen+=1
       
 #+END_SRC
@@ -2300,62 +2298,125 @@ new thread connections:
 new thread connections:
 new thread connections:
 new thread connections:
-new thread connections:
-new thread connections:
-pr 1
-bl 2
+pl 0
+br 0
+br 1
 bl 0
-br 3
+new thread connections:
+new thread connections:
 -------------------------------------//
 -------------------------------------//
 connections: 
 new thread connections:
-pl 5
+new thread connections:
+new thread connections:
+new thread connections:
+pr 2
 bl 1
 bl 3
+br 2
+new thread connections:
+new thread connections:
+new thread connections:
+-------------------------------------//
+-------------------------------------//
+connections: 
+new thread connections:
+new thread connections:
+new thread connections:
+pr 1
+bl 0
+bl 2
 br 0
 new thread connections:
 new thread connections:
+i5 2
+e5 3
 new thread connections:
 new thread connections:
-new thread connections:
-new thread connections:
+e1 0
+e3 2
 -------------------------------------//
 -------------------------------------//
 connections: 
 new thread connections:
 new thread connections:
 new thread connections:
-rr 2
-pr 1
-pr 2
-fr 1
-fr 0
+pr 5
 fl 2
+fl 3
+fr 3
 new thread connections:
 new thread connections:
-i4 2
-e4 0
 new thread connections:
 new thread connections:
+rl 1
+rr 1
 -------------------------------------//
 -------------------------------------//
 connections: 
 new thread connections:
 new thread connections:
+pr 5
+fl 2
+fl 1
+fr 2
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+-------------------------------------//
+-------------------------------------//
+connections: 
 new thread connections:
 new thread connections:
 new thread connections:
 pr 1
-fr 1
-fr 3
+rr 2
+new thread connections:
+new thread connections:
+rr 3
+fl 3
 fl 1
+br 2
+new thread connections:
+pr 2
+bl 1
+bl 2
+fr 1
+new thread connections:
+-------------------------------------//
+-------------------------------------//
+connections: 
+new thread connections:
+pr 1
+fr 1
+fr 2
+fl 0
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
 new thread connections:
 new thread connections:
 -------------------------------------//
 -------------------------------------//
 connections: 
 new thread connections:
+new thread connections:
+pr 2
+fl 2
+fl 0
+fr 3
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+-------------------------------------//
+-------------------------------------//
+connections: 
 new thread connections:
 new thread connections:
 new thread connections:
@@ -2363,100 +2424,47 @@ new thread connections:
 new thread connections:
 new thread connections:
 pl 2
-fl 2
-fl 3
 fr 2
+fr 3
+fl 1
+new thread connections:
 -------------------------------------//
 -------------------------------------//
 connections: 
-new thread connections:
-new thread connections:
 new thread connections:
 pr 2
-bl 3
-bl 2
-br 2
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-pl 0
-bl 0
-bl 3
-br 1
-new thread connections:
-new thread connections:
-new thread connections:
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-pr 0
-fl 0
-fl 1
-fr 1
-new thread connections:
-new thread connections:
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-new thread connections:
-new thread connections:
-pl 0
-fr 0
 fr 2
-fl 1
-new thread connections:
-e2 0
-e4 2
-new thread connections:
-new thread connections:
-new thread connections:
--------------------------------------//
--------------------------------------//
-connections: 
+fr 0
+fl 2
 new thread connections:
 new thread connections:
 new thread connections:
 new thread connections:
 new thread connections:
 new thread connections:
-new thread connections:
-pl 3
-fl 3
-fl 1
-fr 3
+e3 2
+e3 1
 -------------------------------------//
 Active Threads per org:
 
 File 1_7_ _ _ _ 
-thread len.: 0
-thread len.: 0
-thread len.: 0
+genome length 420
 thread len.: 0
 thread len.: 4
+thread len.: 0
+thread len.: 0
+thread len.: 0
 thread len.: 0
 thread len.: 0
 
 thread count 1
 
 File 1_1_ _ _ _ 
+genome length 420
+thread len.: 0
+thread len.: 0
+thread len.: 0
 thread len.: 4
-thread len.: 0
-thread len.: 0
-thread len.: 0
 thread len.: 0
 thread len.: 0
 thread len.: 0
@@ -2464,10 +2472,11 @@ thread len.: 0
 thread count 1
 
 File 1_6_ _ _ _ 
-thread len.: 0
-thread len.: 0
-thread len.: 0
+genome length 420
 thread len.: 4
+thread len.: 0
+thread len.: 0
+thread len.: 0
 thread len.: 0
 thread len.: 0
 thread len.: 0
@@ -2475,107 +2484,114 @@ thread len.: 0
 thread count 1
 
 File 1_9_ _ _ _ 
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 0
+genome length 420
 thread len.: 4
+thread len.: 0
+thread len.: 0
+thread len.: 0
+thread len.: 0
+thread len.: 0
+thread len.: 2
 
-thread count 1
+thread count 2
 
 File 1_4_ _ _ _ 
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 0
+genome length 420
 thread len.: 0
 thread len.: 4
+thread len.: 0
+thread len.: 0
+thread len.: 0
+thread len.: 0
+thread len.: 0
 
 thread count 1
 
 File 1_8_ _ _ _ 
+genome length 420
+thread len.: 0
+thread len.: 0
+thread len.: 0
 thread len.: 0
 thread len.: 0
 thread len.: 4
-thread len.: 2
-thread len.: 0
-thread len.: 0
 thread len.: 0
 
-thread count 2
+thread count 1
 
 File 1_5_ _ _ _ 
+genome length 420
 thread len.: 0
-thread len.: 0
-thread len.: 4
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 0
-
-thread count 1
-
-File 1_2_ _ _ _ 
-thread len.: 0
-thread len.: 0
-thread len.: 6
 thread len.: 0
 thread len.: 2
 thread len.: 0
+thread len.: 4
+thread len.: 4
 thread len.: 0
+
+thread count 3
+
+File 1_2_ _ _ _ 
+genome length 420
+thread len.: 0
+thread len.: 0
+thread len.: 4
+thread len.: 0
+thread len.: 2
+thread len.: 0
+thread len.: 2
+
+thread count 3
+
+File 1_3_ _ _ _ 
+genome length 420
+thread len.: 0
+thread len.: 0
+thread len.: 4
+thread len.: 0
+thread len.: 0
+thread len.: 0
+thread len.: 2
 
 thread count 2
 
-File 1_3_ _ _ _ 
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 4
-thread len.: 0
-thread len.: 0
-
-thread count 1
-
 File 1_0_ _ _ _ 
-thread len.: 0
-thread len.: 0
+genome length 420
 thread len.: 0
 thread len.: 0
 thread len.: 0
 thread len.: 0
 thread len.: 4
+thread len.: 0
+thread len.: 0
 
 thread count 1
 
 
- mean performances for each org in population: [1, 1, 1, 1, 1, 2, 1, 2, 1, 1]
+ mean performances for each org in population: [1, 1, 1, 2, 1, 1, 3, 3, 2, 1]
 
 --------------------------------------------------
 Calculating the Std Error of the mean: 
-Org mean perf: 1 Pop mean: 1.2 Diffsqrd: 0.04 SumDiffsqrd: 0.04 
-Org mean perf: 1 Pop mean: 1.2 Diffsqrd: 0.04 SumDiffsqrd: 0.08 
-Org mean perf: 1 Pop mean: 1.2 Diffsqrd: 0.04 SumDiffsqrd: 0.12 
-Org mean perf: 1 Pop mean: 1.2 Diffsqrd: 0.04 SumDiffsqrd: 0.16 
-Org mean perf: 1 Pop mean: 1.2 Diffsqrd: 0.04 SumDiffsqrd: 0.2 
-Org mean perf: 2 Pop mean: 1.2 Diffsqrd: 0.64 SumDiffsqrd: 0.84 
-Org mean perf: 1 Pop mean: 1.2 Diffsqrd: 0.04 SumDiffsqrd: 0.88 
-Org mean perf: 2 Pop mean: 1.2 Diffsqrd: 0.64 SumDiffsqrd: 1.52 
-Org mean perf: 1 Pop mean: 1.2 Diffsqrd: 0.04 SumDiffsqrd: 1.56 
-Org mean perf: 1 Pop mean: 1.2 Diffsqrd: 0.04 SumDiffsqrd: 1.6 
-Stddv: 0.4  StdErr: 0.126491106407
+Org mean perf: 1 Pop mean: 1.6 Diffsqrd: 0.36 SumDiffsqrd: 0.36 
+Org mean perf: 1 Pop mean: 1.6 Diffsqrd: 0.36 SumDiffsqrd: 0.72 
+Org mean perf: 1 Pop mean: 1.6 Diffsqrd: 0.36 SumDiffsqrd: 1.08 
+Org mean perf: 2 Pop mean: 1.6 Diffsqrd: 0.16 SumDiffsqrd: 1.24 
+Org mean perf: 1 Pop mean: 1.6 Diffsqrd: 0.36 SumDiffsqrd: 1.6 
+Org mean perf: 1 Pop mean: 1.6 Diffsqrd: 0.36 SumDiffsqrd: 1.96 
+Org mean perf: 3 Pop mean: 1.6 Diffsqrd: 1.96 SumDiffsqrd: 3.92 
+Org mean perf: 3 Pop mean: 1.6 Diffsqrd: 1.96 SumDiffsqrd: 5.88 
+Org mean perf: 2 Pop mean: 1.6 Diffsqrd: 0.16 SumDiffsqrd: 6.04 
+Org mean perf: 1 Pop mean: 1.6 Diffsqrd: 0.36 SumDiffsqrd: 6.4 
+Stddv: 0.8  StdErr: 0.252982212813
 ------------------------------------------------------------
  
 
-quartiles: {'mean_threads': 1.2, 'min': 1, 'Generation': 1, 'max': 2, 'gen_size': 10, 'mode': 1, 'stderr': 0.12649110640673517}
+quartiles: {'mean_threads': 1.6, 'min': 1, 'Generation': 1, 'max': 3, 'gen_size': 10, 'mode': 1, 'stderr': 0.25298221281347033}
 
+3
+3
 2
 2
-1
-1
 1
 1
 1
@@ -2585,165 +2601,175 @@ quartiles: {'mean_threads': 1.2, 'min': 1, 'Generation': 1, 'max': 2, 'gen_size'
 ------------------------------------------------------------
 Crossing Generation:
 
-fours [u'1_8_ _ _ _ ', u'1_2_ _ _ _ ']
-threes [u'1_7_ _ _ _ ', u'1_1_ _ _ _ ']
-twos [u'1_6_ _ _ _ ', u'1_9_ _ _ _ ']
-ones [u'1_4_ _ _ _ ', u'1_5_ _ _ _ ']
-org1 1_2_ _ _ _ , org2 1_8_ _ _ _ 
-crossing org1:1_2_ _ _ _  with org2:1_8_ _ _ _ 
+fours [u'1_5_ _ _ _ ', u'1_2_ _ _ _ ']
+threes [u'1_9_ _ _ _ ', u'1_3_ _ _ _ ']
+twos [u'1_7_ _ _ _ ', u'1_1_ _ _ _ ']
+ones [u'1_6_ _ _ _ ', u'1_4_ _ _ _ ']
+org1 1_2_ _ _ _ , org2 1_5_ _ _ _ 
+crossing org1:1_2_ _ _ _  with org2:1_5_ _ _ _ 
 
 fours []
-threes [u'1_7_ _ _ _ ', u'1_1_ _ _ _ ', u'1_2_ _ _ _ ', u'1_8_ _ _ _ ']
-twos [u'1_6_ _ _ _ ', u'1_9_ _ _ _ ']
-ones [u'1_4_ _ _ _ ', u'1_5_ _ _ _ ']
-org1 1_2_ _ _ _ , org2 1_7_ _ _ _ 
-crossing org1:1_2_ _ _ _  with org2:1_7_ _ _ _ 
+threes [u'1_9_ _ _ _ ', u'1_3_ _ _ _ ', u'1_2_ _ _ _ ', u'1_5_ _ _ _ ']
+twos [u'1_7_ _ _ _ ', u'1_1_ _ _ _ ']
+ones [u'1_6_ _ _ _ ', u'1_4_ _ _ _ ']
+org1 1_9_ _ _ _ , org2 1_5_ _ _ _ 
+crossing org1:1_9_ _ _ _  with org2:1_5_ _ _ _ 
 
 fours []
-threes [u'1_1_ _ _ _ ', u'1_8_ _ _ _ ']
-twos [u'1_6_ _ _ _ ', u'1_9_ _ _ _ ', u'1_2_ _ _ _ ', u'1_7_ _ _ _ ']
-ones [u'1_4_ _ _ _ ', u'1_5_ _ _ _ ']
-org1 1_8_ _ _ _ , org2 1_1_ _ _ _ 
-crossing org1:1_8_ _ _ _  with org2:1_1_ _ _ _ 
-
-fours []
-threes []
-twos [u'1_6_ _ _ _ ', u'1_9_ _ _ _ ', u'1_2_ _ _ _ ', u'1_7_ _ _ _ ', u'1_8_ _ _ _ ', u'1_1_ _ _ _ ']
-ones [u'1_4_ _ _ _ ', u'1_5_ _ _ _ ']
-org1 1_7_ _ _ _ , org2 1_2_ _ _ _ 
-crossing org1:1_7_ _ _ _  with org2:1_2_ _ _ _ 
+threes [u'1_3_ _ _ _ ', u'1_2_ _ _ _ ']
+twos [u'1_7_ _ _ _ ', u'1_1_ _ _ _ ', u'1_9_ _ _ _ ', u'1_5_ _ _ _ ']
+ones [u'1_6_ _ _ _ ', u'1_4_ _ _ _ ']
+org1 1_3_ _ _ _ , org2 1_2_ _ _ _ 
+crossing org1:1_3_ _ _ _  with org2:1_2_ _ _ _ 
 
 fours []
 threes []
-twos [u'1_6_ _ _ _ ', u'1_9_ _ _ _ ', u'1_8_ _ _ _ ', u'1_1_ _ _ _ ']
-ones [u'1_4_ _ _ _ ', u'1_5_ _ _ _ ', u'1_7_ _ _ _ ', u'1_2_ _ _ _ ']
+twos [u'1_7_ _ _ _ ', u'1_1_ _ _ _ ', u'1_9_ _ _ _ ', u'1_5_ _ _ _ ', u'1_3_ _ _ _ ', u'1_2_ _ _ _ ']
+ones [u'1_6_ _ _ _ ', u'1_4_ _ _ _ ']
+org1 1_1_ _ _ _ , org2 1_2_ _ _ _ 
+crossing org1:1_1_ _ _ _  with org2:1_2_ _ _ _ 
+
+fours []
+threes []
+twos [u'1_7_ _ _ _ ', u'1_9_ _ _ _ ', u'1_5_ _ _ _ ', u'1_3_ _ _ _ ']
+ones [u'1_6_ _ _ _ ', u'1_4_ _ _ _ ', u'1_1_ _ _ _ ', u'1_2_ _ _ _ ']
+org1 1_7_ _ _ _ , org2 1_3_ _ _ _ 
+crossing org1:1_7_ _ _ _  with org2:1_3_ _ _ _ 
+
+fours []
+threes []
+twos [u'1_9_ _ _ _ ', u'1_5_ _ _ _ ']
+ones [u'1_6_ _ _ _ ', u'1_4_ _ _ _ ', u'1_1_ _ _ _ ', u'1_2_ _ _ _ ', u'1_7_ _ _ _ ', u'1_3_ _ _ _ ']
+org1 1_5_ _ _ _ , org2 1_9_ _ _ _ 
+crossing org1:1_5_ _ _ _  with org2:1_9_ _ _ _ 
+
+fours []
+threes []
+twos []
+ones [u'1_6_ _ _ _ ', u'1_4_ _ _ _ ', u'1_1_ _ _ _ ', u'1_2_ _ _ _ ', u'1_7_ _ _ _ ', u'1_3_ _ _ _ ', u'1_5_ _ _ _ ', u'1_9_ _ _ _ ']
+org1 1_3_ _ _ _ , org2 1_4_ _ _ _ 
+crossing org1:1_3_ _ _ _  with org2:1_4_ _ _ _ 
+
+fours []
+threes []
+twos []
+ones [u'1_6_ _ _ _ ', u'1_1_ _ _ _ ', u'1_2_ _ _ _ ', u'1_7_ _ _ _ ', u'1_5_ _ _ _ ', u'1_9_ _ _ _ ']
+org1 1_5_ _ _ _ , org2 1_1_ _ _ _ 
+crossing org1:1_5_ _ _ _  with org2:1_1_ _ _ _ 
+
+fours []
+threes []
+twos []
+ones [u'1_6_ _ _ _ ', u'1_2_ _ _ _ ', u'1_7_ _ _ _ ', u'1_9_ _ _ _ ']
 org1 1_6_ _ _ _ , org2 1_9_ _ _ _ 
 crossing org1:1_6_ _ _ _  with org2:1_9_ _ _ _ 
 
 fours []
 threes []
-twos [u'1_8_ _ _ _ ', u'1_1_ _ _ _ ']
-ones [u'1_4_ _ _ _ ', u'1_5_ _ _ _ ', u'1_7_ _ _ _ ', u'1_2_ _ _ _ ', u'1_6_ _ _ _ ', u'1_9_ _ _ _ ']
-org1 1_1_ _ _ _ , org2 1_8_ _ _ _ 
-crossing org1:1_1_ _ _ _  with org2:1_8_ _ _ _ 
-
-fours []
-threes []
 twos []
-ones [u'1_4_ _ _ _ ', u'1_5_ _ _ _ ', u'1_7_ _ _ _ ', u'1_2_ _ _ _ ', u'1_6_ _ _ _ ', u'1_9_ _ _ _ ', u'1_1_ _ _ _ ', u'1_8_ _ _ _ ']
-org1 1_7_ _ _ _ , org2 1_4_ _ _ _ 
-crossing org1:1_7_ _ _ _  with org2:1_4_ _ _ _ 
-
-fours []
-threes []
-twos []
-ones [u'1_5_ _ _ _ ', u'1_2_ _ _ _ ', u'1_6_ _ _ _ ', u'1_9_ _ _ _ ', u'1_1_ _ _ _ ', u'1_8_ _ _ _ ']
-org1 1_9_ _ _ _ , org2 1_6_ _ _ _ 
-crossing org1:1_9_ _ _ _  with org2:1_6_ _ _ _ 
-
-fours []
-threes []
-twos []
-ones [u'1_5_ _ _ _ ', u'1_2_ _ _ _ ', u'1_1_ _ _ _ ', u'1_8_ _ _ _ ']
-org1 1_5_ _ _ _ , org2 1_2_ _ _ _ 
-crossing org1:1_5_ _ _ _  with org2:1_2_ _ _ _ 
-
-fours []
-threes []
-twos []
-ones [u'1_1_ _ _ _ ', u'1_8_ _ _ _ ']
-org1 1_1_ _ _ _ , org2 1_8_ _ _ _ 
-crossing org1:1_1_ _ _ _  with org2:1_8_ _ _ _ 
+ones [u'1_2_ _ _ _ ', u'1_7_ _ _ _ ']
+org1 1_7_ _ _ _ , org2 1_2_ _ _ _ 
+crossing org1:1_7_ _ _ _  with org2:1_2_ _ _ _ 
 
 
 Number of Orgs in new gen: 10
 Active Threads per org:
 
-File 2_6_1_7_1_4
+File 2_9_1_2_1_7
+genome length 420
 thread len.: 0
 thread len.: 0
 
 thread count 0
 
-File 2_2_1_1_1_8
+File 2_3_1_1_1_2
+genome length 420
 thread len.: 0
 thread len.: 0
 
 thread count 0
 
-File 2_1_1_2_1_7
+File 2_6_1_4_1_3
+genome length 420
 thread len.: 0
 thread len.: 0
 
 thread count 0
 
-File 2_0_1_2_1_8
+File 2_8_1_6_1_9
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 2_2_1_3_1_2
+genome length 420
 thread len.: 0
 thread len.: 0
 
 thread count 0
 
-File 2_5_1_8_1_1
+File 2_7_1_1_1_5
+genome length 420
 thread len.: 0
 thread len.: 0
 
 thread count 0
 
-File 2_7_1_6_1_9
+File 2_0_1_5_1_2
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 2_5_1_5_1_9
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 2_4_1_3_1_7
+genome length 420
 thread len.: 0
 thread len.: 0
 
 thread count 0
 
-File 2_8_1_2_1_5
+File 2_1_1_5_1_9
+genome length 420
+thread len.: 6
 thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 2_4_1_6_1_9
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 2_9_1_8_1_1
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 2_3_1_7_1_2
-thread len.: 0
-thread len.: 2
 
 thread count 1
 
 
- mean performances for each org in population: [0, 0, 0, 0, 0, 0, 0, 0, 0, 1]
+ mean performances for each org in population: [0, 0, 0, 1, 0, 0, 1, 1, 0, 1]
 
 --------------------------------------------------
 Calculating the Std Error of the mean: 
-Org mean perf: 0 Pop mean: 0.1 Diffsqrd: 0.01 SumDiffsqrd: 0.01 
-Org mean perf: 0 Pop mean: 0.1 Diffsqrd: 0.01 SumDiffsqrd: 0.02 
-Org mean perf: 0 Pop mean: 0.1 Diffsqrd: 0.01 SumDiffsqrd: 0.03 
-Org mean perf: 0 Pop mean: 0.1 Diffsqrd: 0.01 SumDiffsqrd: 0.04 
-Org mean perf: 0 Pop mean: 0.1 Diffsqrd: 0.01 SumDiffsqrd: 0.05 
-Org mean perf: 0 Pop mean: 0.1 Diffsqrd: 0.01 SumDiffsqrd: 0.06 
-Org mean perf: 0 Pop mean: 0.1 Diffsqrd: 0.01 SumDiffsqrd: 0.07 
-Org mean perf: 0 Pop mean: 0.1 Diffsqrd: 0.01 SumDiffsqrd: 0.08 
-Org mean perf: 0 Pop mean: 0.1 Diffsqrd: 0.01 SumDiffsqrd: 0.09 
-Org mean perf: 1 Pop mean: 0.1 Diffsqrd: 0.81 SumDiffsqrd: 0.9 
-Stddv: 0.3  StdErr: 0.0948683298051
+Org mean perf: 0 Pop mean: 0.4 Diffsqrd: 0.16 SumDiffsqrd: 0.16 
+Org mean perf: 0 Pop mean: 0.4 Diffsqrd: 0.16 SumDiffsqrd: 0.32 
+Org mean perf: 0 Pop mean: 0.4 Diffsqrd: 0.16 SumDiffsqrd: 0.48 
+Org mean perf: 1 Pop mean: 0.4 Diffsqrd: 0.36 SumDiffsqrd: 0.84 
+Org mean perf: 0 Pop mean: 0.4 Diffsqrd: 0.16 SumDiffsqrd: 1.0 
+Org mean perf: 0 Pop mean: 0.4 Diffsqrd: 0.16 SumDiffsqrd: 1.16 
+Org mean perf: 1 Pop mean: 0.4 Diffsqrd: 0.36 SumDiffsqrd: 1.52 
+Org mean perf: 1 Pop mean: 0.4 Diffsqrd: 0.36 SumDiffsqrd: 1.88 
+Org mean perf: 0 Pop mean: 0.4 Diffsqrd: 0.16 SumDiffsqrd: 2.04 
+Org mean perf: 1 Pop mean: 0.4 Diffsqrd: 0.36 SumDiffsqrd: 2.4 
+Stddv: 0.489897948557  StdErr: 0.154919333848
 ------------------------------------------------------------
  
 
-quartiles: {'mean_threads': 0.1, 'min': 0, 'Generation': 2, 'max': 1, 'gen_size': 10, 'mode': 0, 'stderr': 0.09486832980505139}
+quartiles: {'mean_threads': 0.4, 'min': 0, 'Generation': 2, 'max': 1, 'gen_size': 10, 'mode': 0, 'stderr': 0.15491933384829665}
 
 1
-0
-0
-0
+1
+1
+1
 0
 0
 0
@@ -2753,166 +2779,176 @@ quartiles: {'mean_threads': 0.1, 'min': 0, 'Generation': 2, 'max': 1, 'gen_size'
 ------------------------------------------------------------
 Crossing Generation:
 
-fours [u'2_3_1_7_1_2', u'2_6_1_7_1_4']
-threes [u'2_2_1_1_1_8', u'2_1_1_2_1_7']
-twos [u'2_0_1_2_1_8', u'2_5_1_8_1_1']
-ones [u'2_7_1_6_1_9', u'2_8_1_2_1_5']
-org1 2_3_1_7_1_2, org2 2_6_1_7_1_4
-crossing org1:2_3_1_7_1_2 with org2:2_6_1_7_1_4
+fours [u'2_8_1_6_1_9', u'2_0_1_5_1_2']
+threes [u'2_5_1_5_1_9', u'2_1_1_5_1_9']
+twos [u'2_9_1_2_1_7', u'2_3_1_1_1_2']
+ones [u'2_6_1_4_1_3', u'2_2_1_3_1_2']
+org1 2_0_1_5_1_2, org2 2_8_1_6_1_9
+crossing org1:2_0_1_5_1_2 with org2:2_8_1_6_1_9
 
 fours []
-threes [u'2_2_1_1_1_8', u'2_1_1_2_1_7', u'2_3_1_7_1_2', u'2_6_1_7_1_4']
-twos [u'2_0_1_2_1_8', u'2_5_1_8_1_1']
-ones [u'2_7_1_6_1_9', u'2_8_1_2_1_5']
-org1 2_2_1_1_1_8, org2 2_3_1_7_1_2
-crossing org1:2_2_1_1_1_8 with org2:2_3_1_7_1_2
+threes [u'2_5_1_5_1_9', u'2_1_1_5_1_9', u'2_0_1_5_1_2', u'2_8_1_6_1_9']
+twos [u'2_9_1_2_1_7', u'2_3_1_1_1_2']
+ones [u'2_6_1_4_1_3', u'2_2_1_3_1_2']
+org1 2_5_1_5_1_9, org2 2_0_1_5_1_2
+crossing org1:2_5_1_5_1_9 with org2:2_0_1_5_1_2
 
 fours []
-threes [u'2_1_1_2_1_7', u'2_6_1_7_1_4']
-twos [u'2_0_1_2_1_8', u'2_5_1_8_1_1', u'2_2_1_1_1_8', u'2_3_1_7_1_2']
-ones [u'2_7_1_6_1_9', u'2_8_1_2_1_5']
-org1 2_6_1_7_1_4, org2 2_1_1_2_1_7
-crossing org1:2_6_1_7_1_4 with org2:2_1_1_2_1_7
-
-fours []
-threes []
-twos [u'2_0_1_2_1_8', u'2_5_1_8_1_1', u'2_2_1_1_1_8', u'2_3_1_7_1_2', u'2_6_1_7_1_4', u'2_1_1_2_1_7']
-ones [u'2_7_1_6_1_9', u'2_8_1_2_1_5']
-org1 2_0_1_2_1_8, org2 2_5_1_8_1_1
-crossing org1:2_0_1_2_1_8 with org2:2_5_1_8_1_1
+threes [u'2_1_1_5_1_9', u'2_8_1_6_1_9']
+twos [u'2_9_1_2_1_7', u'2_3_1_1_1_2', u'2_5_1_5_1_9', u'2_0_1_5_1_2']
+ones [u'2_6_1_4_1_3', u'2_2_1_3_1_2']
+org1 2_8_1_6_1_9, org2 2_1_1_5_1_9
+crossing org1:2_8_1_6_1_9 with org2:2_1_1_5_1_9
 
 fours []
 threes []
-twos [u'2_2_1_1_1_8', u'2_3_1_7_1_2', u'2_6_1_7_1_4', u'2_1_1_2_1_7']
-ones [u'2_7_1_6_1_9', u'2_8_1_2_1_5', u'2_0_1_2_1_8', u'2_5_1_8_1_1']
-org1 2_1_1_2_1_7, org2 2_6_1_7_1_4
-crossing org1:2_1_1_2_1_7 with org2:2_6_1_7_1_4
+twos [u'2_9_1_2_1_7', u'2_3_1_1_1_2', u'2_5_1_5_1_9', u'2_0_1_5_1_2', u'2_8_1_6_1_9', u'2_1_1_5_1_9']
+ones [u'2_6_1_4_1_3', u'2_2_1_3_1_2']
+org1 2_0_1_5_1_2, org2 2_3_1_1_1_2
+crossing org1:2_0_1_5_1_2 with org2:2_3_1_1_1_2
 
 fours []
 threes []
-twos [u'2_2_1_1_1_8', u'2_3_1_7_1_2']
-ones [u'2_7_1_6_1_9', u'2_8_1_2_1_5', u'2_0_1_2_1_8', u'2_5_1_8_1_1', u'2_1_1_2_1_7', u'2_6_1_7_1_4']
-org1 2_3_1_7_1_2, org2 2_2_1_1_1_8
-crossing org1:2_3_1_7_1_2 with org2:2_2_1_1_1_8
+twos [u'2_9_1_2_1_7', u'2_5_1_5_1_9', u'2_8_1_6_1_9', u'2_1_1_5_1_9']
+ones [u'2_6_1_4_1_3', u'2_2_1_3_1_2', u'2_0_1_5_1_2', u'2_3_1_1_1_2']
+org1 2_1_1_5_1_9, org2 2_9_1_2_1_7
+crossing org1:2_1_1_5_1_9 with org2:2_9_1_2_1_7
 
 fours []
 threes []
-twos []
-ones [u'2_7_1_6_1_9', u'2_8_1_2_1_5', u'2_0_1_2_1_8', u'2_5_1_8_1_1', u'2_1_1_2_1_7', u'2_6_1_7_1_4', u'2_3_1_7_1_2', u'2_2_1_1_1_8']
-org1 2_1_1_2_1_7, org2 2_2_1_1_1_8
-crossing org1:2_1_1_2_1_7 with org2:2_2_1_1_1_8
+twos [u'2_5_1_5_1_9', u'2_8_1_6_1_9']
+ones [u'2_6_1_4_1_3', u'2_2_1_3_1_2', u'2_0_1_5_1_2', u'2_3_1_1_1_2', u'2_1_1_5_1_9', u'2_9_1_2_1_7']
+org1 2_8_1_6_1_9, org2 2_5_1_5_1_9
+crossing org1:2_8_1_6_1_9 with org2:2_5_1_5_1_9
 
 fours []
 threes []
 twos []
-ones [u'2_7_1_6_1_9', u'2_8_1_2_1_5', u'2_0_1_2_1_8', u'2_5_1_8_1_1', u'2_6_1_7_1_4', u'2_3_1_7_1_2']
-org1 2_7_1_6_1_9, org2 2_3_1_7_1_2
-crossing org1:2_7_1_6_1_9 with org2:2_3_1_7_1_2
+ones [u'2_6_1_4_1_3', u'2_2_1_3_1_2', u'2_0_1_5_1_2', u'2_3_1_1_1_2', u'2_1_1_5_1_9', u'2_9_1_2_1_7', u'2_8_1_6_1_9', u'2_5_1_5_1_9']
+org1 2_9_1_2_1_7, org2 2_8_1_6_1_9
+crossing org1:2_9_1_2_1_7 with org2:2_8_1_6_1_9
 
 fours []
 threes []
 twos []
-ones [u'2_8_1_2_1_5', u'2_0_1_2_1_8', u'2_5_1_8_1_1', u'2_6_1_7_1_4']
-org1 2_5_1_8_1_1, org2 2_0_1_2_1_8
-crossing org1:2_5_1_8_1_1 with org2:2_0_1_2_1_8
+ones [u'2_6_1_4_1_3', u'2_2_1_3_1_2', u'2_0_1_5_1_2', u'2_3_1_1_1_2', u'2_1_1_5_1_9', u'2_5_1_5_1_9']
+org1 2_1_1_5_1_9, org2 2_3_1_1_1_2
+crossing org1:2_1_1_5_1_9 with org2:2_3_1_1_1_2
 
 fours []
 threes []
 twos []
-ones [u'2_8_1_2_1_5', u'2_6_1_7_1_4']
-org1 2_8_1_2_1_5, org2 2_6_1_7_1_4
-crossing org1:2_8_1_2_1_5 with org2:2_6_1_7_1_4
+ones [u'2_6_1_4_1_3', u'2_2_1_3_1_2', u'2_0_1_5_1_2', u'2_5_1_5_1_9']
+org1 2_6_1_4_1_3, org2 2_5_1_5_1_9
+crossing org1:2_6_1_4_1_3 with org2:2_5_1_5_1_9
+
+fours []
+threes []
+twos []
+ones [u'2_2_1_3_1_2', u'2_0_1_5_1_2']
+org1 2_2_1_3_1_2, org2 2_0_1_5_1_2
+crossing org1:2_2_1_3_1_2 with org2:2_0_1_5_1_2
 
 
 Number of Orgs in new gen: 10
 Active Threads per org:
 
-File 3_6_2_2_2_1
+File 3_6_2_9_2_8
+genome length 420
 thread len.: 0
 thread len.: 0
 
 thread count 0
 
-File 3_4_2_1_2_6
+File 3_7_2_3_2_1
+genome length 420
 thread len.: 0
 thread len.: 0
 
 thread count 0
 
-File 3_2_2_6_2_1
+File 3_8_2_6_2_5
+genome length 420
 thread len.: 0
-thread len.: 2
+thread len.: 0
+
+thread count 0
+
+File 3_2_2_1_2_8
+genome length 420
+thread len.: 6
+thread len.: 0
 
 thread count 1
 
-File 3_8_2_5_2_0
+File 3_3_2_3_2_0
+genome length 420
 thread len.: 0
 thread len.: 0
 
 thread count 0
 
-File 3_5_2_2_2_3
+File 3_4_2_1_2_9
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 3_0_2_0_2_8
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 3_1_2_0_2_5
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 3_5_2_5_2_8
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 3_9_2_2_2_0
+genome length 420
 thread len.: 0
 thread len.: 0
 
 thread count 0
 
-File 3_1_2_2_2_3
-thread len.: 0
-thread len.: 0
 
-thread count 0
-
-File 3_3_2_5_2_0
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 3_9_2_8_2_6
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 3_7_2_7_2_3
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 3_0_2_3_2_6
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-
- mean performances for each org in population: [0, 0, 1, 0, 0, 0, 0, 0, 0, 0]
+ mean performances for each org in population: [0, 0, 0, 1, 0, 1, 1, 1, 1, 0]
 
 --------------------------------------------------
 Calculating the Std Error of the mean: 
-Org mean perf: 0 Pop mean: 0.1 Diffsqrd: 0.01 SumDiffsqrd: 0.01 
-Org mean perf: 0 Pop mean: 0.1 Diffsqrd: 0.01 SumDiffsqrd: 0.02 
-Org mean perf: 1 Pop mean: 0.1 Diffsqrd: 0.81 SumDiffsqrd: 0.83 
-Org mean perf: 0 Pop mean: 0.1 Diffsqrd: 0.01 SumDiffsqrd: 0.84 
-Org mean perf: 0 Pop mean: 0.1 Diffsqrd: 0.01 SumDiffsqrd: 0.85 
-Org mean perf: 0 Pop mean: 0.1 Diffsqrd: 0.01 SumDiffsqrd: 0.86 
-Org mean perf: 0 Pop mean: 0.1 Diffsqrd: 0.01 SumDiffsqrd: 0.87 
-Org mean perf: 0 Pop mean: 0.1 Diffsqrd: 0.01 SumDiffsqrd: 0.88 
-Org mean perf: 0 Pop mean: 0.1 Diffsqrd: 0.01 SumDiffsqrd: 0.89 
-Org mean perf: 0 Pop mean: 0.1 Diffsqrd: 0.01 SumDiffsqrd: 0.9 
-Stddv: 0.3  StdErr: 0.0948683298051
+Org mean perf: 0 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 0.25 
+Org mean perf: 0 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 0.5 
+Org mean perf: 0 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 0.75 
+Org mean perf: 1 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 1.0 
+Org mean perf: 0 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 1.25 
+Org mean perf: 1 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 1.5 
+Org mean perf: 1 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 1.75 
+Org mean perf: 1 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 2.0 
+Org mean perf: 1 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 2.25 
+Org mean perf: 0 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 2.5 
+Stddv: 0.5  StdErr: 0.158113883008
 ------------------------------------------------------------
  
 
-quartiles: {'mean_threads': 0.1, 'min': 0, 'Generation': 3, 'max': 1, 'gen_size': 10, 'mode': 0, 'stderr': 0.09486832980505139}
+quartiles: {'mean_threads': 0.5, 'min': 0, 'Generation': 3, 'max': 1, 'gen_size': 10, 'mode': 0, 'stderr': 0.15811388300841897}
 
 1
-0
-0
-0
-0
+1
+1
+1
+1
 0
 0
 0
@@ -2921,1261 +2957,1327 @@ quartiles: {'mean_threads': 0.1, 'min': 0, 'Generation': 3, 'max': 1, 'gen_size'
 ------------------------------------------------------------
 Crossing Generation:
 
-fours [u'3_2_2_6_2_1', u'3_6_2_2_2_1']
-threes [u'3_4_2_1_2_6', u'3_8_2_5_2_0']
-twos [u'3_5_2_2_2_3', u'3_1_2_2_2_3']
-ones [u'3_3_2_5_2_0', u'3_9_2_8_2_6']
-org1 3_6_2_2_2_1, org2 3_2_2_6_2_1
-crossing org1:3_6_2_2_2_1 with org2:3_2_2_6_2_1
+fours [u'3_2_2_1_2_8', u'3_4_2_1_2_9']
+threes [u'3_0_2_0_2_8', u'3_1_2_0_2_5']
+twos [u'3_5_2_5_2_8', u'3_6_2_9_2_8']
+ones [u'3_7_2_3_2_1', u'3_8_2_6_2_5']
+org1 3_2_2_1_2_8, org2 3_4_2_1_2_9
+crossing org1:3_2_2_1_2_8 with org2:3_4_2_1_2_9
 
 fours []
-threes [u'3_4_2_1_2_6', u'3_8_2_5_2_0', u'3_6_2_2_2_1', u'3_2_2_6_2_1']
-twos [u'3_5_2_2_2_3', u'3_1_2_2_2_3']
-ones [u'3_3_2_5_2_0', u'3_9_2_8_2_6']
-org1 3_4_2_1_2_6, org2 3_8_2_5_2_0
-crossing org1:3_4_2_1_2_6 with org2:3_8_2_5_2_0
+threes [u'3_0_2_0_2_8', u'3_1_2_0_2_5', u'3_2_2_1_2_8', u'3_4_2_1_2_9']
+twos [u'3_5_2_5_2_8', u'3_6_2_9_2_8']
+ones [u'3_7_2_3_2_1', u'3_8_2_6_2_5']
+org1 3_4_2_1_2_9, org2 3_1_2_0_2_5
+crossing org1:3_4_2_1_2_9 with org2:3_1_2_0_2_5
 
 fours []
-threes [u'3_6_2_2_2_1', u'3_2_2_6_2_1']
-twos [u'3_5_2_2_2_3', u'3_1_2_2_2_3', u'3_4_2_1_2_6', u'3_8_2_5_2_0']
-ones [u'3_3_2_5_2_0', u'3_9_2_8_2_6']
-org1 3_2_2_6_2_1, org2 3_6_2_2_2_1
-crossing org1:3_2_2_6_2_1 with org2:3_6_2_2_2_1
-
-fours []
-threes []
-twos [u'3_5_2_2_2_3', u'3_1_2_2_2_3', u'3_4_2_1_2_6', u'3_8_2_5_2_0', u'3_2_2_6_2_1', u'3_6_2_2_2_1']
-ones [u'3_3_2_5_2_0', u'3_9_2_8_2_6']
-org1 3_8_2_5_2_0, org2 3_1_2_2_2_3
-crossing org1:3_8_2_5_2_0 with org2:3_1_2_2_2_3
+threes [u'3_0_2_0_2_8', u'3_2_2_1_2_8']
+twos [u'3_5_2_5_2_8', u'3_6_2_9_2_8', u'3_4_2_1_2_9', u'3_1_2_0_2_5']
+ones [u'3_7_2_3_2_1', u'3_8_2_6_2_5']
+org1 3_0_2_0_2_8, org2 3_2_2_1_2_8
+crossing org1:3_0_2_0_2_8 with org2:3_2_2_1_2_8
 
 fours []
 threes []
-twos [u'3_5_2_2_2_3', u'3_4_2_1_2_6', u'3_2_2_6_2_1', u'3_6_2_2_2_1']
-ones [u'3_3_2_5_2_0', u'3_9_2_8_2_6', u'3_8_2_5_2_0', u'3_1_2_2_2_3']
-org1 3_6_2_2_2_1, org2 3_4_2_1_2_6
-crossing org1:3_6_2_2_2_1 with org2:3_4_2_1_2_6
+twos [u'3_5_2_5_2_8', u'3_6_2_9_2_8', u'3_4_2_1_2_9', u'3_1_2_0_2_5', u'3_0_2_0_2_8', u'3_2_2_1_2_8']
+ones [u'3_7_2_3_2_1', u'3_8_2_6_2_5']
+org1 3_5_2_5_2_8, org2 3_6_2_9_2_8
+crossing org1:3_5_2_5_2_8 with org2:3_6_2_9_2_8
 
 fours []
 threes []
-twos [u'3_5_2_2_2_3', u'3_2_2_6_2_1']
-ones [u'3_3_2_5_2_0', u'3_9_2_8_2_6', u'3_8_2_5_2_0', u'3_1_2_2_2_3', u'3_6_2_2_2_1', u'3_4_2_1_2_6']
-org1 3_2_2_6_2_1, org2 3_5_2_2_2_3
-crossing org1:3_2_2_6_2_1 with org2:3_5_2_2_2_3
+twos [u'3_4_2_1_2_9', u'3_1_2_0_2_5', u'3_0_2_0_2_8', u'3_2_2_1_2_8']
+ones [u'3_7_2_3_2_1', u'3_8_2_6_2_5', u'3_5_2_5_2_8', u'3_6_2_9_2_8']
+org1 3_0_2_0_2_8, org2 3_1_2_0_2_5
+crossing org1:3_0_2_0_2_8 with org2:3_1_2_0_2_5
 
 fours []
 threes []
-twos []
-ones [u'3_3_2_5_2_0', u'3_9_2_8_2_6', u'3_8_2_5_2_0', u'3_1_2_2_2_3', u'3_6_2_2_2_1', u'3_4_2_1_2_6', u'3_2_2_6_2_1', u'3_5_2_2_2_3']
-org1 3_6_2_2_2_1, org2 3_4_2_1_2_6
-crossing org1:3_6_2_2_2_1 with org2:3_4_2_1_2_6
+twos [u'3_4_2_1_2_9', u'3_2_2_1_2_8']
+ones [u'3_7_2_3_2_1', u'3_8_2_6_2_5', u'3_5_2_5_2_8', u'3_6_2_9_2_8', u'3_0_2_0_2_8', u'3_1_2_0_2_5']
+org1 3_4_2_1_2_9, org2 3_2_2_1_2_8
+crossing org1:3_4_2_1_2_9 with org2:3_2_2_1_2_8
 
 fours []
 threes []
 twos []
-ones [u'3_3_2_5_2_0', u'3_9_2_8_2_6', u'3_8_2_5_2_0', u'3_1_2_2_2_3', u'3_2_2_6_2_1', u'3_5_2_2_2_3']
-org1 3_3_2_5_2_0, org2 3_8_2_5_2_0
-crossing org1:3_3_2_5_2_0 with org2:3_8_2_5_2_0
+ones [u'3_7_2_3_2_1', u'3_8_2_6_2_5', u'3_5_2_5_2_8', u'3_6_2_9_2_8', u'3_0_2_0_2_8', u'3_1_2_0_2_5', u'3_4_2_1_2_9', u'3_2_2_1_2_8']
+org1 3_7_2_3_2_1, org2 3_8_2_6_2_5
+crossing org1:3_7_2_3_2_1 with org2:3_8_2_6_2_5
 
-Char mutation at index: 15
+fours []
+threes []
+twos []
+ones [u'3_5_2_5_2_8', u'3_6_2_9_2_8', u'3_0_2_0_2_8', u'3_1_2_0_2_5', u'3_4_2_1_2_9', u'3_2_2_1_2_8']
+org1 3_2_2_1_2_8, org2 3_6_2_9_2_8
+crossing org1:3_2_2_1_2_8 with org2:3_6_2_9_2_8
+
+fours []
+threes []
+twos []
+ones [u'3_5_2_5_2_8', u'3_0_2_0_2_8', u'3_1_2_0_2_5', u'3_4_2_1_2_9']
+org1 3_4_2_1_2_9, org2 3_0_2_0_2_8
+crossing org1:3_4_2_1_2_9 with org2:3_0_2_0_2_8
+
+fours []
+threes []
+twos []
+ones [u'3_5_2_5_2_8', u'3_1_2_0_2_5']
+org1 3_5_2_5_2_8, org2 3_1_2_0_2_5
+crossing org1:3_5_2_5_2_8 with org2:3_1_2_0_2_5
+
+
+Number of Orgs in new gen: 10
+Active Threads per org:
+
+File 4_8_3_4_3_0
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 4_6_3_7_3_8
+genome length 420
+thread len.: 0
+thread len.: 0
+
+thread count 0
+
+File 4_1_3_1_3_4
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 4_3_3_5_3_6
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 4_2_3_0_3_2
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 4_9_3_1_3_5
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 4_5_3_2_3_4
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 4_7_3_6_3_2
+genome length 420
+thread len.: 0
+thread len.: 0
+
+thread count 0
+
+File 4_0_3_4_3_2
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 4_4_3_0_3_1
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+
+ mean performances for each org in population: [1, 0, 1, 1, 1, 1, 1, 0, 1, 1]
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 1 Pop mean: 0.8 Diffsqrd: 0.04 SumDiffsqrd: 0.04 
+Org mean perf: 0 Pop mean: 0.8 Diffsqrd: 0.64 SumDiffsqrd: 0.68 
+Org mean perf: 1 Pop mean: 0.8 Diffsqrd: 0.04 SumDiffsqrd: 0.72 
+Org mean perf: 1 Pop mean: 0.8 Diffsqrd: 0.04 SumDiffsqrd: 0.76 
+Org mean perf: 1 Pop mean: 0.8 Diffsqrd: 0.04 SumDiffsqrd: 0.8 
+Org mean perf: 1 Pop mean: 0.8 Diffsqrd: 0.04 SumDiffsqrd: 0.84 
+Org mean perf: 1 Pop mean: 0.8 Diffsqrd: 0.04 SumDiffsqrd: 0.88 
+Org mean perf: 0 Pop mean: 0.8 Diffsqrd: 0.64 SumDiffsqrd: 1.52 
+Org mean perf: 1 Pop mean: 0.8 Diffsqrd: 0.04 SumDiffsqrd: 1.56 
+Org mean perf: 1 Pop mean: 0.8 Diffsqrd: 0.04 SumDiffsqrd: 1.6 
+Stddv: 0.4  StdErr: 0.126491106407
+------------------------------------------------------------
+ 
+
+quartiles: {'mean_threads': 0.8, 'min': 0, 'Generation': 4, 'max': 1, 'gen_size': 10, 'mode': 1, 'stderr': 0.1264911064067352}
+
+1
+1
+1
+1
+1
+1
+1
+1
+0
+0
+------------------------------------------------------------
+Crossing Generation:
+
+fours [u'4_8_3_4_3_0', u'4_1_3_1_3_4']
+threes [u'4_3_3_5_3_6', u'4_2_3_0_3_2']
+twos [u'4_9_3_1_3_5', u'4_5_3_2_3_4']
+ones [u'4_0_3_4_3_2', u'4_4_3_0_3_1']
+org1 4_1_3_1_3_4, org2 4_8_3_4_3_0
+crossing org1:4_1_3_1_3_4 with org2:4_8_3_4_3_0
+
+Crossover_point mutation at index: 77
+0 --> 1
+fours []
+threes [u'4_3_3_5_3_6', u'4_2_3_0_3_2', u'4_1_3_1_3_4', u'4_8_3_4_3_0']
+twos [u'4_9_3_1_3_5', u'4_5_3_2_3_4']
+ones [u'4_0_3_4_3_2', u'4_4_3_0_3_1']
+org1 4_3_3_5_3_6, org2 4_1_3_1_3_4
+crossing org1:4_3_3_5_3_6 with org2:4_1_3_1_3_4
+
+fours []
+threes [u'4_2_3_0_3_2', u'4_8_3_4_3_0']
+twos [u'4_9_3_1_3_5', u'4_5_3_2_3_4', u'4_3_3_5_3_6', u'4_1_3_1_3_4']
+ones [u'4_0_3_4_3_2', u'4_4_3_0_3_1']
+org1 4_8_3_4_3_0, org2 4_2_3_0_3_2
+crossing org1:4_8_3_4_3_0 with org2:4_2_3_0_3_2
+
+fours []
+threes []
+twos [u'4_9_3_1_3_5', u'4_5_3_2_3_4', u'4_3_3_5_3_6', u'4_1_3_1_3_4', u'4_8_3_4_3_0', u'4_2_3_0_3_2']
+ones [u'4_0_3_4_3_2', u'4_4_3_0_3_1']
+org1 4_3_3_5_3_6, org2 4_8_3_4_3_0
+crossing org1:4_3_3_5_3_6 with org2:4_8_3_4_3_0
+
+fours []
+threes []
+twos [u'4_9_3_1_3_5', u'4_5_3_2_3_4', u'4_1_3_1_3_4', u'4_2_3_0_3_2']
+ones [u'4_0_3_4_3_2', u'4_4_3_0_3_1', u'4_3_3_5_3_6', u'4_8_3_4_3_0']
+org1 4_2_3_0_3_2, org2 4_9_3_1_3_5
+crossing org1:4_2_3_0_3_2 with org2:4_9_3_1_3_5
+
+fours []
+threes []
+twos [u'4_5_3_2_3_4', u'4_1_3_1_3_4']
+ones [u'4_0_3_4_3_2', u'4_4_3_0_3_1', u'4_3_3_5_3_6', u'4_8_3_4_3_0', u'4_2_3_0_3_2', u'4_9_3_1_3_5']
+org1 4_1_3_1_3_4, org2 4_5_3_2_3_4
+crossing org1:4_1_3_1_3_4 with org2:4_5_3_2_3_4
+
+fours []
+threes []
+twos []
+ones [u'4_0_3_4_3_2', u'4_4_3_0_3_1', u'4_3_3_5_3_6', u'4_8_3_4_3_0', u'4_2_3_0_3_2', u'4_9_3_1_3_5', u'4_1_3_1_3_4', u'4_5_3_2_3_4']
+org1 4_8_3_4_3_0, org2 4_1_3_1_3_4
+crossing org1:4_8_3_4_3_0 with org2:4_1_3_1_3_4
+
+fours []
+threes []
+twos []
+ones [u'4_0_3_4_3_2', u'4_4_3_0_3_1', u'4_3_3_5_3_6', u'4_2_3_0_3_2', u'4_9_3_1_3_5', u'4_5_3_2_3_4']
+org1 4_5_3_2_3_4, org2 4_4_3_0_3_1
+crossing org1:4_5_3_2_3_4 with org2:4_4_3_0_3_1
+
+fours []
+threes []
+twos []
+ones [u'4_0_3_4_3_2', u'4_3_3_5_3_6', u'4_2_3_0_3_2', u'4_9_3_1_3_5']
+org1 4_0_3_4_3_2, org2 4_3_3_5_3_6
+crossing org1:4_0_3_4_3_2 with org2:4_3_3_5_3_6
+
+fours []
+threes []
+twos []
+ones [u'4_2_3_0_3_2', u'4_9_3_1_3_5']
+org1 4_2_3_0_3_2, org2 4_9_3_1_3_5
+crossing org1:4_2_3_0_3_2 with org2:4_9_3_1_3_5
+
+
+Number of Orgs in new gen: 10
+Active Threads per org:
+
+File 5_5_4_5_4_1
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 5_6_4_8_4_1
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 5_8_4_3_4_0
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 5_1_4_1_4_3
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 5_9_4_2_4_9
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 5_2_4_8_4_2
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 5_0_4_1_4_8
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 5_3_4_8_4_3
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 5_4_4_9_4_2
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 5_7_4_5_4_4
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+
+ mean performances for each org in population: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Stddv: 0.0  StdErr: 0.0
+------------------------------------------------------------
+ 
+
+quartiles: {'mean_threads': 1.0, 'min': 1, 'Generation': 5, 'max': 1, 'gen_size': 10, 'mode': 1, 'stderr': 0.0}
+
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+------------------------------------------------------------
+Crossing Generation:
+
+fours [u'5_5_4_5_4_1', u'5_6_4_8_4_1']
+threes [u'5_8_4_3_4_0', u'5_1_4_1_4_3']
+twos [u'5_9_4_2_4_9', u'5_2_4_8_4_2']
+ones [u'5_0_4_1_4_8', u'5_3_4_8_4_3']
+org1 5_6_4_8_4_1, org2 5_5_4_5_4_1
+crossing org1:5_6_4_8_4_1 with org2:5_5_4_5_4_1
+
+fours []
+threes [u'5_8_4_3_4_0', u'5_1_4_1_4_3', u'5_6_4_8_4_1', u'5_5_4_5_4_1']
+twos [u'5_9_4_2_4_9', u'5_2_4_8_4_2']
+ones [u'5_0_4_1_4_8', u'5_3_4_8_4_3']
+org1 5_8_4_3_4_0, org2 5_6_4_8_4_1
+crossing org1:5_8_4_3_4_0 with org2:5_6_4_8_4_1
+
+fours []
+threes [u'5_1_4_1_4_3', u'5_5_4_5_4_1']
+twos [u'5_9_4_2_4_9', u'5_2_4_8_4_2', u'5_8_4_3_4_0', u'5_6_4_8_4_1']
+ones [u'5_0_4_1_4_8', u'5_3_4_8_4_3']
+org1 5_1_4_1_4_3, org2 5_5_4_5_4_1
+crossing org1:5_1_4_1_4_3 with org2:5_5_4_5_4_1
+
+fours []
+threes []
+twos [u'5_9_4_2_4_9', u'5_2_4_8_4_2', u'5_8_4_3_4_0', u'5_6_4_8_4_1', u'5_1_4_1_4_3', u'5_5_4_5_4_1']
+ones [u'5_0_4_1_4_8', u'5_3_4_8_4_3']
+org1 5_2_4_8_4_2, org2 5_1_4_1_4_3
+crossing org1:5_2_4_8_4_2 with org2:5_1_4_1_4_3
+
+fours []
+threes []
+twos [u'5_9_4_2_4_9', u'5_8_4_3_4_0', u'5_6_4_8_4_1', u'5_5_4_5_4_1']
+ones [u'5_0_4_1_4_8', u'5_3_4_8_4_3', u'5_2_4_8_4_2', u'5_1_4_1_4_3']
+org1 5_8_4_3_4_0, org2 5_6_4_8_4_1
+crossing org1:5_8_4_3_4_0 with org2:5_6_4_8_4_1
+
+fours []
+threes []
+twos [u'5_9_4_2_4_9', u'5_5_4_5_4_1']
+ones [u'5_0_4_1_4_8', u'5_3_4_8_4_3', u'5_2_4_8_4_2', u'5_1_4_1_4_3', u'5_8_4_3_4_0', u'5_6_4_8_4_1']
+org1 5_5_4_5_4_1, org2 5_9_4_2_4_9
+crossing org1:5_5_4_5_4_1 with org2:5_9_4_2_4_9
+
+fours []
+threes []
+twos []
+ones [u'5_0_4_1_4_8', u'5_3_4_8_4_3', u'5_2_4_8_4_2', u'5_1_4_1_4_3', u'5_8_4_3_4_0', u'5_6_4_8_4_1', u'5_5_4_5_4_1', u'5_9_4_2_4_9']
+org1 5_9_4_2_4_9, org2 5_1_4_1_4_3
+crossing org1:5_9_4_2_4_9 with org2:5_1_4_1_4_3
+
+fours []
+threes []
+twos []
+ones [u'5_0_4_1_4_8', u'5_3_4_8_4_3', u'5_2_4_8_4_2', u'5_8_4_3_4_0', u'5_6_4_8_4_1', u'5_5_4_5_4_1']
+org1 5_3_4_8_4_3, org2 5_0_4_1_4_8
+crossing org1:5_3_4_8_4_3 with org2:5_0_4_1_4_8
+
+fours []
+threes []
+twos []
+ones [u'5_2_4_8_4_2', u'5_8_4_3_4_0', u'5_6_4_8_4_1', u'5_5_4_5_4_1']
+org1 5_5_4_5_4_1, org2 5_8_4_3_4_0
+crossing org1:5_5_4_5_4_1 with org2:5_8_4_3_4_0
+
+fours []
+threes []
+twos []
+ones [u'5_2_4_8_4_2', u'5_6_4_8_4_1']
+org1 5_6_4_8_4_1, org2 5_2_4_8_4_2
+crossing org1:5_6_4_8_4_1 with org2:5_2_4_8_4_2
+
+
+Number of Orgs in new gen: 10
+Active Threads per org:
+
+File 6_6_5_9_5_1
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 6_3_5_2_5_1
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 6_4_5_6_5_8
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 6_7_5_0_5_3
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 6_1_5_6_5_8
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 6_0_5_6_5_5
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 6_9_5_2_5_6
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 6_2_5_5_5_1
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 6_5_5_9_5_5
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 6_8_5_5_5_8
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+
+ mean performances for each org in population: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Stddv: 0.0  StdErr: 0.0
+------------------------------------------------------------
+ 
+
+quartiles: {'mean_threads': 1.0, 'min': 1, 'Generation': 6, 'max': 1, 'gen_size': 10, 'mode': 1, 'stderr': 0.0}
+
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+------------------------------------------------------------
+Crossing Generation:
+
+fours [u'6_6_5_9_5_1', u'6_3_5_2_5_1']
+threes [u'6_4_5_6_5_8', u'6_7_5_0_5_3']
+twos [u'6_1_5_6_5_8', u'6_0_5_6_5_5']
+ones [u'6_9_5_2_5_6', u'6_2_5_5_5_1']
+org1 6_3_5_2_5_1, org2 6_6_5_9_5_1
+crossing org1:6_3_5_2_5_1 with org2:6_6_5_9_5_1
+
+fours []
+threes [u'6_4_5_6_5_8', u'6_7_5_0_5_3', u'6_3_5_2_5_1', u'6_6_5_9_5_1']
+twos [u'6_1_5_6_5_8', u'6_0_5_6_5_5']
+ones [u'6_9_5_2_5_6', u'6_2_5_5_5_1']
+org1 6_3_5_2_5_1, org2 6_6_5_9_5_1
+crossing org1:6_3_5_2_5_1 with org2:6_6_5_9_5_1
+
+fours []
+threes [u'6_4_5_6_5_8', u'6_7_5_0_5_3']
+twos [u'6_1_5_6_5_8', u'6_0_5_6_5_5', u'6_3_5_2_5_1', u'6_6_5_9_5_1']
+ones [u'6_9_5_2_5_6', u'6_2_5_5_5_1']
+org1 6_4_5_6_5_8, org2 6_7_5_0_5_3
+crossing org1:6_4_5_6_5_8 with org2:6_7_5_0_5_3
+
+fours []
+threes []
+twos [u'6_1_5_6_5_8', u'6_0_5_6_5_5', u'6_3_5_2_5_1', u'6_6_5_9_5_1', u'6_4_5_6_5_8', u'6_7_5_0_5_3']
+ones [u'6_9_5_2_5_6', u'6_2_5_5_5_1']
+org1 6_3_5_2_5_1, org2 6_0_5_6_5_5
+crossing org1:6_3_5_2_5_1 with org2:6_0_5_6_5_5
+
+fours []
+threes []
+twos [u'6_1_5_6_5_8', u'6_6_5_9_5_1', u'6_4_5_6_5_8', u'6_7_5_0_5_3']
+ones [u'6_9_5_2_5_6', u'6_2_5_5_5_1', u'6_3_5_2_5_1', u'6_0_5_6_5_5']
+org1 6_1_5_6_5_8, org2 6_4_5_6_5_8
+crossing org1:6_1_5_6_5_8 with org2:6_4_5_6_5_8
+
+fours []
+threes []
+twos [u'6_6_5_9_5_1', u'6_7_5_0_5_3']
+ones [u'6_9_5_2_5_6', u'6_2_5_5_5_1', u'6_3_5_2_5_1', u'6_0_5_6_5_5', u'6_1_5_6_5_8', u'6_4_5_6_5_8']
+org1 6_6_5_9_5_1, org2 6_7_5_0_5_3
+crossing org1:6_6_5_9_5_1 with org2:6_7_5_0_5_3
+
+fours []
+threes []
+twos []
+ones [u'6_9_5_2_5_6', u'6_2_5_5_5_1', u'6_3_5_2_5_1', u'6_0_5_6_5_5', u'6_1_5_6_5_8', u'6_4_5_6_5_8', u'6_6_5_9_5_1', u'6_7_5_0_5_3']
+org1 6_1_5_6_5_8, org2 6_0_5_6_5_5
+crossing org1:6_1_5_6_5_8 with org2:6_0_5_6_5_5
+
+fours []
+threes []
+twos []
+ones [u'6_9_5_2_5_6', u'6_2_5_5_5_1', u'6_3_5_2_5_1', u'6_4_5_6_5_8', u'6_6_5_9_5_1', u'6_7_5_0_5_3']
+org1 6_4_5_6_5_8, org2 6_3_5_2_5_1
+crossing org1:6_4_5_6_5_8 with org2:6_3_5_2_5_1
+
+fours []
+threes []
+twos []
+ones [u'6_9_5_2_5_6', u'6_2_5_5_5_1', u'6_6_5_9_5_1', u'6_7_5_0_5_3']
+org1 6_2_5_5_5_1, org2 6_7_5_0_5_3
+crossing org1:6_2_5_5_5_1 with org2:6_7_5_0_5_3
+
+fours []
+threes []
+twos []
+ones [u'6_9_5_2_5_6', u'6_6_5_9_5_1']
+org1 6_6_5_9_5_1, org2 6_9_5_2_5_6
+crossing org1:6_6_5_9_5_1 with org2:6_9_5_2_5_6
+
+
+Number of Orgs in new gen: 10
+Active Threads per org:
+
+File 7_9_6_6_6_9
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 7_7_6_3_6_4
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 7_6_6_0_6_1
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 7_0_6_3_6_6
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 7_2_6_7_6_4
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 7_8_6_7_6_2
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 7_3_6_0_6_3
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 7_4_6_1_6_4
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 7_1_6_3_6_6
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 7_5_6_6_6_7
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+
+ mean performances for each org in population: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Stddv: 0.0  StdErr: 0.0
+------------------------------------------------------------
+ 
+
+quartiles: {'mean_threads': 1.0, 'min': 1, 'Generation': 7, 'max': 1, 'gen_size': 10, 'mode': 1, 'stderr': 0.0}
+
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+------------------------------------------------------------
+Crossing Generation:
+
+fours [u'7_9_6_6_6_9', u'7_7_6_3_6_4']
+threes [u'7_6_6_0_6_1', u'7_0_6_3_6_6']
+twos [u'7_2_6_7_6_4', u'7_8_6_7_6_2']
+ones [u'7_3_6_0_6_3', u'7_4_6_1_6_4']
+org1 7_7_6_3_6_4, org2 7_9_6_6_6_9
+crossing org1:7_7_6_3_6_4 with org2:7_9_6_6_6_9
+
+fours []
+threes [u'7_6_6_0_6_1', u'7_0_6_3_6_6', u'7_7_6_3_6_4', u'7_9_6_6_6_9']
+twos [u'7_2_6_7_6_4', u'7_8_6_7_6_2']
+ones [u'7_3_6_0_6_3', u'7_4_6_1_6_4']
+org1 7_7_6_3_6_4, org2 7_0_6_3_6_6
+crossing org1:7_7_6_3_6_4 with org2:7_0_6_3_6_6
+
+fours []
+threes [u'7_6_6_0_6_1', u'7_9_6_6_6_9']
+twos [u'7_2_6_7_6_4', u'7_8_6_7_6_2', u'7_7_6_3_6_4', u'7_0_6_3_6_6']
+ones [u'7_3_6_0_6_3', u'7_4_6_1_6_4']
+org1 7_9_6_6_6_9, org2 7_6_6_0_6_1
+crossing org1:7_9_6_6_6_9 with org2:7_6_6_0_6_1
+
+fours []
+threes []
+twos [u'7_2_6_7_6_4', u'7_8_6_7_6_2', u'7_7_6_3_6_4', u'7_0_6_3_6_6', u'7_9_6_6_6_9', u'7_6_6_0_6_1']
+ones [u'7_3_6_0_6_3', u'7_4_6_1_6_4']
+org1 7_9_6_6_6_9, org2 7_2_6_7_6_4
+crossing org1:7_9_6_6_6_9 with org2:7_2_6_7_6_4
+
+fours []
+threes []
+twos [u'7_8_6_7_6_2', u'7_7_6_3_6_4', u'7_0_6_3_6_6', u'7_6_6_0_6_1']
+ones [u'7_3_6_0_6_3', u'7_4_6_1_6_4', u'7_9_6_6_6_9', u'7_2_6_7_6_4']
+org1 7_7_6_3_6_4, org2 7_0_6_3_6_6
+crossing org1:7_7_6_3_6_4 with org2:7_0_6_3_6_6
+
+fours []
+threes []
+twos [u'7_8_6_7_6_2', u'7_6_6_0_6_1']
+ones [u'7_3_6_0_6_3', u'7_4_6_1_6_4', u'7_9_6_6_6_9', u'7_2_6_7_6_4', u'7_7_6_3_6_4', u'7_0_6_3_6_6']
+org1 7_8_6_7_6_2, org2 7_6_6_0_6_1
+crossing org1:7_8_6_7_6_2 with org2:7_6_6_0_6_1
+
+fours []
+threes []
+twos []
+ones [u'7_3_6_0_6_3', u'7_4_6_1_6_4', u'7_9_6_6_6_9', u'7_2_6_7_6_4', u'7_7_6_3_6_4', u'7_0_6_3_6_6', u'7_8_6_7_6_2', u'7_6_6_0_6_1']
+org1 7_9_6_6_6_9, org2 7_7_6_3_6_4
+crossing org1:7_9_6_6_6_9 with org2:7_7_6_3_6_4
+
+fours []
+threes []
+twos []
+ones [u'7_3_6_0_6_3', u'7_4_6_1_6_4', u'7_2_6_7_6_4', u'7_0_6_3_6_6', u'7_8_6_7_6_2', u'7_6_6_0_6_1']
+org1 7_0_6_3_6_6, org2 7_4_6_1_6_4
+crossing org1:7_0_6_3_6_6 with org2:7_4_6_1_6_4
+
+fours []
+threes []
+twos []
+ones [u'7_3_6_0_6_3', u'7_2_6_7_6_4', u'7_8_6_7_6_2', u'7_6_6_0_6_1']
+org1 7_3_6_0_6_3, org2 7_2_6_7_6_4
+crossing org1:7_3_6_0_6_3 with org2:7_2_6_7_6_4
+
+fours []
+threes []
+twos []
+ones [u'7_8_6_7_6_2', u'7_6_6_0_6_1']
+org1 7_8_6_7_6_2, org2 7_6_6_0_6_1
+crossing org1:7_8_6_7_6_2 with org2:7_6_6_0_6_1
+
+
+Number of Orgs in new gen: 10
+Active Threads per org:
+
+File 8_8_7_3_7_2
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 8_1_7_7_7_0
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 8_3_7_2_7_9
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 8_9_7_6_7_8
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 8_7_7_4_7_0
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 8_2_7_9_7_6
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 8_6_7_9_7_7
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 8_5_7_6_7_8
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 8_0_7_9_7_7
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 8_4_7_7_7_0
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+
+ mean performances for each org in population: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Stddv: 0.0  StdErr: 0.0
+------------------------------------------------------------
+ 
+
+quartiles: {'mean_threads': 1.0, 'min': 1, 'Generation': 8, 'max': 1, 'gen_size': 10, 'mode': 1, 'stderr': 0.0}
+
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+------------------------------------------------------------
+Crossing Generation:
+
+fours [u'8_8_7_3_7_2', u'8_1_7_7_7_0']
+threes [u'8_3_7_2_7_9', u'8_9_7_6_7_8']
+twos [u'8_7_7_4_7_0', u'8_2_7_9_7_6']
+ones [u'8_6_7_9_7_7', u'8_5_7_6_7_8']
+org1 8_1_7_7_7_0, org2 8_8_7_3_7_2
+crossing org1:8_1_7_7_7_0 with org2:8_8_7_3_7_2
+
+fours []
+threes [u'8_3_7_2_7_9', u'8_9_7_6_7_8', u'8_1_7_7_7_0', u'8_8_7_3_7_2']
+twos [u'8_7_7_4_7_0', u'8_2_7_9_7_6']
+ones [u'8_6_7_9_7_7', u'8_5_7_6_7_8']
+org1 8_3_7_2_7_9, org2 8_8_7_3_7_2
+crossing org1:8_3_7_2_7_9 with org2:8_8_7_3_7_2
+
+fours []
+threes [u'8_9_7_6_7_8', u'8_1_7_7_7_0']
+twos [u'8_7_7_4_7_0', u'8_2_7_9_7_6', u'8_3_7_2_7_9', u'8_8_7_3_7_2']
+ones [u'8_6_7_9_7_7', u'8_5_7_6_7_8']
+org1 8_9_7_6_7_8, org2 8_1_7_7_7_0
+crossing org1:8_9_7_6_7_8 with org2:8_1_7_7_7_0
+
+fours []
+threes []
+twos [u'8_7_7_4_7_0', u'8_2_7_9_7_6', u'8_3_7_2_7_9', u'8_8_7_3_7_2', u'8_9_7_6_7_8', u'8_1_7_7_7_0']
+ones [u'8_6_7_9_7_7', u'8_5_7_6_7_8']
+org1 8_1_7_7_7_0, org2 8_9_7_6_7_8
+crossing org1:8_1_7_7_7_0 with org2:8_9_7_6_7_8
+
+fours []
+threes []
+twos [u'8_7_7_4_7_0', u'8_2_7_9_7_6', u'8_3_7_2_7_9', u'8_8_7_3_7_2']
+ones [u'8_6_7_9_7_7', u'8_5_7_6_7_8', u'8_1_7_7_7_0', u'8_9_7_6_7_8']
+org1 8_3_7_2_7_9, org2 8_8_7_3_7_2
+crossing org1:8_3_7_2_7_9 with org2:8_8_7_3_7_2
+
+fours []
+threes []
+twos [u'8_7_7_4_7_0', u'8_2_7_9_7_6']
+ones [u'8_6_7_9_7_7', u'8_5_7_6_7_8', u'8_1_7_7_7_0', u'8_9_7_6_7_8', u'8_3_7_2_7_9', u'8_8_7_3_7_2']
+org1 8_2_7_9_7_6, org2 8_7_7_4_7_0
+crossing org1:8_2_7_9_7_6 with org2:8_7_7_4_7_0
+
+fours []
+threes []
+twos []
+ones [u'8_6_7_9_7_7', u'8_5_7_6_7_8', u'8_1_7_7_7_0', u'8_9_7_6_7_8', u'8_3_7_2_7_9', u'8_8_7_3_7_2', u'8_2_7_9_7_6', u'8_7_7_4_7_0']
+org1 8_5_7_6_7_8, org2 8_9_7_6_7_8
+crossing org1:8_5_7_6_7_8 with org2:8_9_7_6_7_8
+
+fours []
+threes []
+twos []
+ones [u'8_6_7_9_7_7', u'8_1_7_7_7_0', u'8_3_7_2_7_9', u'8_8_7_3_7_2', u'8_2_7_9_7_6', u'8_7_7_4_7_0']
+org1 8_8_7_3_7_2, org2 8_3_7_2_7_9
+crossing org1:8_8_7_3_7_2 with org2:8_3_7_2_7_9
+
+fours []
+threes []
+twos []
+ones [u'8_6_7_9_7_7', u'8_1_7_7_7_0', u'8_2_7_9_7_6', u'8_7_7_4_7_0']
+org1 8_7_7_4_7_0, org2 8_6_7_9_7_7
+crossing org1:8_7_7_4_7_0 with org2:8_6_7_9_7_7
+
+fours []
+threes []
+twos []
+ones [u'8_1_7_7_7_0', u'8_2_7_9_7_6']
+org1 8_1_7_7_7_0, org2 8_2_7_9_7_6
+crossing org1:8_1_7_7_7_0 with org2:8_2_7_9_7_6
+
+
+Number of Orgs in new gen: 10
+Active Threads per org:
+
+File 9_9_8_2_8_1
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 9_1_8_8_8_3
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 9_3_8_9_8_1
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 9_6_8_5_8_9
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 9_5_8_7_8_2
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 9_0_8_1_8_8
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 9_8_8_7_8_6
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 9_2_8_9_8_1
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 9_4_8_3_8_8
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 9_7_8_3_8_8
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+
+ mean performances for each org in population: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Stddv: 0.0  StdErr: 0.0
+------------------------------------------------------------
+ 
+
+quartiles: {'mean_threads': 1.0, 'min': 1, 'Generation': 9, 'max': 1, 'gen_size': 10, 'mode': 1, 'stderr': 0.0}
+
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+------------------------------------------------------------
+Crossing Generation:
+
+fours [u'9_9_8_2_8_1', u'9_1_8_8_8_3']
+threes [u'9_3_8_9_8_1', u'9_6_8_5_8_9']
+twos [u'9_5_8_7_8_2', u'9_0_8_1_8_8']
+ones [u'9_8_8_7_8_6', u'9_2_8_9_8_1']
+org1 9_9_8_2_8_1, org2 9_1_8_8_8_3
+crossing org1:9_9_8_2_8_1 with org2:9_1_8_8_8_3
+
+fours []
+threes [u'9_3_8_9_8_1', u'9_6_8_5_8_9', u'9_9_8_2_8_1', u'9_1_8_8_8_3']
+twos [u'9_5_8_7_8_2', u'9_0_8_1_8_8']
+ones [u'9_8_8_7_8_6', u'9_2_8_9_8_1']
+org1 9_6_8_5_8_9, org2 9_9_8_2_8_1
+crossing org1:9_6_8_5_8_9 with org2:9_9_8_2_8_1
+
+fours []
+threes [u'9_3_8_9_8_1', u'9_1_8_8_8_3']
+twos [u'9_5_8_7_8_2', u'9_0_8_1_8_8', u'9_6_8_5_8_9', u'9_9_8_2_8_1']
+ones [u'9_8_8_7_8_6', u'9_2_8_9_8_1']
+org1 9_3_8_9_8_1, org2 9_1_8_8_8_3
+crossing org1:9_3_8_9_8_1 with org2:9_1_8_8_8_3
+
+Char mutation at index: 73
 0 --> 1
 fours []
 threes []
-twos []
-ones [u'3_9_2_8_2_6', u'3_1_2_2_2_3', u'3_2_2_6_2_1', u'3_5_2_2_2_3']
-org1 3_1_2_2_2_3, org2 3_2_2_6_2_1
-crossing org1:3_1_2_2_2_3 with org2:3_2_2_6_2_1
+twos [u'9_5_8_7_8_2', u'9_0_8_1_8_8', u'9_6_8_5_8_9', u'9_9_8_2_8_1', u'9_3_8_9_8_1', u'9_1_8_8_8_3']
+ones [u'9_8_8_7_8_6', u'9_2_8_9_8_1']
+org1 9_1_8_8_8_3, org2 9_3_8_9_8_1
+crossing org1:9_1_8_8_8_3 with org2:9_3_8_9_8_1
+
+fours []
+threes []
+twos [u'9_5_8_7_8_2', u'9_0_8_1_8_8', u'9_6_8_5_8_9', u'9_9_8_2_8_1']
+ones [u'9_8_8_7_8_6', u'9_2_8_9_8_1', u'9_1_8_8_8_3', u'9_3_8_9_8_1']
+org1 9_5_8_7_8_2, org2 9_0_8_1_8_8
+crossing org1:9_5_8_7_8_2 with org2:9_0_8_1_8_8
+
+fours []
+threes []
+twos [u'9_6_8_5_8_9', u'9_9_8_2_8_1']
+ones [u'9_8_8_7_8_6', u'9_2_8_9_8_1', u'9_1_8_8_8_3', u'9_3_8_9_8_1', u'9_5_8_7_8_2', u'9_0_8_1_8_8']
+org1 9_9_8_2_8_1, org2 9_6_8_5_8_9
+crossing org1:9_9_8_2_8_1 with org2:9_6_8_5_8_9
 
 fours []
 threes []
 twos []
-ones [u'3_9_2_8_2_6', u'3_5_2_2_2_3']
-org1 3_9_2_8_2_6, org2 3_5_2_2_2_3
-crossing org1:3_9_2_8_2_6 with org2:3_5_2_2_2_3
+ones [u'9_8_8_7_8_6', u'9_2_8_9_8_1', u'9_1_8_8_8_3', u'9_3_8_9_8_1', u'9_5_8_7_8_2', u'9_0_8_1_8_8', u'9_9_8_2_8_1', u'9_6_8_5_8_9']
+org1 9_3_8_9_8_1, org2 9_2_8_9_8_1
+crossing org1:9_3_8_9_8_1 with org2:9_2_8_9_8_1
+
+fours []
+threes []
+twos []
+ones [u'9_8_8_7_8_6', u'9_1_8_8_8_3', u'9_5_8_7_8_2', u'9_0_8_1_8_8', u'9_9_8_2_8_1', u'9_6_8_5_8_9']
+org1 9_5_8_7_8_2, org2 9_1_8_8_8_3
+crossing org1:9_5_8_7_8_2 with org2:9_1_8_8_8_3
+
+fours []
+threes []
+twos []
+ones [u'9_8_8_7_8_6', u'9_0_8_1_8_8', u'9_9_8_2_8_1', u'9_6_8_5_8_9']
+org1 9_8_8_7_8_6, org2 9_0_8_1_8_8
+crossing org1:9_8_8_7_8_6 with org2:9_0_8_1_8_8
+
+fours []
+threes []
+twos []
+ones [u'9_9_8_2_8_1', u'9_6_8_5_8_9']
+org1 9_6_8_5_8_9, org2 9_9_8_2_8_1
+crossing org1:9_6_8_5_8_9 with org2:9_9_8_2_8_1
 
 
 Number of Orgs in new gen: 10
 Active Threads per org:
 
-File 4_6_3_6_3_4
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 4_0_3_6_3_2
-thread len.: 0
+File 10_7_9_5_9_1
+genome length 420
+thread len.: 6
 thread len.: 0
 
-thread count 0
+thread count 1
 
-File 4_1_3_4_3_8
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 4_2_3_2_3_6
-thread len.: 0
+File 10_3_9_3_9_1
+genome length 420
+thread len.: 6
 thread len.: 0
 
-thread count 0
+thread count 1
 
-File 4_9_3_5_3_9
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 4_7_3_8_3_3
-thread len.: 0
+File 10_9_9_6_9_9
+genome length 420
+thread len.: 6
 thread len.: 0
 
-thread count 0
+thread count 1
 
-File 4_5_3_2_3_5
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 4_8_3_2_3_1
-thread len.: 0
+File 10_2_9_1_9_3
+genome length 420
+thread len.: 6
 thread len.: 0
 
-thread count 0
+thread count 1
 
-File 4_3_3_8_3_1
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 4_4_3_6_3_4
-thread len.: 0
+File 10_5_9_9_9_6
+genome length 420
+thread len.: 6
 thread len.: 0
 
-thread count 0
+thread count 1
+
+File 10_0_9_1_9_9
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 10_8_9_8_9_0
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 10_6_9_2_9_3
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 10_4_9_5_9_0
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
+
+File 10_1_9_9_9_6
+genome length 420
+thread len.: 6
+thread len.: 0
+
+thread count 1
 
 
- mean performances for each org in population: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+ mean performances for each org in population: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 
 --------------------------------------------------
 Calculating the Std Error of the mean: 
-Org mean perf: 0 Pop mean: 0.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 0 Pop mean: 0.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 0 Pop mean: 0.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 0 Pop mean: 0.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 0 Pop mean: 0.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 0 Pop mean: 0.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 0 Pop mean: 0.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 0 Pop mean: 0.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 0 Pop mean: 0.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 0 Pop mean: 0.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
 Stddv: 0.0  StdErr: 0.0
 ------------------------------------------------------------
  
 
-quartiles: {'mean_threads': 0.0, 'min': 0, 'Generation': 4, 'max': 0, 'gen_size': 10, 'mode': 0, 'stderr': 0.0}
+quartiles: {'mean_threads': 1.0, 'min': 1, 'Generation': 10, 'max': 1, 'gen_size': 10, 'mode': 1, 'stderr': 0.0}
 
-0
-0
-0
-0
-0
-0
-0
-0
-0
-0
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
 ------------------------------------------------------------
 Crossing Generation:
 
-fours [u'4_6_3_6_3_4', u'4_0_3_6_3_2']
-threes [u'4_1_3_4_3_8', u'4_2_3_2_3_6']
-twos [u'4_9_3_5_3_9', u'4_7_3_8_3_3']
-ones [u'4_5_3_2_3_5', u'4_8_3_2_3_1']
-org1 4_0_3_6_3_2, org2 4_6_3_6_3_4
-crossing org1:4_0_3_6_3_2 with org2:4_6_3_6_3_4
+fours [u'10_7_9_5_9_1', u'10_3_9_3_9_1']
+threes [u'10_9_9_6_9_9', u'10_2_9_1_9_3']
+twos [u'10_5_9_9_9_6', u'10_0_9_1_9_9']
+ones [u'10_8_9_8_9_0', u'10_6_9_2_9_3']
+org1 10_7_9_5_9_1, org2 10_3_9_3_9_1
+crossing org1:10_7_9_5_9_1 with org2:10_3_9_3_9_1
 
 fours []
-threes [u'4_1_3_4_3_8', u'4_2_3_2_3_6', u'4_0_3_6_3_2', u'4_6_3_6_3_4']
-twos [u'4_9_3_5_3_9', u'4_7_3_8_3_3']
-ones [u'4_5_3_2_3_5', u'4_8_3_2_3_1']
-org1 4_2_3_2_3_6, org2 4_6_3_6_3_4
-crossing org1:4_2_3_2_3_6 with org2:4_6_3_6_3_4
+threes [u'10_9_9_6_9_9', u'10_2_9_1_9_3', u'10_7_9_5_9_1', u'10_3_9_3_9_1']
+twos [u'10_5_9_9_9_6', u'10_0_9_1_9_9']
+ones [u'10_8_9_8_9_0', u'10_6_9_2_9_3']
+org1 10_2_9_1_9_3, org2 10_3_9_3_9_1
+crossing org1:10_2_9_1_9_3 with org2:10_3_9_3_9_1
 
 fours []
-threes [u'4_1_3_4_3_8', u'4_0_3_6_3_2']
-twos [u'4_9_3_5_3_9', u'4_7_3_8_3_3', u'4_2_3_2_3_6', u'4_6_3_6_3_4']
-ones [u'4_5_3_2_3_5', u'4_8_3_2_3_1']
-org1 4_0_3_6_3_2, org2 4_1_3_4_3_8
-crossing org1:4_0_3_6_3_2 with org2:4_1_3_4_3_8
+threes [u'10_9_9_6_9_9', u'10_7_9_5_9_1']
+twos [u'10_5_9_9_9_6', u'10_0_9_1_9_9', u'10_2_9_1_9_3', u'10_3_9_3_9_1']
+ones [u'10_8_9_8_9_0', u'10_6_9_2_9_3']
+org1 10_9_9_6_9_9, org2 10_7_9_5_9_1
+crossing org1:10_9_9_6_9_9 with org2:10_7_9_5_9_1
 
-fours []
-threes []
-twos [u'4_9_3_5_3_9', u'4_7_3_8_3_3', u'4_2_3_2_3_6', u'4_6_3_6_3_4', u'4_0_3_6_3_2', u'4_1_3_4_3_8']
-ones [u'4_5_3_2_3_5', u'4_8_3_2_3_1']
-org1 4_9_3_5_3_9, org2 4_1_3_4_3_8
-crossing org1:4_9_3_5_3_9 with org2:4_1_3_4_3_8
-
-fours []
-threes []
-twos [u'4_7_3_8_3_3', u'4_2_3_2_3_6', u'4_6_3_6_3_4', u'4_0_3_6_3_2']
-ones [u'4_5_3_2_3_5', u'4_8_3_2_3_1', u'4_9_3_5_3_9', u'4_1_3_4_3_8']
-org1 4_2_3_2_3_6, org2 4_6_3_6_3_4
-crossing org1:4_2_3_2_3_6 with org2:4_6_3_6_3_4
-
-fours []
-threes []
-twos [u'4_7_3_8_3_3', u'4_0_3_6_3_2']
-ones [u'4_5_3_2_3_5', u'4_8_3_2_3_1', u'4_9_3_5_3_9', u'4_1_3_4_3_8', u'4_2_3_2_3_6', u'4_6_3_6_3_4']
-org1 4_7_3_8_3_3, org2 4_0_3_6_3_2
-crossing org1:4_7_3_8_3_3 with org2:4_0_3_6_3_2
-
-fours []
-threes []
-twos []
-ones [u'4_5_3_2_3_5', u'4_8_3_2_3_1', u'4_9_3_5_3_9', u'4_1_3_4_3_8', u'4_2_3_2_3_6', u'4_6_3_6_3_4', u'4_7_3_8_3_3', u'4_0_3_6_3_2']
-org1 4_0_3_6_3_2, org2 4_8_3_2_3_1
-crossing org1:4_0_3_6_3_2 with org2:4_8_3_2_3_1
-
-fours []
-threes []
-twos []
-ones [u'4_5_3_2_3_5', u'4_9_3_5_3_9', u'4_1_3_4_3_8', u'4_2_3_2_3_6', u'4_6_3_6_3_4', u'4_7_3_8_3_3']
-org1 4_7_3_8_3_3, org2 4_6_3_6_3_4
-crossing org1:4_7_3_8_3_3 with org2:4_6_3_6_3_4
-
-fours []
-threes []
-twos []
-ones [u'4_5_3_2_3_5', u'4_9_3_5_3_9', u'4_1_3_4_3_8', u'4_2_3_2_3_6']
-org1 4_2_3_2_3_6, org2 4_5_3_2_3_5
-crossing org1:4_2_3_2_3_6 with org2:4_5_3_2_3_5
-
-fours []
-threes []
-twos []
-ones [u'4_9_3_5_3_9', u'4_1_3_4_3_8']
-org1 4_9_3_5_3_9, org2 4_1_3_4_3_8
-crossing org1:4_9_3_5_3_9 with org2:4_1_3_4_3_8
-
-
-Number of Orgs in new gen: 10
-Active Threads per org:
-
-File 5_3_4_1_4_9
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 5_9_4_9_4_1
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 5_6_4_0_4_8
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 5_8_4_2_4_5
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 5_5_4_7_4_0
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 5_7_4_6_4_7
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 5_2_4_0_4_1
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 5_1_4_2_4_6
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 5_0_4_0_4_6
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 5_4_4_2_4_6
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-
- mean performances for each org in population: [0, 2, 0, 0, 0, 2, 2, 0, 0, 0]
-
---------------------------------------------------
-Calculating the Std Error of the mean: 
-Org mean perf: 0 Pop mean: 0.6 Diffsqrd: 0.36 SumDiffsqrd: 0.36 
-Org mean perf: 2 Pop mean: 0.6 Diffsqrd: 1.96 SumDiffsqrd: 2.32 
-Org mean perf: 0 Pop mean: 0.6 Diffsqrd: 0.36 SumDiffsqrd: 2.68 
-Org mean perf: 0 Pop mean: 0.6 Diffsqrd: 0.36 SumDiffsqrd: 3.04 
-Org mean perf: 0 Pop mean: 0.6 Diffsqrd: 0.36 SumDiffsqrd: 3.4 
-Org mean perf: 2 Pop mean: 0.6 Diffsqrd: 1.96 SumDiffsqrd: 5.36 
-Org mean perf: 2 Pop mean: 0.6 Diffsqrd: 1.96 SumDiffsqrd: 7.32 
-Org mean perf: 0 Pop mean: 0.6 Diffsqrd: 0.36 SumDiffsqrd: 7.68 
-Org mean perf: 0 Pop mean: 0.6 Diffsqrd: 0.36 SumDiffsqrd: 8.04 
-Org mean perf: 0 Pop mean: 0.6 Diffsqrd: 0.36 SumDiffsqrd: 8.4 
-Stddv: 0.916515138991  StdErr: 0.289827534924
-------------------------------------------------------------
- 
-
-quartiles: {'mean_threads': 0.6, 'min': 0, 'Generation': 5, 'max': 2, 'gen_size': 10, 'mode': 0, 'stderr': 0.2898275349237887}
-
-2
-2
-2
-0
-0
-0
-0
-0
-0
-0
-------------------------------------------------------------
-Crossing Generation:
-
-fours [u'5_9_4_9_4_1', u'5_7_4_6_4_7']
-threes [u'5_2_4_0_4_1', u'5_3_4_1_4_9']
-twos [u'5_6_4_0_4_8', u'5_8_4_2_4_5']
-ones [u'5_5_4_7_4_0', u'5_1_4_2_4_6']
-org1 5_9_4_9_4_1, org2 5_7_4_6_4_7
-crossing org1:5_9_4_9_4_1 with org2:5_7_4_6_4_7
-
-fours []
-threes [u'5_2_4_0_4_1', u'5_3_4_1_4_9', u'5_9_4_9_4_1', u'5_7_4_6_4_7']
-twos [u'5_6_4_0_4_8', u'5_8_4_2_4_5']
-ones [u'5_5_4_7_4_0', u'5_1_4_2_4_6']
-org1 5_2_4_0_4_1, org2 5_3_4_1_4_9
-crossing org1:5_2_4_0_4_1 with org2:5_3_4_1_4_9
-
-fours []
-threes [u'5_9_4_9_4_1', u'5_7_4_6_4_7']
-twos [u'5_6_4_0_4_8', u'5_8_4_2_4_5', u'5_2_4_0_4_1', u'5_3_4_1_4_9']
-ones [u'5_5_4_7_4_0', u'5_1_4_2_4_6']
-org1 5_9_4_9_4_1, org2 5_7_4_6_4_7
-crossing org1:5_9_4_9_4_1 with org2:5_7_4_6_4_7
-
-Char mutation at index: 377
+Char mutation at index: 43
 0 --> 1
 fours []
 threes []
-twos [u'5_6_4_0_4_8', u'5_8_4_2_4_5', u'5_2_4_0_4_1', u'5_3_4_1_4_9', u'5_9_4_9_4_1', u'5_7_4_6_4_7']
-ones [u'5_5_4_7_4_0', u'5_1_4_2_4_6']
-org1 5_9_4_9_4_1, org2 5_3_4_1_4_9
-crossing org1:5_9_4_9_4_1 with org2:5_3_4_1_4_9
+twos [u'10_5_9_9_9_6', u'10_0_9_1_9_9', u'10_2_9_1_9_3', u'10_3_9_3_9_1', u'10_9_9_6_9_9', u'10_7_9_5_9_1']
+ones [u'10_8_9_8_9_0', u'10_6_9_2_9_3']
+org1 10_9_9_6_9_9, org2 10_0_9_1_9_9
+crossing org1:10_9_9_6_9_9 with org2:10_0_9_1_9_9
 
 fours []
 threes []
-twos [u'5_6_4_0_4_8', u'5_8_4_2_4_5', u'5_2_4_0_4_1', u'5_7_4_6_4_7']
-ones [u'5_5_4_7_4_0', u'5_1_4_2_4_6', u'5_9_4_9_4_1', u'5_3_4_1_4_9']
-org1 5_6_4_0_4_8, org2 5_7_4_6_4_7
-crossing org1:5_6_4_0_4_8 with org2:5_7_4_6_4_7
+twos [u'10_5_9_9_9_6', u'10_2_9_1_9_3', u'10_3_9_3_9_1', u'10_7_9_5_9_1']
+ones [u'10_8_9_8_9_0', u'10_6_9_2_9_3', u'10_9_9_6_9_9', u'10_0_9_1_9_9']
+org1 10_7_9_5_9_1, org2 10_2_9_1_9_3
+crossing org1:10_7_9_5_9_1 with org2:10_2_9_1_9_3
 
 fours []
 threes []
-twos [u'5_8_4_2_4_5', u'5_2_4_0_4_1']
-ones [u'5_5_4_7_4_0', u'5_1_4_2_4_6', u'5_9_4_9_4_1', u'5_3_4_1_4_9', u'5_6_4_0_4_8', u'5_7_4_6_4_7']
-org1 5_2_4_0_4_1, org2 5_8_4_2_4_5
-crossing org1:5_2_4_0_4_1 with org2:5_8_4_2_4_5
-
-fours []
-threes []
-twos []
-ones [u'5_5_4_7_4_0', u'5_1_4_2_4_6', u'5_9_4_9_4_1', u'5_3_4_1_4_9', u'5_6_4_0_4_8', u'5_7_4_6_4_7', u'5_2_4_0_4_1', u'5_8_4_2_4_5']
-org1 5_2_4_0_4_1, org2 5_1_4_2_4_6
-crossing org1:5_2_4_0_4_1 with org2:5_1_4_2_4_6
+twos [u'10_5_9_9_9_6', u'10_3_9_3_9_1']
+ones [u'10_8_9_8_9_0', u'10_6_9_2_9_3', u'10_9_9_6_9_9', u'10_0_9_1_9_9', u'10_7_9_5_9_1', u'10_2_9_1_9_3']
+org1 10_3_9_3_9_1, org2 10_5_9_9_9_6
+crossing org1:10_3_9_3_9_1 with org2:10_5_9_9_9_6
 
 fours []
 threes []
 twos []
-ones [u'5_5_4_7_4_0', u'5_9_4_9_4_1', u'5_3_4_1_4_9', u'5_6_4_0_4_8', u'5_7_4_6_4_7', u'5_8_4_2_4_5']
-org1 5_5_4_7_4_0, org2 5_8_4_2_4_5
-crossing org1:5_5_4_7_4_0 with org2:5_8_4_2_4_5
+ones [u'10_8_9_8_9_0', u'10_6_9_2_9_3', u'10_9_9_6_9_9', u'10_0_9_1_9_9', u'10_7_9_5_9_1', u'10_2_9_1_9_3', u'10_3_9_3_9_1', u'10_5_9_9_9_6']
+org1 10_5_9_9_9_6, org2 10_0_9_1_9_9
+crossing org1:10_5_9_9_9_6 with org2:10_0_9_1_9_9
 
 fours []
 threes []
 twos []
-ones [u'5_9_4_9_4_1', u'5_3_4_1_4_9', u'5_6_4_0_4_8', u'5_7_4_6_4_7']
-org1 5_3_4_1_4_9, org2 5_7_4_6_4_7
-crossing org1:5_3_4_1_4_9 with org2:5_7_4_6_4_7
+ones [u'10_8_9_8_9_0', u'10_6_9_2_9_3', u'10_9_9_6_9_9', u'10_7_9_5_9_1', u'10_2_9_1_9_3', u'10_3_9_3_9_1']
+org1 10_7_9_5_9_1, org2 10_2_9_1_9_3
+crossing org1:10_7_9_5_9_1 with org2:10_2_9_1_9_3
 
 fours []
 threes []
 twos []
-ones [u'5_9_4_9_4_1', u'5_6_4_0_4_8']
-org1 5_9_4_9_4_1, org2 5_6_4_0_4_8
-crossing org1:5_9_4_9_4_1 with org2:5_6_4_0_4_8
-
-Char mutation at index: 163
-1 --> 0
-
-Number of Orgs in new gen: 10
-Active Threads per org:
-
-File 6_3_5_9_5_3
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 6_9_5_6_5_9
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 6_7_5_8_5_5
-thread len.: 0
-thread len.: 2
-
-thread count 1
-
-File 6_0_5_7_5_9
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 6_8_5_3_5_7
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 6_1_5_2_5_3
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 6_2_5_7_5_9
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 6_6_5_1_5_2
-thread len.: 0
-thread len.: 2
-
-thread count 1
-
-File 6_5_5_8_5_2
-thread len.: 0
-thread len.: 2
-
-thread count 1
-
-File 6_4_5_7_5_6
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-
- mean performances for each org in population: [2, 2, 1, 2, 0, 2, 2, 1, 1, 2]
-
---------------------------------------------------
-Calculating the Std Error of the mean: 
-Org mean perf: 2 Pop mean: 1.5 Diffsqrd: 0.25 SumDiffsqrd: 0.25 
-Org mean perf: 2 Pop mean: 1.5 Diffsqrd: 0.25 SumDiffsqrd: 0.5 
-Org mean perf: 1 Pop mean: 1.5 Diffsqrd: 0.25 SumDiffsqrd: 0.75 
-Org mean perf: 2 Pop mean: 1.5 Diffsqrd: 0.25 SumDiffsqrd: 1.0 
-Org mean perf: 0 Pop mean: 1.5 Diffsqrd: 2.25 SumDiffsqrd: 3.25 
-Org mean perf: 2 Pop mean: 1.5 Diffsqrd: 0.25 SumDiffsqrd: 3.5 
-Org mean perf: 2 Pop mean: 1.5 Diffsqrd: 0.25 SumDiffsqrd: 3.75 
-Org mean perf: 1 Pop mean: 1.5 Diffsqrd: 0.25 SumDiffsqrd: 4.0 
-Org mean perf: 1 Pop mean: 1.5 Diffsqrd: 0.25 SumDiffsqrd: 4.25 
-Org mean perf: 2 Pop mean: 1.5 Diffsqrd: 0.25 SumDiffsqrd: 4.5 
-Stddv: 0.67082039325  StdErr: 0.212132034356
-------------------------------------------------------------
- 
-
-quartiles: {'mean_threads': 1.5, 'min': 0, 'Generation': 6, 'max': 2, 'gen_size': 10, 'mode': 2, 'stderr': 0.21213203435596426}
-
-2
-2
-2
-2
-2
-2
-1
-1
-1
-0
-------------------------------------------------------------
-Crossing Generation:
-
-fours [u'6_3_5_9_5_3', u'6_9_5_6_5_9']
-threes [u'6_0_5_7_5_9', u'6_1_5_2_5_3']
-twos [u'6_2_5_7_5_9', u'6_4_5_7_5_6']
-ones [u'6_7_5_8_5_5', u'6_6_5_1_5_2']
-org1 6_3_5_9_5_3, org2 6_9_5_6_5_9
-crossing org1:6_3_5_9_5_3 with org2:6_9_5_6_5_9
-
-fours []
-threes [u'6_0_5_7_5_9', u'6_1_5_2_5_3', u'6_3_5_9_5_3', u'6_9_5_6_5_9']
-twos [u'6_2_5_7_5_9', u'6_4_5_7_5_6']
-ones [u'6_7_5_8_5_5', u'6_6_5_1_5_2']
-org1 6_3_5_9_5_3, org2 6_9_5_6_5_9
-crossing org1:6_3_5_9_5_3 with org2:6_9_5_6_5_9
-
-fours []
-threes [u'6_0_5_7_5_9', u'6_1_5_2_5_3']
-twos [u'6_2_5_7_5_9', u'6_4_5_7_5_6', u'6_3_5_9_5_3', u'6_9_5_6_5_9']
-ones [u'6_7_5_8_5_5', u'6_6_5_1_5_2']
-org1 6_1_5_2_5_3, org2 6_0_5_7_5_9
-crossing org1:6_1_5_2_5_3 with org2:6_0_5_7_5_9
-
-fours []
-threes []
-twos [u'6_2_5_7_5_9', u'6_4_5_7_5_6', u'6_3_5_9_5_3', u'6_9_5_6_5_9', u'6_1_5_2_5_3', u'6_0_5_7_5_9']
-ones [u'6_7_5_8_5_5', u'6_6_5_1_5_2']
-org1 6_2_5_7_5_9, org2 6_4_5_7_5_6
-crossing org1:6_2_5_7_5_9 with org2:6_4_5_7_5_6
-
-fours []
-threes []
-twos [u'6_3_5_9_5_3', u'6_9_5_6_5_9', u'6_1_5_2_5_3', u'6_0_5_7_5_9']
-ones [u'6_7_5_8_5_5', u'6_6_5_1_5_2', u'6_2_5_7_5_9', u'6_4_5_7_5_6']
-org1 6_1_5_2_5_3, org2 6_0_5_7_5_9
-crossing org1:6_1_5_2_5_3 with org2:6_0_5_7_5_9
-
-fours []
-threes []
-twos [u'6_3_5_9_5_3', u'6_9_5_6_5_9']
-ones [u'6_7_5_8_5_5', u'6_6_5_1_5_2', u'6_2_5_7_5_9', u'6_4_5_7_5_6', u'6_1_5_2_5_3', u'6_0_5_7_5_9']
-org1 6_3_5_9_5_3, org2 6_9_5_6_5_9
-crossing org1:6_3_5_9_5_3 with org2:6_9_5_6_5_9
+ones [u'10_8_9_8_9_0', u'10_6_9_2_9_3', u'10_9_9_6_9_9', u'10_3_9_3_9_1']
+org1 10_6_9_2_9_3, org2 10_8_9_8_9_0
+crossing org1:10_6_9_2_9_3 with org2:10_8_9_8_9_0
 
 fours []
 threes []
 twos []
-ones [u'6_7_5_8_5_5', u'6_6_5_1_5_2', u'6_2_5_7_5_9', u'6_4_5_7_5_6', u'6_1_5_2_5_3', u'6_0_5_7_5_9', u'6_3_5_9_5_3', u'6_9_5_6_5_9']
-org1 6_6_5_1_5_2, org2 6_3_5_9_5_3
-crossing org1:6_6_5_1_5_2 with org2:6_3_5_9_5_3
-
-fours []
-threes []
-twos []
-ones [u'6_7_5_8_5_5', u'6_2_5_7_5_9', u'6_4_5_7_5_6', u'6_1_5_2_5_3', u'6_0_5_7_5_9', u'6_9_5_6_5_9']
-org1 6_2_5_7_5_9, org2 6_7_5_8_5_5
-crossing org1:6_2_5_7_5_9 with org2:6_7_5_8_5_5
-
-fours []
-threes []
-twos []
-ones [u'6_4_5_7_5_6', u'6_1_5_2_5_3', u'6_0_5_7_5_9', u'6_9_5_6_5_9']
-org1 6_4_5_7_5_6, org2 6_9_5_6_5_9
-crossing org1:6_4_5_7_5_6 with org2:6_9_5_6_5_9
-
-fours []
-threes []
-twos []
-ones [u'6_1_5_2_5_3', u'6_0_5_7_5_9']
-org1 6_1_5_2_5_3, org2 6_0_5_7_5_9
-crossing org1:6_1_5_2_5_3 with org2:6_0_5_7_5_9
-
-Char mutation at index: 252
-1 --> 0
-
-Number of Orgs in new gen: 10
-Active Threads per org:
-
-File 7_9_6_1_6_0
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 7_6_6_3_6_6
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 7_4_6_0_6_1
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 7_2_6_1_6_0
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 7_3_6_2_6_4
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 7_1_6_9_6_3
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 7_8_6_9_6_4
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 7_7_6_7_6_2
-thread len.: 0
-thread len.: 2
-
-thread count 1
-
-File 7_0_6_9_6_3
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 7_5_6_3_6_9
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-
- mean performances for each org in population: [2, 2, 2, 2, 2, 2, 2, 1, 2, 2]
-
---------------------------------------------------
-Calculating the Std Error of the mean: 
-Org mean perf: 2 Pop mean: 1.9 Diffsqrd: 0.01 SumDiffsqrd: 0.01 
-Org mean perf: 2 Pop mean: 1.9 Diffsqrd: 0.01 SumDiffsqrd: 0.02 
-Org mean perf: 2 Pop mean: 1.9 Diffsqrd: 0.01 SumDiffsqrd: 0.03 
-Org mean perf: 2 Pop mean: 1.9 Diffsqrd: 0.01 SumDiffsqrd: 0.04 
-Org mean perf: 2 Pop mean: 1.9 Diffsqrd: 0.01 SumDiffsqrd: 0.05 
-Org mean perf: 2 Pop mean: 1.9 Diffsqrd: 0.01 SumDiffsqrd: 0.06 
-Org mean perf: 2 Pop mean: 1.9 Diffsqrd: 0.01 SumDiffsqrd: 0.07 
-Org mean perf: 1 Pop mean: 1.9 Diffsqrd: 0.81 SumDiffsqrd: 0.88 
-Org mean perf: 2 Pop mean: 1.9 Diffsqrd: 0.01 SumDiffsqrd: 0.89 
-Org mean perf: 2 Pop mean: 1.9 Diffsqrd: 0.01 SumDiffsqrd: 0.9 
-Stddv: 0.3  StdErr: 0.0948683298051
-------------------------------------------------------------
- 
-
-quartiles: {'mean_threads': 1.9, 'min': 1, 'Generation': 7, 'max': 2, 'gen_size': 10, 'mode': 2, 'stderr': 0.09486832980505137}
-
-2
-2
-2
-2
-2
-2
-2
-2
-2
-1
-------------------------------------------------------------
-Crossing Generation:
-
-fours [u'7_9_6_1_6_0', u'7_6_6_3_6_6']
-threes [u'7_4_6_0_6_1', u'7_2_6_1_6_0']
-twos [u'7_3_6_2_6_4', u'7_1_6_9_6_3']
-ones [u'7_8_6_9_6_4', u'7_0_6_9_6_3']
-org1 7_9_6_1_6_0, org2 7_6_6_3_6_6
-crossing org1:7_9_6_1_6_0 with org2:7_6_6_3_6_6
-
-fours []
-threes [u'7_4_6_0_6_1', u'7_2_6_1_6_0', u'7_9_6_1_6_0', u'7_6_6_3_6_6']
-twos [u'7_3_6_2_6_4', u'7_1_6_9_6_3']
-ones [u'7_8_6_9_6_4', u'7_0_6_9_6_3']
-org1 7_9_6_1_6_0, org2 7_6_6_3_6_6
-crossing org1:7_9_6_1_6_0 with org2:7_6_6_3_6_6
-
-fours []
-threes [u'7_4_6_0_6_1', u'7_2_6_1_6_0']
-twos [u'7_3_6_2_6_4', u'7_1_6_9_6_3', u'7_9_6_1_6_0', u'7_6_6_3_6_6']
-ones [u'7_8_6_9_6_4', u'7_0_6_9_6_3']
-org1 7_4_6_0_6_1, org2 7_2_6_1_6_0
-crossing org1:7_4_6_0_6_1 with org2:7_2_6_1_6_0
-
-fours []
-threes []
-twos [u'7_3_6_2_6_4', u'7_1_6_9_6_3', u'7_9_6_1_6_0', u'7_6_6_3_6_6', u'7_4_6_0_6_1', u'7_2_6_1_6_0']
-ones [u'7_8_6_9_6_4', u'7_0_6_9_6_3']
-org1 7_3_6_2_6_4, org2 7_4_6_0_6_1
-crossing org1:7_3_6_2_6_4 with org2:7_4_6_0_6_1
-
-fours []
-threes []
-twos [u'7_1_6_9_6_3', u'7_9_6_1_6_0', u'7_6_6_3_6_6', u'7_2_6_1_6_0']
-ones [u'7_8_6_9_6_4', u'7_0_6_9_6_3', u'7_3_6_2_6_4', u'7_4_6_0_6_1']
-org1 7_1_6_9_6_3, org2 7_6_6_3_6_6
-crossing org1:7_1_6_9_6_3 with org2:7_6_6_3_6_6
-
-fours []
-threes []
-twos [u'7_9_6_1_6_0', u'7_2_6_1_6_0']
-ones [u'7_8_6_9_6_4', u'7_0_6_9_6_3', u'7_3_6_2_6_4', u'7_4_6_0_6_1', u'7_1_6_9_6_3', u'7_6_6_3_6_6']
-org1 7_2_6_1_6_0, org2 7_9_6_1_6_0
-crossing org1:7_2_6_1_6_0 with org2:7_9_6_1_6_0
-
-fours []
-threes []
-twos []
-ones [u'7_8_6_9_6_4', u'7_0_6_9_6_3', u'7_3_6_2_6_4', u'7_4_6_0_6_1', u'7_1_6_9_6_3', u'7_6_6_3_6_6', u'7_2_6_1_6_0', u'7_9_6_1_6_0']
-org1 7_8_6_9_6_4, org2 7_9_6_1_6_0
-crossing org1:7_8_6_9_6_4 with org2:7_9_6_1_6_0
-
-fours []
-threes []
-twos []
-ones [u'7_0_6_9_6_3', u'7_3_6_2_6_4', u'7_4_6_0_6_1', u'7_1_6_9_6_3', u'7_6_6_3_6_6', u'7_2_6_1_6_0']
-org1 7_4_6_0_6_1, org2 7_3_6_2_6_4
-crossing org1:7_4_6_0_6_1 with org2:7_3_6_2_6_4
-
-fours []
-threes []
-twos []
-ones [u'7_0_6_9_6_3', u'7_1_6_9_6_3', u'7_6_6_3_6_6', u'7_2_6_1_6_0']
-org1 7_0_6_9_6_3, org2 7_1_6_9_6_3
-crossing org1:7_0_6_9_6_3 with org2:7_1_6_9_6_3
-
-fours []
-threes []
-twos []
-ones [u'7_6_6_3_6_6', u'7_2_6_1_6_0']
-org1 7_6_6_3_6_6, org2 7_2_6_1_6_0
-crossing org1:7_6_6_3_6_6 with org2:7_2_6_1_6_0
-
-
-Number of Orgs in new gen: 10
-Active Threads per org:
-
-File 8_5_7_2_7_9
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 8_7_7_4_7_3
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 8_3_7_3_7_4
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 8_6_7_8_7_9
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 8_2_7_2_7_4
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 8_9_7_6_7_2
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 8_0_7_9_7_6
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 8_1_7_9_7_6
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 8_8_7_1_7_0
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 8_4_7_6_7_1
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-
- mean performances for each org in population: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
-
---------------------------------------------------
-Calculating the Std Error of the mean: 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Stddv: 0.0  StdErr: 0.0
-------------------------------------------------------------
- 
-
-quartiles: {'mean_threads': 2.0, 'min': 2, 'Generation': 8, 'max': 2, 'gen_size': 10, 'mode': 2, 'stderr': 0.0}
-
-2
-2
-2
-2
-2
-2
-2
-2
-2
-2
-------------------------------------------------------------
-Crossing Generation:
-
-fours [u'8_5_7_2_7_9', u'8_7_7_4_7_3']
-threes [u'8_3_7_3_7_4', u'8_6_7_8_7_9']
-twos [u'8_2_7_2_7_4', u'8_9_7_6_7_2']
-ones [u'8_0_7_9_7_6', u'8_1_7_9_7_6']
-org1 8_5_7_2_7_9, org2 8_7_7_4_7_3
-crossing org1:8_5_7_2_7_9 with org2:8_7_7_4_7_3
-
-fours []
-threes [u'8_3_7_3_7_4', u'8_6_7_8_7_9', u'8_5_7_2_7_9', u'8_7_7_4_7_3']
-twos [u'8_2_7_2_7_4', u'8_9_7_6_7_2']
-ones [u'8_0_7_9_7_6', u'8_1_7_9_7_6']
-org1 8_6_7_8_7_9, org2 8_5_7_2_7_9
-crossing org1:8_6_7_8_7_9 with org2:8_5_7_2_7_9
-
-fours []
-threes [u'8_3_7_3_7_4', u'8_7_7_4_7_3']
-twos [u'8_2_7_2_7_4', u'8_9_7_6_7_2', u'8_6_7_8_7_9', u'8_5_7_2_7_9']
-ones [u'8_0_7_9_7_6', u'8_1_7_9_7_6']
-org1 8_3_7_3_7_4, org2 8_7_7_4_7_3
-crossing org1:8_3_7_3_7_4 with org2:8_7_7_4_7_3
-
-fours []
-threes []
-twos [u'8_2_7_2_7_4', u'8_9_7_6_7_2', u'8_6_7_8_7_9', u'8_5_7_2_7_9', u'8_3_7_3_7_4', u'8_7_7_4_7_3']
-ones [u'8_0_7_9_7_6', u'8_1_7_9_7_6']
-org1 8_7_7_4_7_3, org2 8_3_7_3_7_4
-crossing org1:8_7_7_4_7_3 with org2:8_3_7_3_7_4
-
-fours []
-threes []
-twos [u'8_2_7_2_7_4', u'8_9_7_6_7_2', u'8_6_7_8_7_9', u'8_5_7_2_7_9']
-ones [u'8_0_7_9_7_6', u'8_1_7_9_7_6', u'8_7_7_4_7_3', u'8_3_7_3_7_4']
-org1 8_2_7_2_7_4, org2 8_6_7_8_7_9
-crossing org1:8_2_7_2_7_4 with org2:8_6_7_8_7_9
-
-fours []
-threes []
-twos [u'8_9_7_6_7_2', u'8_5_7_2_7_9']
-ones [u'8_0_7_9_7_6', u'8_1_7_9_7_6', u'8_7_7_4_7_3', u'8_3_7_3_7_4', u'8_2_7_2_7_4', u'8_6_7_8_7_9']
-org1 8_5_7_2_7_9, org2 8_9_7_6_7_2
-crossing org1:8_5_7_2_7_9 with org2:8_9_7_6_7_2
-
-fours []
-threes []
-twos []
-ones [u'8_0_7_9_7_6', u'8_1_7_9_7_6', u'8_7_7_4_7_3', u'8_3_7_3_7_4', u'8_2_7_2_7_4', u'8_6_7_8_7_9', u'8_5_7_2_7_9', u'8_9_7_6_7_2']
-org1 8_5_7_2_7_9, org2 8_9_7_6_7_2
-crossing org1:8_5_7_2_7_9 with org2:8_9_7_6_7_2
-
-fours []
-threes []
-twos []
-ones [u'8_0_7_9_7_6', u'8_1_7_9_7_6', u'8_7_7_4_7_3', u'8_3_7_3_7_4', u'8_2_7_2_7_4', u'8_6_7_8_7_9']
-org1 8_1_7_9_7_6, org2 8_7_7_4_7_3
-crossing org1:8_1_7_9_7_6 with org2:8_7_7_4_7_3
-
-fours []
-threes []
-twos []
-ones [u'8_0_7_9_7_6', u'8_3_7_3_7_4', u'8_2_7_2_7_4', u'8_6_7_8_7_9']
-org1 8_0_7_9_7_6, org2 8_6_7_8_7_9
-crossing org1:8_0_7_9_7_6 with org2:8_6_7_8_7_9
-
-fours []
-threes []
-twos []
-ones [u'8_3_7_3_7_4', u'8_2_7_2_7_4']
-org1 8_2_7_2_7_4, org2 8_3_7_3_7_4
-crossing org1:8_2_7_2_7_4 with org2:8_3_7_3_7_4
-
-Crossover_point mutation at index: 271
-0 --> 1
-
-Number of Orgs in new gen: 10
-Active Threads per org:
-
-File 9_6_8_9_8_5
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 9_5_8_9_8_5
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 9_2_8_3_8_7
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 9_8_8_6_8_0
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 9_7_8_7_8_1
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 9_0_8_7_8_5
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 9_1_8_6_8_5
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 9_3_8_3_8_7
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 9_4_8_2_8_6
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 9_9_8_3_8_2
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-
- mean performances for each org in population: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
-
---------------------------------------------------
-Calculating the Std Error of the mean: 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Stddv: 0.0  StdErr: 0.0
-------------------------------------------------------------
- 
-
-quartiles: {'mean_threads': 2.0, 'min': 2, 'Generation': 9, 'max': 2, 'gen_size': 10, 'mode': 2, 'stderr': 0.0}
-
-2
-2
-2
-2
-2
-2
-2
-2
-2
-2
-------------------------------------------------------------
-Crossing Generation:
-
-fours [u'9_6_8_9_8_5', u'9_5_8_9_8_5']
-threes [u'9_2_8_3_8_7', u'9_8_8_6_8_0']
-twos [u'9_7_8_7_8_1', u'9_0_8_7_8_5']
-ones [u'9_1_8_6_8_5', u'9_3_8_3_8_7']
-org1 9_6_8_9_8_5, org2 9_5_8_9_8_5
-crossing org1:9_6_8_9_8_5 with org2:9_5_8_9_8_5
-
-fours []
-threes [u'9_2_8_3_8_7', u'9_8_8_6_8_0', u'9_6_8_9_8_5', u'9_5_8_9_8_5']
-twos [u'9_7_8_7_8_1', u'9_0_8_7_8_5']
-ones [u'9_1_8_6_8_5', u'9_3_8_3_8_7']
-org1 9_5_8_9_8_5, org2 9_6_8_9_8_5
-crossing org1:9_5_8_9_8_5 with org2:9_6_8_9_8_5
-
-fours []
-threes [u'9_2_8_3_8_7', u'9_8_8_6_8_0']
-twos [u'9_7_8_7_8_1', u'9_0_8_7_8_5', u'9_5_8_9_8_5', u'9_6_8_9_8_5']
-ones [u'9_1_8_6_8_5', u'9_3_8_3_8_7']
-org1 9_2_8_3_8_7, org2 9_8_8_6_8_0
-crossing org1:9_2_8_3_8_7 with org2:9_8_8_6_8_0
-
-fours []
-threes []
-twos [u'9_7_8_7_8_1', u'9_0_8_7_8_5', u'9_5_8_9_8_5', u'9_6_8_9_8_5', u'9_2_8_3_8_7', u'9_8_8_6_8_0']
-ones [u'9_1_8_6_8_5', u'9_3_8_3_8_7']
-org1 9_7_8_7_8_1, org2 9_6_8_9_8_5
-crossing org1:9_7_8_7_8_1 with org2:9_6_8_9_8_5
-
-fours []
-threes []
-twos [u'9_0_8_7_8_5', u'9_5_8_9_8_5', u'9_2_8_3_8_7', u'9_8_8_6_8_0']
-ones [u'9_1_8_6_8_5', u'9_3_8_3_8_7', u'9_7_8_7_8_1', u'9_6_8_9_8_5']
-org1 9_0_8_7_8_5, org2 9_2_8_3_8_7
-crossing org1:9_0_8_7_8_5 with org2:9_2_8_3_8_7
-
-fours []
-threes []
-twos [u'9_5_8_9_8_5', u'9_8_8_6_8_0']
-ones [u'9_1_8_6_8_5', u'9_3_8_3_8_7', u'9_7_8_7_8_1', u'9_6_8_9_8_5', u'9_0_8_7_8_5', u'9_2_8_3_8_7']
-org1 9_5_8_9_8_5, org2 9_8_8_6_8_0
-crossing org1:9_5_8_9_8_5 with org2:9_8_8_6_8_0
-
-fours []
-threes []
-twos []
-ones [u'9_1_8_6_8_5', u'9_3_8_3_8_7', u'9_7_8_7_8_1', u'9_6_8_9_8_5', u'9_0_8_7_8_5', u'9_2_8_3_8_7', u'9_5_8_9_8_5', u'9_8_8_6_8_0']
-org1 9_7_8_7_8_1, org2 9_5_8_9_8_5
-crossing org1:9_7_8_7_8_1 with org2:9_5_8_9_8_5
-
-fours []
-threes []
-twos []
-ones [u'9_1_8_6_8_5', u'9_3_8_3_8_7', u'9_6_8_9_8_5', u'9_0_8_7_8_5', u'9_2_8_3_8_7', u'9_8_8_6_8_0']
-org1 9_0_8_7_8_5, org2 9_8_8_6_8_0
-crossing org1:9_0_8_7_8_5 with org2:9_8_8_6_8_0
-
-fours []
-threes []
-twos []
-ones [u'9_1_8_6_8_5', u'9_3_8_3_8_7', u'9_6_8_9_8_5', u'9_2_8_3_8_7']
-org1 9_2_8_3_8_7, org2 9_6_8_9_8_5
-crossing org1:9_2_8_3_8_7 with org2:9_6_8_9_8_5
-
-fours []
-threes []
-twos []
-ones [u'9_1_8_6_8_5', u'9_3_8_3_8_7']
-org1 9_3_8_3_8_7, org2 9_1_8_6_8_5
-crossing org1:9_3_8_3_8_7 with org2:9_1_8_6_8_5
-
-
-Number of Orgs in new gen: 10
-Active Threads per org:
-
-File 10_4_9_2_9_0
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 10_1_9_5_9_6
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 10_7_9_8_9_0
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 10_3_9_6_9_7
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 10_0_9_5_9_6
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 10_8_9_6_9_2
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 10_2_9_2_9_8
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 10_6_9_5_9_7
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 10_9_9_3_9_1
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-File 10_5_9_8_9_5
-thread len.: 4
-thread len.: 2
-
-thread count 2
-
-
- mean performances for each org in population: [2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
-
---------------------------------------------------
-Calculating the Std Error of the mean: 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Stddv: 0.0  StdErr: 0.0
-------------------------------------------------------------
- 
-
-quartiles: {'mean_threads': 2.0, 'min': 2, 'Generation': 10, 'max': 2, 'gen_size': 10, 'mode': 2, 'stderr': 0.0}
-
-2
-2
-2
-2
-2
-2
-2
-2
-2
-2
-------------------------------------------------------------
-Crossing Generation:
-
-fours [u'10_4_9_2_9_0', u'10_1_9_5_9_6']
-threes [u'10_7_9_8_9_0', u'10_3_9_6_9_7']
-twos [u'10_0_9_5_9_6', u'10_8_9_6_9_2']
-ones [u'10_2_9_2_9_8', u'10_6_9_5_9_7']
-org1 10_1_9_5_9_6, org2 10_4_9_2_9_0
-crossing org1:10_1_9_5_9_6 with org2:10_4_9_2_9_0
-
-fours []
-threes [u'10_7_9_8_9_0', u'10_3_9_6_9_7', u'10_1_9_5_9_6', u'10_4_9_2_9_0']
-twos [u'10_0_9_5_9_6', u'10_8_9_6_9_2']
-ones [u'10_2_9_2_9_8', u'10_6_9_5_9_7']
-org1 10_1_9_5_9_6, org2 10_3_9_6_9_7
-crossing org1:10_1_9_5_9_6 with org2:10_3_9_6_9_7
-
-fours []
-threes [u'10_7_9_8_9_0', u'10_4_9_2_9_0']
-twos [u'10_0_9_5_9_6', u'10_8_9_6_9_2', u'10_1_9_5_9_6', u'10_3_9_6_9_7']
-ones [u'10_2_9_2_9_8', u'10_6_9_5_9_7']
-org1 10_7_9_8_9_0, org2 10_4_9_2_9_0
-crossing org1:10_7_9_8_9_0 with org2:10_4_9_2_9_0
-
-fours []
-threes []
-twos [u'10_0_9_5_9_6', u'10_8_9_6_9_2', u'10_1_9_5_9_6', u'10_3_9_6_9_7', u'10_7_9_8_9_0', u'10_4_9_2_9_0']
-ones [u'10_2_9_2_9_8', u'10_6_9_5_9_7']
-org1 10_3_9_6_9_7, org2 10_0_9_5_9_6
-crossing org1:10_3_9_6_9_7 with org2:10_0_9_5_9_6
-
-fours []
-threes []
-twos [u'10_8_9_6_9_2', u'10_1_9_5_9_6', u'10_7_9_8_9_0', u'10_4_9_2_9_0']
-ones [u'10_2_9_2_9_8', u'10_6_9_5_9_7', u'10_3_9_6_9_7', u'10_0_9_5_9_6']
-org1 10_8_9_6_9_2, org2 10_7_9_8_9_0
-crossing org1:10_8_9_6_9_2 with org2:10_7_9_8_9_0
-
-fours []
-threes []
-twos [u'10_1_9_5_9_6', u'10_4_9_2_9_0']
-ones [u'10_2_9_2_9_8', u'10_6_9_5_9_7', u'10_3_9_6_9_7', u'10_0_9_5_9_6', u'10_8_9_6_9_2', u'10_7_9_8_9_0']
-org1 10_1_9_5_9_6, org2 10_4_9_2_9_0
-crossing org1:10_1_9_5_9_6 with org2:10_4_9_2_9_0
-
-fours []
-threes []
-twos []
-ones [u'10_2_9_2_9_8', u'10_6_9_5_9_7', u'10_3_9_6_9_7', u'10_0_9_5_9_6', u'10_8_9_6_9_2', u'10_7_9_8_9_0', u'10_1_9_5_9_6', u'10_4_9_2_9_0']
-org1 10_7_9_8_9_0, org2 10_3_9_6_9_7
-crossing org1:10_7_9_8_9_0 with org2:10_3_9_6_9_7
-
-fours []
-threes []
-twos []
-ones [u'10_2_9_2_9_8', u'10_6_9_5_9_7', u'10_0_9_5_9_6', u'10_8_9_6_9_2', u'10_1_9_5_9_6', u'10_4_9_2_9_0']
-org1 10_2_9_2_9_8, org2 10_0_9_5_9_6
-crossing org1:10_2_9_2_9_8 with org2:10_0_9_5_9_6
-
-fours []
-threes []
-twos []
-ones [u'10_6_9_5_9_7', u'10_8_9_6_9_2', u'10_1_9_5_9_6', u'10_4_9_2_9_0']
-org1 10_8_9_6_9_2, org2 10_4_9_2_9_0
-crossing org1:10_8_9_6_9_2 with org2:10_4_9_2_9_0
-
-fours []
-threes []
-twos []
-ones [u'10_6_9_5_9_7', u'10_1_9_5_9_6']
-org1 10_1_9_5_9_6, org2 10_6_9_5_9_7
-crossing org1:10_1_9_5_9_6 with org2:10_6_9_5_9_7
+ones [u'10_9_9_6_9_9', u'10_3_9_3_9_1']
+org1 10_9_9_6_9_9, org2 10_3_9_3_9_1
+crossing org1:10_9_9_6_9_9 with org2:10_3_9_3_9_1
 
 
 Number of Orgs in new gen: 10
