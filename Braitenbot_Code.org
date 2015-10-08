@@ -1193,6 +1193,8 @@ class Thread:
           self.reproduction_possibilities = None
           self.generation = generation
           self.generational_index = generational_index
+          self.thread_length = thread_length
+          self.genome_size = genome_size 
           # store organizational and naming information
           #NOTE: no longer saves a reference to parent org object
           #as that resulted in gigundus file sizes
@@ -1238,14 +1240,14 @@ class Thread:
           self.create_threads(thread_length)
           self.generate_thread_instructions()
           self.build_thread_coordinates()
-      <<Class Methods>>
 
-  <<Other Methods>>
+      <<ClassMethods>>
+
+  <<OtherMethods>>
 #+END_SRC
 
 *** Class Methods
-
-#+NAME: Class Methods
+#+NAME: ClassMethods
 #+BEGIN_SRC python :noweb yes
 <<set_file_name>>
 <<save_to_file>>
@@ -1564,7 +1566,7 @@ the set of all connected pins in a given thread.\\
 
 #+END_SRC
 *** Other Methods
-#+NAME: Other Methods
+#+NAME: OtherMethods
 #+BEGIN_SRC python :noewb yes
 <<reproduce>>
 <<generate_viable>>
@@ -1642,16 +1644,16 @@ from the successive locus in recessive parent’s InstructionSet. This switch wi
           for root, dirs, files in os.walk(path, topdown=False):
               for name in files:
                   count += 1
-          child_instruction_set = InstructionSet(2100, 2,True,300)
+          child_instruction_set = InstructionSet(dom.genome_size, 2,True,dom.thread_length)
           child_instruction_set.setGenome(child1_genome)
           child_instruction_set.mutate()
-          child1 = Organism(dom.generation + 1, count,2100,2,True,300, dom, rec, child_instruction_set.genome)
+          child1 = Organism(dom.generation + 1, count,dom.genome_size,2,True,dom.thread_length, dom, rec, child_instruction_set.genome)
       else:
           os.makedirs(path)
-          child_instruction_set = InstructionSet(2100, 2,True,300)
+          child_instruction_set = InstructionSet(dom.genome_size, 2,True,dom.thread_length)
           child_instruction_set.setGenome(child1_genome)
           child_instruction_set.mutate()
-          child1 = Organism(dom.generation + 1, 0,2100,2,True,300, dom, rec, child_instruction_set.genome)
+          child1 = Organism(dom.generation + 1, 0,dom.genome_size,2,True,dom.thread_length, dom, rec, child_instruction_set.genome)
           #print [i.char for i in child1.genome]
      # print 'child %s threads:' % child1.filename
      # for thread in child1.threads:
@@ -2012,248 +2014,249 @@ Pretty much the same as [[RankAndCrossGeneration]] except it selects for the num
 #+NAME: RankAndCrossByThreadCount
 #+BEGIN_SRC python :tangle RankAndCrossGenerationByThreadCount.py
 
-__author__ = 'JakeBrawer'
-from json_load_file import json_load_file
-import random
-import Organism
-import HoboAnalysis
-import os
-import math
-import datetime
-import csv
-import gc
-global_quartiles = {}
+  __author__ = 'JakeBrawer'
+  from json_load_file import json_load_file
+  import random
+  import Organism
+  import HoboAnalysis
+  import os
+  import math
+  import datetime
+  import csv
+  import gc
+  global_quartiles = {}
 
-#INPUT: list_of_vals-- list cont
-def calculateStdError(list_of_vals, average):
-    stddev = 0.0
-    diffsquared = 0.0
-    sum_diffsquared = 0.0
-    print '\n--------------------------------------------------\nCalculating the Std Error of the mean: '
-    for val in list_of_vals:
-        diffsquared = (val- average)**2.0
-        sum_diffsquared += diffsquared 
-        print 'Org mean perf: %s Pop mean: %s Diffsqrd: %s SumDiffsqrd: %s ' % (val, average, diffsquared, sum_diffsquared)
-    stddev = ((sum_diffsquared)/len(list_of_vals))**(1.0/2.0)
-    stderror = stddev / (len(list_of_vals)**(1.0/2.0))
-    print 'Stddv: %s  StdErr: %s\n------------------------------------------------------------\n ' % (stddev, stderror)
-    #print(numpy.sqrt(numpy.var(list_of_vals)))
-    return stderror
+  #INPUT: list_of_vals-- list cont
+  def calculateStdError(list_of_vals, average):
+      stddev = 0.0
+      diffsquared = 0.0
+      sum_diffsquared = 0.0
+      print '\n--------------------------------------------------\nCalculating the Std Error of the mean: '
+      for val in list_of_vals:
+          diffsquared = (val- average)**2.0
+          sum_diffsquared += diffsquared 
+          print 'Org mean perf: %s Pop mean: %s Diffsqrd: %s SumDiffsqrd: %s ' % (val, average, diffsquared, sum_diffsquared)
+      stddev = ((sum_diffsquared)/len(list_of_vals))**(1.0/2.0)
+      stderror = stddev / (len(list_of_vals)**(1.0/2.0))
+      print 'Stddv: %s  StdErr: %s\n------------------------------------------------------------\n ' % (stddev, stderror)
+      #print(numpy.sqrt(numpy.var(list_of_vals)))
+      return stderror
 
-#INPUT: experiment_directory -- direcotry containing all the gens for the given experiment
-     #gen_directory -- directory containing subdirectories of agents in a given generation
-     #  path_to_new_generation -- where you want the direcotry containing new dir
-     #  *new_gen_size --(OPTIONAL) upperlimit on number of individuals in new generation
-#OUTPUT: A direcory containing individuals from the next generation
-def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_gen,*new_gen_size):
-    unpickled_orgs = []# temporarily holds unpickled orgs
-    try:
-        new_gen_size = int( new_gen_size[0]) #turns the input (a tuple) into an int
-    except IndexError:
-        new_gen_size = None #No size input given
+  #INPUT: experiment_directory -- direcotry containing all the gens for the given experiment
+       #gen_directory -- directory containing subdirectories of agents in a given generation
+       #  path_to_new_generation -- where you want the direcotry containing new dir
+       #  *new_gen_size --(OPTIONAL) upperlimit on number of individuals in new generation
+  #OUTPUT: A direcory containing individuals from the next generation
+  def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_gen,*new_gen_size):
+      unpickled_orgs = []# temporarily holds unpickled orgs
+      try:
+          new_gen_size = int( new_gen_size[0]) #turns the input (a tuple) into an int
+      except IndexError:
+          new_gen_size = None #No size input given
 
-    #INPUT: Directory containing gen to be crossed
-    #OUTPUT: Calculates performance thresholds based on the mean pop. performance
-            #orgs < Q1 dont reproduce, Q1<= org < Q2 can reproduce once, Q2 <= org <Q3
-            # twice, etc.
-    def evaluateGenerationPerformance(gen_directory):
-        global global_quartiles
-        num_threads_per_org = [] 
-        mean_threads_per_pop = 0
-        list_of_vals = []
-        y = []
-        #walks through files belonging to an organism, one org at a time
-        print 'Active Threads per org:\n'
-        for root, dir, files in os.walk(gen_directory):
-            for f in files:
-                print 'File',
-                try:
-                    y.append(f)
-                    if f.endswith('.pkl') or f.endswith('.txt'):
-                        org = json_load_file(root + '/' + f)
-                        #print  root + '/'+ f
-                        print org.filename
-                        print "genome length", len(org.genome) 
-                        # This stores the number of active threads per org in org.performance_1,
-                        # which is used to rank the organism later on.
-                        thread_count = 0
-                        for thread in org.threads:
-                            print 'thread len.:',len(thread.connected_pins)
-                            if len(thread.connected_pins) > 0:
-                                thread_count += 1
-                        org.performance_1 = thread_count
-                        print '\nthread count', thread_count
-                        print
-                        num_threads_per_org.append(org.performance_1)
-                except AttributeError:
-                    print 'Error'
-                    pass
-                try:
-                    unpickled_orgs.append(org)
-                except AttributeError:
-                    print 'append error'
-                    pass
-        print'\n mean performances for each org in population:', num_threads_per_org
-        try:
-            mean_threads_per_pop = sum(num_threads_per_org)/float(len(num_threads_per_org)) #cast as a float to get float quotient
-        except ZeroDivisionError:
-            mean_threads_per_pop = 0 
-        #Saves quartile information and stdev of pop mean to a dict
-        quartiles = {'Generation': unpickled_orgs[0].generation, 'mean_threads': mean_threads_per_pop, \
-                     'stderr': calculateStdError(num_threads_per_org, mean_threads_per_pop),\
-                     'gen_size': len(unpickled_orgs), 'mode': max(set(num_threads_per_org), key=num_threads_per_org.count),\
-                     'min': min(num_threads_per_org), 'max': max(num_threads_per_org)}
-        print '\nquartiles: %s\n' % quartiles  
-        global_quartiles = quartiles
-        return quartiles
+      #INPUT: Directory containing gen to be crossed
+      #OUTPUT: Calculates performance thresholds based on the mean pop. performance
+              #orgs < Q1 dont reproduce, Q1<= org < Q2 can reproduce once, Q2 <= org <Q3
+              # twice, etc.
+      def evaluateGenerationPerformance(gen_directory):
+          global global_quartiles
+          num_threads_per_org = [] 
+          mean_threads_per_pop = 0
+          list_of_vals = []
+          y = []
+          #walks through files belonging to an organism, one org at a time
+          print 'Active Threads per org:\n'
+          for root, dir, files in os.walk(gen_directory):
+              for f in files:
+                  print 'File',
+                  try:
+                      y.append(f)
+                      if f.endswith('.pkl') or f.endswith('.txt'):
+                          org = json_load_file(root + '/' + f)
+                          #print  root + '/'+ f
+                          print org.filename
+                          print "genome length", len(org.genome) 
+                          # This stores the number of active threads per org in org.performance_1,
+                          # which is used to rank the organism later on.
+                          thread_count = 0
+                          for thread in org.threads:
+                              print 'thread len.:',len(thread.connected_pins)
+                              print "thread binary len:", len(thread.binary)
+                              if len(thread.connected_pins) > 0:
+                                  thread_count += 1
+                          org.performance_1 = thread_count
+                          print '\nthread count', thread_count
+                          print
+                          num_threads_per_org.append(org.performance_1)
+                  except AttributeError:
+                      print 'Error'
+                      pass
+                  try:
+                      unpickled_orgs.append(org)
+                  except AttributeError:
+                      print 'append error'
+                      pass
+          print'\n mean performances for each org in population:', num_threads_per_org
+          try:
+              mean_threads_per_pop = sum(num_threads_per_org)/float(len(num_threads_per_org)) #cast as a float to get float quotient
+          except ZeroDivisionError:
+              mean_threads_per_pop = 0 
+          #Saves quartile information and stdev of pop mean to a dict
+          quartiles = {'Generation': unpickled_orgs[0].generation, 'mean_threads': mean_threads_per_pop, \
+                       'stderr': calculateStdError(num_threads_per_org, mean_threads_per_pop),\
+                       'gen_size': len(unpickled_orgs), 'mode': max(set(num_threads_per_org), key=num_threads_per_org.count),\
+                       'min': min(num_threads_per_org), 'max': max(num_threads_per_org)}
+          print '\nquartiles: %s\n' % quartiles  
+          global_quartiles = quartiles
+          return quartiles
 
-    #INPUT: dir containing gen of interest
-    #OUTPUT: Sorts organisms into lists that denote how many offspring they
-            # can potentially create
-    def calculateRankings(gen_directory):
-        evaluateGenerationPerformance(gen_directory)
-        #Sorts orgs from Orgs with most threads to Orgs with least threads
-        sorted_orgs = sorted(unpickled_orgs, key=lambda x: x.performance_1,\
-                             reverse=True)
-        ranking = []
-        while len(sorted_orgs) >0:
-            ranking.append([sorted_orgs.pop(0), sorted_orgs.pop(0)])
+      #INPUT: dir containing gen of interest
+      #OUTPUT: Sorts organisms into lists that denote how many offspring they
+              # can potentially create
+      def calculateRankings(gen_directory):
+          evaluateGenerationPerformance(gen_directory)
+          #Sorts orgs from Orgs with most threads to Orgs with least threads
+          sorted_orgs = sorted(unpickled_orgs, key=lambda x: x.performance_1,\
+                               reverse=True)
+          ranking = []
+          while len(sorted_orgs) >0:
+              ranking.append([sorted_orgs.pop(0), sorted_orgs.pop(0)])
 
-        for i in ranking:
-            for r in i:
-                print r.performance_1
-        
-        return ranking
-   
-    #INPUT: path_to_new_gen: where to save the new gen data
-        #   new_gen_size: the upperlimit (if any) to the new gen
-    #OUTPUT: New generation of orgs saved to path_to_new_gen 
-    def crossAndSaveGeneration(path_to_new_gen,new_gen_size):
-        #These lines calculate the quartiles, and then save each area 
-        #above a quartile to its own list
-        rankings = calculateRankings(gen_directory)
-        fours = rankings.pop(0)
-        threes = rankings.pop(0)
-        twos = rankings.pop(0)
-        ones = rankings.pop(0)
-        #INPUT: path_to_new_gen -- see above
-        #OUTPUT: Crosses to orgs (if any are present in the above lists) 
-        # and sve their offspring to a direcotry located in path_to_new_gen
-        def chooseTwoToCross(path_to_new_gen):
-            org1 = None
-            org2 = None
-            #This horribly ugly blcok of code handles the selection of the orgs
-            #To be crossed. The algorithm always looks two cross orgs in the higher
-            #lists first (i.e. threes then twos then ones). Once an organism has been
-            #crossed, they are put into a lower list (Threes-->twos, etc), or are
-            #removed altogether from the lists (ones --> n/a)
-            try:
-                print 'fours %s' % [i.filename for i in fours]
-                print 'threes %s' % [i.filename for i in threes]
-                print 'twos %s' % [i.filename for i in twos]
-                print 'ones %s' % [i.filename for i in ones]
-            except IndexError:
-                pass
-            if len(fours) > 0:
-                org1 = random.choice(fours)
-                fours.remove(org1)
-                threes.append(org1)
-            elif len(threes) > 0:
-                org1 = random.choice(threes)
-                threes.remove(org1)
-                twos.append(org1)
-            elif len(twos) > 0:
-                org1 = random.choice(twos)
-                ones.append(org1)
-                twos.remove(org1)
-            elif len(ones) > 0:
-                org1 = random.choice(ones)
-                ones.remove(org1)
-            if len(fours) > 0:
-                fours_sans_org1 = filter(lambda y:y != org1, fours)
-                org2 = random.choice(fours_sans_org1)
-                fours.remove(org2)
-                threes.append(org2)
-            elif len(threes) > 0:
-                try:
-                    threes_sans_org1 = filter(lambda y:y != org1, threes)
-                    org2 = random.choice(threes_sans_org1)
-                    threes.remove(org2)
-                    twos.append(org2)
-                except IndexError:
-                    pass
-            elif len(filter(lambda y:y != org1, twos)) > 0:
-                try:
-                    twos_sans_org1 = filter(lambda y:y != org1, twos)
-                    org2 = random.choice(twos_sans_org1)
-                    ones.append(org2)
-                    twos.remove(org2)
-                except IndexError:
-                    pass
-            elif len(filter(lambda y:y != org1, ones)) > 0:
-                try:
-                    ones_sans_org1 = filter(lambda y:y != org1, ones)
-                    org2 = random.choice(ones_sans_org1)
-                    ones.remove(org2)
-                except IndexError:
-                    pass
-                    #print 'one filtered list %s' % ones_sans_org1
-            print 'org1 %s, org2 %s' % (org1.filename, org2.filename)
-            if org1 is not None and  org2 is not None:
-                print 'crossing org1:%s with org2:%s\n' % (org1.filename, org2.filename, 
-                                                                   )
-                Organism.reproduce(org1, org2, path_to_new_gen)
-                return True
-            else:
-                return False
-        #This block handles how much crossing is actually done. If an upper limit
-        # is specified via a non None new_gen_size val, crossing will stop after
-        #those many offspring have been created. Otherwise orgs will be crossed as
-        #long as there are orgs in any of the lists.
-        print '------------------------------------------------------------\nCrossing Generation:\n'
-        if new_gen_size is not None:
-            while(new_gen_size > 0):
-                reproduction = chooseTwoToCross(path_to_new_gen)
-                if reproduction is True:
-                    new_gen_size -= 1
-                else:
-                    break
-        else:
-            count = 0
-            while ( len(threes) + len(twos) +len(ones)) >= 2:
-                chooseTwoToCross(path_to_new_gen)
-                count += 1
-            print '\nNumber of Orgs in new gen: %s' % count
-   #INPUT: quartile_dict: the dict containing quartile info
-         # dir: path_to_new_gen
-   #OUTPUT: a CSV file saved to dir containing quartile data 
-    def writeQuartilesToCsv(data_dict, dir):
-        #os.mkdir(dir)
-        data_file =  dir + '/' + 'experiment_data.csv' 
-        if os.path.isfile(data_file):
-            with open(dir + '/' + 'experiment_data.csv' , 'a') as f:
-                fieldnames = ['Generation', 'mean_threads', 'stderr','gen_size', 'mode', 'min', 'max' ]
-                writer = csv.DictWriter(f, fieldnames=fieldnames)
-                writer.writerow(data_dict)
-        else:
-            with open(dir + '/' + 'experiment_data.csv' , 'wb') as f:
-                fieldnames = ['Generation', 'mean_threads', 'stderr','gen_size', 'mode', 'min', 'max' ]
-                writer = csv.DictWriter(f, fieldnames=fieldnames)
+          for i in ranking:
+              for r in i:
+                  print r.performance_1
+          
+          return ranking
+     
+      #INPUT: path_to_new_gen: where to save the new gen data
+          #   new_gen_size: the upperlimit (if any) to the new gen
+      #OUTPUT: New generation of orgs saved to path_to_new_gen 
+      def crossAndSaveGeneration(path_to_new_gen,new_gen_size):
+          #These lines calculate the quartiles, and then save each area 
+          #above a quartile to its own list
+          rankings = calculateRankings(gen_directory)
+          fours = rankings.pop(0)
+          threes = rankings.pop(0)
+          twos = rankings.pop(0)
+          ones = rankings.pop(0)
+          #INPUT: path_to_new_gen -- see above
+          #OUTPUT: Crosses to orgs (if any are present in the above lists) 
+          # and sve their offspring to a direcotry located in path_to_new_gen
+          def chooseTwoToCross(path_to_new_gen):
+              org1 = None
+              org2 = None
+              #This horribly ugly blcok of code handles the selection of the orgs
+              #To be crossed. The algorithm always looks two cross orgs in the higher
+              #lists first (i.e. threes then twos then ones). Once an organism has been
+              #crossed, they are put into a lower list (Threes-->twos, etc), or are
+              #removed altogether from the lists (ones --> n/a)
+              try:
+                  print 'fours %s' % [i.filename for i in fours]
+                  print 'threes %s' % [i.filename for i in threes]
+                  print 'twos %s' % [i.filename for i in twos]
+                  print 'ones %s' % [i.filename for i in ones]
+              except IndexError:
+                  pass
+              if len(fours) > 0:
+                  org1 = random.choice(fours)
+                  fours.remove(org1)
+                  threes.append(org1)
+              elif len(threes) > 0:
+                  org1 = random.choice(threes)
+                  threes.remove(org1)
+                  twos.append(org1)
+              elif len(twos) > 0:
+                  org1 = random.choice(twos)
+                  ones.append(org1)
+                  twos.remove(org1)
+              elif len(ones) > 0:
+                  org1 = random.choice(ones)
+                  ones.remove(org1)
+              if len(fours) > 0:
+                  fours_sans_org1 = filter(lambda y:y != org1, fours)
+                  org2 = random.choice(fours_sans_org1)
+                  fours.remove(org2)
+                  threes.append(org2)
+              elif len(threes) > 0:
+                  try:
+                      threes_sans_org1 = filter(lambda y:y != org1, threes)
+                      org2 = random.choice(threes_sans_org1)
+                      threes.remove(org2)
+                      twos.append(org2)
+                  except IndexError:
+                      pass
+              elif len(filter(lambda y:y != org1, twos)) > 0:
+                  try:
+                      twos_sans_org1 = filter(lambda y:y != org1, twos)
+                      org2 = random.choice(twos_sans_org1)
+                      ones.append(org2)
+                      twos.remove(org2)
+                  except IndexError:
+                      pass
+              elif len(filter(lambda y:y != org1, ones)) > 0:
+                  try:
+                      ones_sans_org1 = filter(lambda y:y != org1, ones)
+                      org2 = random.choice(ones_sans_org1)
+                      ones.remove(org2)
+                  except IndexError:
+                      pass
+                      #print 'one filtered list %s' % ones_sans_org1
+              print 'org1 %s, org2 %s' % (org1.filename, org2.filename)
+              if org1 is not None and  org2 is not None:
+                  print 'crossing org1:%s with org2:%s\n' % (org1.filename, org2.filename, 
+                                                                     )
+                  Organism.reproduce(org1, org2, path_to_new_gen)
+                  return True
+              else:
+                  return False
+          #This block handles how much crossing is actually done. If an upper limit
+          # is specified via a non None new_gen_size val, crossing will stop after
+          #those many offspring have been created. Otherwise orgs will be crossed as
+          #long as there are orgs in any of the lists.
+          print '------------------------------------------------------------\nCrossing Generation:\n'
+          if new_gen_size is not None:
+              while(new_gen_size > 0):
+                  reproduction = chooseTwoToCross(path_to_new_gen)
+                  if reproduction is True:
+                      new_gen_size -= 1
+                  else:
+                      break
+          else:
+              count = 0
+              while ( len(threes) + len(twos) +len(ones)) >= 2:
+                  chooseTwoToCross(path_to_new_gen)
+                  count += 1
+              print '\nNumber of Orgs in new gen: %s' % count
+     #INPUT: quartile_dict: the dict containing quartile info
+           # dir: path_to_new_gen
+     #OUTPUT: a CSV file saved to dir containing quartile data 
+      def writeQuartilesToCsv(data_dict, dir):
+          #os.mkdir(dir)
+          data_file =  dir + '/' + 'experiment_data.csv' 
+          if os.path.isfile(data_file):
+              with open(dir + '/' + 'experiment_data.csv' , 'a') as f:
+                  fieldnames = ['Generation', 'mean_threads', 'stderr','gen_size', 'mode', 'min', 'max' ]
+                  writer = csv.DictWriter(f, fieldnames=fieldnames)
+                  writer.writerow(data_dict)
+          else:
+              with open(dir + '/' + 'experiment_data.csv' , 'wb') as f:
+                  fieldnames = ['Generation', 'mean_threads', 'stderr','gen_size', 'mode', 'min', 'max' ]
+                  writer = csv.DictWriter(f, fieldnames=fieldnames)
 
-                writer.writeheader()
-                writer.writerow(data_dict)
+                  writer.writeheader()
+                  writer.writerow(data_dict)
 
-            #w = csv.DictWriter(f, quartile_dict.keys())
-            #w.writeheader()
-            #w.writerow(quartile_dict)
+              #w = csv.DictWriter(f, quartile_dict.keys())
+              #w.writeheader()
+              #w.writerow(quartile_dict)
 
-    crossAndSaveGeneration(path_to_new_gen, new_gen_size)
-    ##calculateRankings(gen_directory)
-    writeQuartilesToCsv(global_quartiles, experiment_directory)
-    gc.collect()
+      crossAndSaveGeneration(path_to_new_gen, new_gen_size)
+      ##calculateRankings(gen_directory)
+      writeQuartilesToCsv(global_quartiles, experiment_directory)
+      gc.collect()
 
 
-#thresholdedCrossGeneration('/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_3', '/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_3/Gen11' ,'/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_3/Gen12' )
+  #thresholdedCrossGeneration('/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_3', '/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_3/Gen11' ,'/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_3/Gen12' )
 
 
 
@@ -2278,2008 +2281,17 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
                       print connection.group_id, connection.number
               print "-------------------------------------//"
           tested += 1
-          #progress(tested_gen(10, "/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/coding_region_30/Default_3/Gen1")
+          #progress(tested_gen(10, "/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/coding_region_60/Default_1/Gen1")
 
+  #initial_gen( 10, "/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/coding_region_60/Default_1/Gen1")
   gen = 1
   while (gen < 11):
-      path1 = "/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/coding_region_30/Default_3/Gen"+str(gen)
-      path2 = "/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/coding_region_30/Default_3/Gen"+str(gen+1)
-      thresholdedCrossGeneration("/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/coding_region_30/Default_3", path1, path2)
+      path1 = "/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/coding_region_60/Default_1/Gen"+str(gen)
+      path2 = "/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/coding_region_60/Default_1/Gen"+str(gen+1)
+      thresholdedCrossGeneration("/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/coding_region_60/Default_1", path1, path2)
       gen+=1
       
 #+END_SRC
 
 #+RESULTS:
-#+begin_example
--------------------------------------//
-connections: 
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-pl 0
-br 0
-br 1
-bl 0
-new thread connections:
-new thread connections:
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-pr 2
-bl 1
-bl 3
-br 2
-new thread connections:
-new thread connections:
-new thread connections:
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-new thread connections:
-new thread connections:
-pr 1
-bl 0
-bl 2
-br 0
-new thread connections:
-new thread connections:
-i5 2
-e5 3
-new thread connections:
-new thread connections:
-e1 0
-e3 2
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-new thread connections:
-new thread connections:
-pr 5
-fl 2
-fl 3
-fr 3
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-rl 1
-rr 1
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-new thread connections:
-pr 5
-fl 2
-fl 1
-fr 2
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-new thread connections:
-new thread connections:
-pr 1
-rr 2
-new thread connections:
-new thread connections:
-rr 3
-fl 3
-fl 1
-br 2
-new thread connections:
-pr 2
-bl 1
-bl 2
-fr 1
-new thread connections:
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-pr 1
-fr 1
-fr 2
-fl 0
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-new thread connections:
-pr 2
-fl 2
-fl 0
-fr 3
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-pl 2
-fr 2
-fr 3
-fl 1
-new thread connections:
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-pr 2
-fr 2
-fr 0
-fl 2
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-e3 2
-e3 1
--------------------------------------//
-Active Threads per org:
-
-File 1_7_ _ _ _ 
-genome length 420
-thread len.: 0
-thread len.: 4
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 0
-
-thread count 1
-
-File 1_1_ _ _ _ 
-genome length 420
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 4
-thread len.: 0
-thread len.: 0
-thread len.: 0
-
-thread count 1
-
-File 1_6_ _ _ _ 
-genome length 420
-thread len.: 4
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 0
-
-thread count 1
-
-File 1_9_ _ _ _ 
-genome length 420
-thread len.: 4
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 2
-
-thread count 2
-
-File 1_4_ _ _ _ 
-genome length 420
-thread len.: 0
-thread len.: 4
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 0
-
-thread count 1
-
-File 1_8_ _ _ _ 
-genome length 420
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 4
-thread len.: 0
-
-thread count 1
-
-File 1_5_ _ _ _ 
-genome length 420
-thread len.: 0
-thread len.: 0
-thread len.: 2
-thread len.: 0
-thread len.: 4
-thread len.: 4
-thread len.: 0
-
-thread count 3
-
-File 1_2_ _ _ _ 
-genome length 420
-thread len.: 0
-thread len.: 0
-thread len.: 4
-thread len.: 0
-thread len.: 2
-thread len.: 0
-thread len.: 2
-
-thread count 3
-
-File 1_3_ _ _ _ 
-genome length 420
-thread len.: 0
-thread len.: 0
-thread len.: 4
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 2
-
-thread count 2
-
-File 1_0_ _ _ _ 
-genome length 420
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 0
-thread len.: 4
-thread len.: 0
-thread len.: 0
-
-thread count 1
-
-
- mean performances for each org in population: [1, 1, 1, 2, 1, 1, 3, 3, 2, 1]
-
---------------------------------------------------
-Calculating the Std Error of the mean: 
-Org mean perf: 1 Pop mean: 1.6 Diffsqrd: 0.36 SumDiffsqrd: 0.36 
-Org mean perf: 1 Pop mean: 1.6 Diffsqrd: 0.36 SumDiffsqrd: 0.72 
-Org mean perf: 1 Pop mean: 1.6 Diffsqrd: 0.36 SumDiffsqrd: 1.08 
-Org mean perf: 2 Pop mean: 1.6 Diffsqrd: 0.16 SumDiffsqrd: 1.24 
-Org mean perf: 1 Pop mean: 1.6 Diffsqrd: 0.36 SumDiffsqrd: 1.6 
-Org mean perf: 1 Pop mean: 1.6 Diffsqrd: 0.36 SumDiffsqrd: 1.96 
-Org mean perf: 3 Pop mean: 1.6 Diffsqrd: 1.96 SumDiffsqrd: 3.92 
-Org mean perf: 3 Pop mean: 1.6 Diffsqrd: 1.96 SumDiffsqrd: 5.88 
-Org mean perf: 2 Pop mean: 1.6 Diffsqrd: 0.16 SumDiffsqrd: 6.04 
-Org mean perf: 1 Pop mean: 1.6 Diffsqrd: 0.36 SumDiffsqrd: 6.4 
-Stddv: 0.8  StdErr: 0.252982212813
-------------------------------------------------------------
- 
-
-quartiles: {'mean_threads': 1.6, 'min': 1, 'Generation': 1, 'max': 3, 'gen_size': 10, 'mode': 1, 'stderr': 0.25298221281347033}
-
-3
-3
-2
-2
-1
-1
-1
-1
-1
-1
-------------------------------------------------------------
-Crossing Generation:
-
-fours [u'1_5_ _ _ _ ', u'1_2_ _ _ _ ']
-threes [u'1_9_ _ _ _ ', u'1_3_ _ _ _ ']
-twos [u'1_7_ _ _ _ ', u'1_1_ _ _ _ ']
-ones [u'1_6_ _ _ _ ', u'1_4_ _ _ _ ']
-org1 1_2_ _ _ _ , org2 1_5_ _ _ _ 
-crossing org1:1_2_ _ _ _  with org2:1_5_ _ _ _ 
-
-fours []
-threes [u'1_9_ _ _ _ ', u'1_3_ _ _ _ ', u'1_2_ _ _ _ ', u'1_5_ _ _ _ ']
-twos [u'1_7_ _ _ _ ', u'1_1_ _ _ _ ']
-ones [u'1_6_ _ _ _ ', u'1_4_ _ _ _ ']
-org1 1_9_ _ _ _ , org2 1_5_ _ _ _ 
-crossing org1:1_9_ _ _ _  with org2:1_5_ _ _ _ 
-
-fours []
-threes [u'1_3_ _ _ _ ', u'1_2_ _ _ _ ']
-twos [u'1_7_ _ _ _ ', u'1_1_ _ _ _ ', u'1_9_ _ _ _ ', u'1_5_ _ _ _ ']
-ones [u'1_6_ _ _ _ ', u'1_4_ _ _ _ ']
-org1 1_3_ _ _ _ , org2 1_2_ _ _ _ 
-crossing org1:1_3_ _ _ _  with org2:1_2_ _ _ _ 
-
-fours []
-threes []
-twos [u'1_7_ _ _ _ ', u'1_1_ _ _ _ ', u'1_9_ _ _ _ ', u'1_5_ _ _ _ ', u'1_3_ _ _ _ ', u'1_2_ _ _ _ ']
-ones [u'1_6_ _ _ _ ', u'1_4_ _ _ _ ']
-org1 1_1_ _ _ _ , org2 1_2_ _ _ _ 
-crossing org1:1_1_ _ _ _  with org2:1_2_ _ _ _ 
-
-fours []
-threes []
-twos [u'1_7_ _ _ _ ', u'1_9_ _ _ _ ', u'1_5_ _ _ _ ', u'1_3_ _ _ _ ']
-ones [u'1_6_ _ _ _ ', u'1_4_ _ _ _ ', u'1_1_ _ _ _ ', u'1_2_ _ _ _ ']
-org1 1_7_ _ _ _ , org2 1_3_ _ _ _ 
-crossing org1:1_7_ _ _ _  with org2:1_3_ _ _ _ 
-
-fours []
-threes []
-twos [u'1_9_ _ _ _ ', u'1_5_ _ _ _ ']
-ones [u'1_6_ _ _ _ ', u'1_4_ _ _ _ ', u'1_1_ _ _ _ ', u'1_2_ _ _ _ ', u'1_7_ _ _ _ ', u'1_3_ _ _ _ ']
-org1 1_5_ _ _ _ , org2 1_9_ _ _ _ 
-crossing org1:1_5_ _ _ _  with org2:1_9_ _ _ _ 
-
-fours []
-threes []
-twos []
-ones [u'1_6_ _ _ _ ', u'1_4_ _ _ _ ', u'1_1_ _ _ _ ', u'1_2_ _ _ _ ', u'1_7_ _ _ _ ', u'1_3_ _ _ _ ', u'1_5_ _ _ _ ', u'1_9_ _ _ _ ']
-org1 1_3_ _ _ _ , org2 1_4_ _ _ _ 
-crossing org1:1_3_ _ _ _  with org2:1_4_ _ _ _ 
-
-fours []
-threes []
-twos []
-ones [u'1_6_ _ _ _ ', u'1_1_ _ _ _ ', u'1_2_ _ _ _ ', u'1_7_ _ _ _ ', u'1_5_ _ _ _ ', u'1_9_ _ _ _ ']
-org1 1_5_ _ _ _ , org2 1_1_ _ _ _ 
-crossing org1:1_5_ _ _ _  with org2:1_1_ _ _ _ 
-
-fours []
-threes []
-twos []
-ones [u'1_6_ _ _ _ ', u'1_2_ _ _ _ ', u'1_7_ _ _ _ ', u'1_9_ _ _ _ ']
-org1 1_6_ _ _ _ , org2 1_9_ _ _ _ 
-crossing org1:1_6_ _ _ _  with org2:1_9_ _ _ _ 
-
-fours []
-threes []
-twos []
-ones [u'1_2_ _ _ _ ', u'1_7_ _ _ _ ']
-org1 1_7_ _ _ _ , org2 1_2_ _ _ _ 
-crossing org1:1_7_ _ _ _  with org2:1_2_ _ _ _ 
-
-
-Number of Orgs in new gen: 10
-Active Threads per org:
-
-File 2_9_1_2_1_7
-genome length 420
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 2_3_1_1_1_2
-genome length 420
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 2_6_1_4_1_3
-genome length 420
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 2_8_1_6_1_9
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 2_2_1_3_1_2
-genome length 420
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 2_7_1_1_1_5
-genome length 420
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 2_0_1_5_1_2
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 2_5_1_5_1_9
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 2_4_1_3_1_7
-genome length 420
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 2_1_1_5_1_9
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-
- mean performances for each org in population: [0, 0, 0, 1, 0, 0, 1, 1, 0, 1]
-
---------------------------------------------------
-Calculating the Std Error of the mean: 
-Org mean perf: 0 Pop mean: 0.4 Diffsqrd: 0.16 SumDiffsqrd: 0.16 
-Org mean perf: 0 Pop mean: 0.4 Diffsqrd: 0.16 SumDiffsqrd: 0.32 
-Org mean perf: 0 Pop mean: 0.4 Diffsqrd: 0.16 SumDiffsqrd: 0.48 
-Org mean perf: 1 Pop mean: 0.4 Diffsqrd: 0.36 SumDiffsqrd: 0.84 
-Org mean perf: 0 Pop mean: 0.4 Diffsqrd: 0.16 SumDiffsqrd: 1.0 
-Org mean perf: 0 Pop mean: 0.4 Diffsqrd: 0.16 SumDiffsqrd: 1.16 
-Org mean perf: 1 Pop mean: 0.4 Diffsqrd: 0.36 SumDiffsqrd: 1.52 
-Org mean perf: 1 Pop mean: 0.4 Diffsqrd: 0.36 SumDiffsqrd: 1.88 
-Org mean perf: 0 Pop mean: 0.4 Diffsqrd: 0.16 SumDiffsqrd: 2.04 
-Org mean perf: 1 Pop mean: 0.4 Diffsqrd: 0.36 SumDiffsqrd: 2.4 
-Stddv: 0.489897948557  StdErr: 0.154919333848
-------------------------------------------------------------
- 
-
-quartiles: {'mean_threads': 0.4, 'min': 0, 'Generation': 2, 'max': 1, 'gen_size': 10, 'mode': 0, 'stderr': 0.15491933384829665}
-
-1
-1
-1
-1
-0
-0
-0
-0
-0
-0
-------------------------------------------------------------
-Crossing Generation:
-
-fours [u'2_8_1_6_1_9', u'2_0_1_5_1_2']
-threes [u'2_5_1_5_1_9', u'2_1_1_5_1_9']
-twos [u'2_9_1_2_1_7', u'2_3_1_1_1_2']
-ones [u'2_6_1_4_1_3', u'2_2_1_3_1_2']
-org1 2_0_1_5_1_2, org2 2_8_1_6_1_9
-crossing org1:2_0_1_5_1_2 with org2:2_8_1_6_1_9
-
-fours []
-threes [u'2_5_1_5_1_9', u'2_1_1_5_1_9', u'2_0_1_5_1_2', u'2_8_1_6_1_9']
-twos [u'2_9_1_2_1_7', u'2_3_1_1_1_2']
-ones [u'2_6_1_4_1_3', u'2_2_1_3_1_2']
-org1 2_5_1_5_1_9, org2 2_0_1_5_1_2
-crossing org1:2_5_1_5_1_9 with org2:2_0_1_5_1_2
-
-fours []
-threes [u'2_1_1_5_1_9', u'2_8_1_6_1_9']
-twos [u'2_9_1_2_1_7', u'2_3_1_1_1_2', u'2_5_1_5_1_9', u'2_0_1_5_1_2']
-ones [u'2_6_1_4_1_3', u'2_2_1_3_1_2']
-org1 2_8_1_6_1_9, org2 2_1_1_5_1_9
-crossing org1:2_8_1_6_1_9 with org2:2_1_1_5_1_9
-
-fours []
-threes []
-twos [u'2_9_1_2_1_7', u'2_3_1_1_1_2', u'2_5_1_5_1_9', u'2_0_1_5_1_2', u'2_8_1_6_1_9', u'2_1_1_5_1_9']
-ones [u'2_6_1_4_1_3', u'2_2_1_3_1_2']
-org1 2_0_1_5_1_2, org2 2_3_1_1_1_2
-crossing org1:2_0_1_5_1_2 with org2:2_3_1_1_1_2
-
-fours []
-threes []
-twos [u'2_9_1_2_1_7', u'2_5_1_5_1_9', u'2_8_1_6_1_9', u'2_1_1_5_1_9']
-ones [u'2_6_1_4_1_3', u'2_2_1_3_1_2', u'2_0_1_5_1_2', u'2_3_1_1_1_2']
-org1 2_1_1_5_1_9, org2 2_9_1_2_1_7
-crossing org1:2_1_1_5_1_9 with org2:2_9_1_2_1_7
-
-fours []
-threes []
-twos [u'2_5_1_5_1_9', u'2_8_1_6_1_9']
-ones [u'2_6_1_4_1_3', u'2_2_1_3_1_2', u'2_0_1_5_1_2', u'2_3_1_1_1_2', u'2_1_1_5_1_9', u'2_9_1_2_1_7']
-org1 2_8_1_6_1_9, org2 2_5_1_5_1_9
-crossing org1:2_8_1_6_1_9 with org2:2_5_1_5_1_9
-
-fours []
-threes []
-twos []
-ones [u'2_6_1_4_1_3', u'2_2_1_3_1_2', u'2_0_1_5_1_2', u'2_3_1_1_1_2', u'2_1_1_5_1_9', u'2_9_1_2_1_7', u'2_8_1_6_1_9', u'2_5_1_5_1_9']
-org1 2_9_1_2_1_7, org2 2_8_1_6_1_9
-crossing org1:2_9_1_2_1_7 with org2:2_8_1_6_1_9
-
-fours []
-threes []
-twos []
-ones [u'2_6_1_4_1_3', u'2_2_1_3_1_2', u'2_0_1_5_1_2', u'2_3_1_1_1_2', u'2_1_1_5_1_9', u'2_5_1_5_1_9']
-org1 2_1_1_5_1_9, org2 2_3_1_1_1_2
-crossing org1:2_1_1_5_1_9 with org2:2_3_1_1_1_2
-
-fours []
-threes []
-twos []
-ones [u'2_6_1_4_1_3', u'2_2_1_3_1_2', u'2_0_1_5_1_2', u'2_5_1_5_1_9']
-org1 2_6_1_4_1_3, org2 2_5_1_5_1_9
-crossing org1:2_6_1_4_1_3 with org2:2_5_1_5_1_9
-
-fours []
-threes []
-twos []
-ones [u'2_2_1_3_1_2', u'2_0_1_5_1_2']
-org1 2_2_1_3_1_2, org2 2_0_1_5_1_2
-crossing org1:2_2_1_3_1_2 with org2:2_0_1_5_1_2
-
-
-Number of Orgs in new gen: 10
-Active Threads per org:
-
-File 3_6_2_9_2_8
-genome length 420
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 3_7_2_3_2_1
-genome length 420
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 3_8_2_6_2_5
-genome length 420
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 3_2_2_1_2_8
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 3_3_2_3_2_0
-genome length 420
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 3_4_2_1_2_9
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 3_0_2_0_2_8
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 3_1_2_0_2_5
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 3_5_2_5_2_8
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 3_9_2_2_2_0
-genome length 420
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-
- mean performances for each org in population: [0, 0, 0, 1, 0, 1, 1, 1, 1, 0]
-
---------------------------------------------------
-Calculating the Std Error of the mean: 
-Org mean perf: 0 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 0.25 
-Org mean perf: 0 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 0.5 
-Org mean perf: 0 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 0.75 
-Org mean perf: 1 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 1.0 
-Org mean perf: 0 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 1.25 
-Org mean perf: 1 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 1.5 
-Org mean perf: 1 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 1.75 
-Org mean perf: 1 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 2.0 
-Org mean perf: 1 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 2.25 
-Org mean perf: 0 Pop mean: 0.5 Diffsqrd: 0.25 SumDiffsqrd: 2.5 
-Stddv: 0.5  StdErr: 0.158113883008
-------------------------------------------------------------
- 
-
-quartiles: {'mean_threads': 0.5, 'min': 0, 'Generation': 3, 'max': 1, 'gen_size': 10, 'mode': 0, 'stderr': 0.15811388300841897}
-
-1
-1
-1
-1
-1
-0
-0
-0
-0
-0
-------------------------------------------------------------
-Crossing Generation:
-
-fours [u'3_2_2_1_2_8', u'3_4_2_1_2_9']
-threes [u'3_0_2_0_2_8', u'3_1_2_0_2_5']
-twos [u'3_5_2_5_2_8', u'3_6_2_9_2_8']
-ones [u'3_7_2_3_2_1', u'3_8_2_6_2_5']
-org1 3_2_2_1_2_8, org2 3_4_2_1_2_9
-crossing org1:3_2_2_1_2_8 with org2:3_4_2_1_2_9
-
-fours []
-threes [u'3_0_2_0_2_8', u'3_1_2_0_2_5', u'3_2_2_1_2_8', u'3_4_2_1_2_9']
-twos [u'3_5_2_5_2_8', u'3_6_2_9_2_8']
-ones [u'3_7_2_3_2_1', u'3_8_2_6_2_5']
-org1 3_4_2_1_2_9, org2 3_1_2_0_2_5
-crossing org1:3_4_2_1_2_9 with org2:3_1_2_0_2_5
-
-fours []
-threes [u'3_0_2_0_2_8', u'3_2_2_1_2_8']
-twos [u'3_5_2_5_2_8', u'3_6_2_9_2_8', u'3_4_2_1_2_9', u'3_1_2_0_2_5']
-ones [u'3_7_2_3_2_1', u'3_8_2_6_2_5']
-org1 3_0_2_0_2_8, org2 3_2_2_1_2_8
-crossing org1:3_0_2_0_2_8 with org2:3_2_2_1_2_8
-
-fours []
-threes []
-twos [u'3_5_2_5_2_8', u'3_6_2_9_2_8', u'3_4_2_1_2_9', u'3_1_2_0_2_5', u'3_0_2_0_2_8', u'3_2_2_1_2_8']
-ones [u'3_7_2_3_2_1', u'3_8_2_6_2_5']
-org1 3_5_2_5_2_8, org2 3_6_2_9_2_8
-crossing org1:3_5_2_5_2_8 with org2:3_6_2_9_2_8
-
-fours []
-threes []
-twos [u'3_4_2_1_2_9', u'3_1_2_0_2_5', u'3_0_2_0_2_8', u'3_2_2_1_2_8']
-ones [u'3_7_2_3_2_1', u'3_8_2_6_2_5', u'3_5_2_5_2_8', u'3_6_2_9_2_8']
-org1 3_0_2_0_2_8, org2 3_1_2_0_2_5
-crossing org1:3_0_2_0_2_8 with org2:3_1_2_0_2_5
-
-fours []
-threes []
-twos [u'3_4_2_1_2_9', u'3_2_2_1_2_8']
-ones [u'3_7_2_3_2_1', u'3_8_2_6_2_5', u'3_5_2_5_2_8', u'3_6_2_9_2_8', u'3_0_2_0_2_8', u'3_1_2_0_2_5']
-org1 3_4_2_1_2_9, org2 3_2_2_1_2_8
-crossing org1:3_4_2_1_2_9 with org2:3_2_2_1_2_8
-
-fours []
-threes []
-twos []
-ones [u'3_7_2_3_2_1', u'3_8_2_6_2_5', u'3_5_2_5_2_8', u'3_6_2_9_2_8', u'3_0_2_0_2_8', u'3_1_2_0_2_5', u'3_4_2_1_2_9', u'3_2_2_1_2_8']
-org1 3_7_2_3_2_1, org2 3_8_2_6_2_5
-crossing org1:3_7_2_3_2_1 with org2:3_8_2_6_2_5
-
-fours []
-threes []
-twos []
-ones [u'3_5_2_5_2_8', u'3_6_2_9_2_8', u'3_0_2_0_2_8', u'3_1_2_0_2_5', u'3_4_2_1_2_9', u'3_2_2_1_2_8']
-org1 3_2_2_1_2_8, org2 3_6_2_9_2_8
-crossing org1:3_2_2_1_2_8 with org2:3_6_2_9_2_8
-
-fours []
-threes []
-twos []
-ones [u'3_5_2_5_2_8', u'3_0_2_0_2_8', u'3_1_2_0_2_5', u'3_4_2_1_2_9']
-org1 3_4_2_1_2_9, org2 3_0_2_0_2_8
-crossing org1:3_4_2_1_2_9 with org2:3_0_2_0_2_8
-
-fours []
-threes []
-twos []
-ones [u'3_5_2_5_2_8', u'3_1_2_0_2_5']
-org1 3_5_2_5_2_8, org2 3_1_2_0_2_5
-crossing org1:3_5_2_5_2_8 with org2:3_1_2_0_2_5
-
-
-Number of Orgs in new gen: 10
-Active Threads per org:
-
-File 4_8_3_4_3_0
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 4_6_3_7_3_8
-genome length 420
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 4_1_3_1_3_4
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 4_3_3_5_3_6
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 4_2_3_0_3_2
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 4_9_3_1_3_5
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 4_5_3_2_3_4
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 4_7_3_6_3_2
-genome length 420
-thread len.: 0
-thread len.: 0
-
-thread count 0
-
-File 4_0_3_4_3_2
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 4_4_3_0_3_1
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-
- mean performances for each org in population: [1, 0, 1, 1, 1, 1, 1, 0, 1, 1]
-
---------------------------------------------------
-Calculating the Std Error of the mean: 
-Org mean perf: 1 Pop mean: 0.8 Diffsqrd: 0.04 SumDiffsqrd: 0.04 
-Org mean perf: 0 Pop mean: 0.8 Diffsqrd: 0.64 SumDiffsqrd: 0.68 
-Org mean perf: 1 Pop mean: 0.8 Diffsqrd: 0.04 SumDiffsqrd: 0.72 
-Org mean perf: 1 Pop mean: 0.8 Diffsqrd: 0.04 SumDiffsqrd: 0.76 
-Org mean perf: 1 Pop mean: 0.8 Diffsqrd: 0.04 SumDiffsqrd: 0.8 
-Org mean perf: 1 Pop mean: 0.8 Diffsqrd: 0.04 SumDiffsqrd: 0.84 
-Org mean perf: 1 Pop mean: 0.8 Diffsqrd: 0.04 SumDiffsqrd: 0.88 
-Org mean perf: 0 Pop mean: 0.8 Diffsqrd: 0.64 SumDiffsqrd: 1.52 
-Org mean perf: 1 Pop mean: 0.8 Diffsqrd: 0.04 SumDiffsqrd: 1.56 
-Org mean perf: 1 Pop mean: 0.8 Diffsqrd: 0.04 SumDiffsqrd: 1.6 
-Stddv: 0.4  StdErr: 0.126491106407
-------------------------------------------------------------
- 
-
-quartiles: {'mean_threads': 0.8, 'min': 0, 'Generation': 4, 'max': 1, 'gen_size': 10, 'mode': 1, 'stderr': 0.1264911064067352}
-
-1
-1
-1
-1
-1
-1
-1
-1
-0
-0
-------------------------------------------------------------
-Crossing Generation:
-
-fours [u'4_8_3_4_3_0', u'4_1_3_1_3_4']
-threes [u'4_3_3_5_3_6', u'4_2_3_0_3_2']
-twos [u'4_9_3_1_3_5', u'4_5_3_2_3_4']
-ones [u'4_0_3_4_3_2', u'4_4_3_0_3_1']
-org1 4_1_3_1_3_4, org2 4_8_3_4_3_0
-crossing org1:4_1_3_1_3_4 with org2:4_8_3_4_3_0
-
-Crossover_point mutation at index: 77
-0 --> 1
-fours []
-threes [u'4_3_3_5_3_6', u'4_2_3_0_3_2', u'4_1_3_1_3_4', u'4_8_3_4_3_0']
-twos [u'4_9_3_1_3_5', u'4_5_3_2_3_4']
-ones [u'4_0_3_4_3_2', u'4_4_3_0_3_1']
-org1 4_3_3_5_3_6, org2 4_1_3_1_3_4
-crossing org1:4_3_3_5_3_6 with org2:4_1_3_1_3_4
-
-fours []
-threes [u'4_2_3_0_3_2', u'4_8_3_4_3_0']
-twos [u'4_9_3_1_3_5', u'4_5_3_2_3_4', u'4_3_3_5_3_6', u'4_1_3_1_3_4']
-ones [u'4_0_3_4_3_2', u'4_4_3_0_3_1']
-org1 4_8_3_4_3_0, org2 4_2_3_0_3_2
-crossing org1:4_8_3_4_3_0 with org2:4_2_3_0_3_2
-
-fours []
-threes []
-twos [u'4_9_3_1_3_5', u'4_5_3_2_3_4', u'4_3_3_5_3_6', u'4_1_3_1_3_4', u'4_8_3_4_3_0', u'4_2_3_0_3_2']
-ones [u'4_0_3_4_3_2', u'4_4_3_0_3_1']
-org1 4_3_3_5_3_6, org2 4_8_3_4_3_0
-crossing org1:4_3_3_5_3_6 with org2:4_8_3_4_3_0
-
-fours []
-threes []
-twos [u'4_9_3_1_3_5', u'4_5_3_2_3_4', u'4_1_3_1_3_4', u'4_2_3_0_3_2']
-ones [u'4_0_3_4_3_2', u'4_4_3_0_3_1', u'4_3_3_5_3_6', u'4_8_3_4_3_0']
-org1 4_2_3_0_3_2, org2 4_9_3_1_3_5
-crossing org1:4_2_3_0_3_2 with org2:4_9_3_1_3_5
-
-fours []
-threes []
-twos [u'4_5_3_2_3_4', u'4_1_3_1_3_4']
-ones [u'4_0_3_4_3_2', u'4_4_3_0_3_1', u'4_3_3_5_3_6', u'4_8_3_4_3_0', u'4_2_3_0_3_2', u'4_9_3_1_3_5']
-org1 4_1_3_1_3_4, org2 4_5_3_2_3_4
-crossing org1:4_1_3_1_3_4 with org2:4_5_3_2_3_4
-
-fours []
-threes []
-twos []
-ones [u'4_0_3_4_3_2', u'4_4_3_0_3_1', u'4_3_3_5_3_6', u'4_8_3_4_3_0', u'4_2_3_0_3_2', u'4_9_3_1_3_5', u'4_1_3_1_3_4', u'4_5_3_2_3_4']
-org1 4_8_3_4_3_0, org2 4_1_3_1_3_4
-crossing org1:4_8_3_4_3_0 with org2:4_1_3_1_3_4
-
-fours []
-threes []
-twos []
-ones [u'4_0_3_4_3_2', u'4_4_3_0_3_1', u'4_3_3_5_3_6', u'4_2_3_0_3_2', u'4_9_3_1_3_5', u'4_5_3_2_3_4']
-org1 4_5_3_2_3_4, org2 4_4_3_0_3_1
-crossing org1:4_5_3_2_3_4 with org2:4_4_3_0_3_1
-
-fours []
-threes []
-twos []
-ones [u'4_0_3_4_3_2', u'4_3_3_5_3_6', u'4_2_3_0_3_2', u'4_9_3_1_3_5']
-org1 4_0_3_4_3_2, org2 4_3_3_5_3_6
-crossing org1:4_0_3_4_3_2 with org2:4_3_3_5_3_6
-
-fours []
-threes []
-twos []
-ones [u'4_2_3_0_3_2', u'4_9_3_1_3_5']
-org1 4_2_3_0_3_2, org2 4_9_3_1_3_5
-crossing org1:4_2_3_0_3_2 with org2:4_9_3_1_3_5
-
-
-Number of Orgs in new gen: 10
-Active Threads per org:
-
-File 5_5_4_5_4_1
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 5_6_4_8_4_1
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 5_8_4_3_4_0
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 5_1_4_1_4_3
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 5_9_4_2_4_9
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 5_2_4_8_4_2
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 5_0_4_1_4_8
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 5_3_4_8_4_3
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 5_4_4_9_4_2
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 5_7_4_5_4_4
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-
- mean performances for each org in population: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-
---------------------------------------------------
-Calculating the Std Error of the mean: 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Stddv: 0.0  StdErr: 0.0
-------------------------------------------------------------
- 
-
-quartiles: {'mean_threads': 1.0, 'min': 1, 'Generation': 5, 'max': 1, 'gen_size': 10, 'mode': 1, 'stderr': 0.0}
-
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-------------------------------------------------------------
-Crossing Generation:
-
-fours [u'5_5_4_5_4_1', u'5_6_4_8_4_1']
-threes [u'5_8_4_3_4_0', u'5_1_4_1_4_3']
-twos [u'5_9_4_2_4_9', u'5_2_4_8_4_2']
-ones [u'5_0_4_1_4_8', u'5_3_4_8_4_3']
-org1 5_6_4_8_4_1, org2 5_5_4_5_4_1
-crossing org1:5_6_4_8_4_1 with org2:5_5_4_5_4_1
-
-fours []
-threes [u'5_8_4_3_4_0', u'5_1_4_1_4_3', u'5_6_4_8_4_1', u'5_5_4_5_4_1']
-twos [u'5_9_4_2_4_9', u'5_2_4_8_4_2']
-ones [u'5_0_4_1_4_8', u'5_3_4_8_4_3']
-org1 5_8_4_3_4_0, org2 5_6_4_8_4_1
-crossing org1:5_8_4_3_4_0 with org2:5_6_4_8_4_1
-
-fours []
-threes [u'5_1_4_1_4_3', u'5_5_4_5_4_1']
-twos [u'5_9_4_2_4_9', u'5_2_4_8_4_2', u'5_8_4_3_4_0', u'5_6_4_8_4_1']
-ones [u'5_0_4_1_4_8', u'5_3_4_8_4_3']
-org1 5_1_4_1_4_3, org2 5_5_4_5_4_1
-crossing org1:5_1_4_1_4_3 with org2:5_5_4_5_4_1
-
-fours []
-threes []
-twos [u'5_9_4_2_4_9', u'5_2_4_8_4_2', u'5_8_4_3_4_0', u'5_6_4_8_4_1', u'5_1_4_1_4_3', u'5_5_4_5_4_1']
-ones [u'5_0_4_1_4_8', u'5_3_4_8_4_3']
-org1 5_2_4_8_4_2, org2 5_1_4_1_4_3
-crossing org1:5_2_4_8_4_2 with org2:5_1_4_1_4_3
-
-fours []
-threes []
-twos [u'5_9_4_2_4_9', u'5_8_4_3_4_0', u'5_6_4_8_4_1', u'5_5_4_5_4_1']
-ones [u'5_0_4_1_4_8', u'5_3_4_8_4_3', u'5_2_4_8_4_2', u'5_1_4_1_4_3']
-org1 5_8_4_3_4_0, org2 5_6_4_8_4_1
-crossing org1:5_8_4_3_4_0 with org2:5_6_4_8_4_1
-
-fours []
-threes []
-twos [u'5_9_4_2_4_9', u'5_5_4_5_4_1']
-ones [u'5_0_4_1_4_8', u'5_3_4_8_4_3', u'5_2_4_8_4_2', u'5_1_4_1_4_3', u'5_8_4_3_4_0', u'5_6_4_8_4_1']
-org1 5_5_4_5_4_1, org2 5_9_4_2_4_9
-crossing org1:5_5_4_5_4_1 with org2:5_9_4_2_4_9
-
-fours []
-threes []
-twos []
-ones [u'5_0_4_1_4_8', u'5_3_4_8_4_3', u'5_2_4_8_4_2', u'5_1_4_1_4_3', u'5_8_4_3_4_0', u'5_6_4_8_4_1', u'5_5_4_5_4_1', u'5_9_4_2_4_9']
-org1 5_9_4_2_4_9, org2 5_1_4_1_4_3
-crossing org1:5_9_4_2_4_9 with org2:5_1_4_1_4_3
-
-fours []
-threes []
-twos []
-ones [u'5_0_4_1_4_8', u'5_3_4_8_4_3', u'5_2_4_8_4_2', u'5_8_4_3_4_0', u'5_6_4_8_4_1', u'5_5_4_5_4_1']
-org1 5_3_4_8_4_3, org2 5_0_4_1_4_8
-crossing org1:5_3_4_8_4_3 with org2:5_0_4_1_4_8
-
-fours []
-threes []
-twos []
-ones [u'5_2_4_8_4_2', u'5_8_4_3_4_0', u'5_6_4_8_4_1', u'5_5_4_5_4_1']
-org1 5_5_4_5_4_1, org2 5_8_4_3_4_0
-crossing org1:5_5_4_5_4_1 with org2:5_8_4_3_4_0
-
-fours []
-threes []
-twos []
-ones [u'5_2_4_8_4_2', u'5_6_4_8_4_1']
-org1 5_6_4_8_4_1, org2 5_2_4_8_4_2
-crossing org1:5_6_4_8_4_1 with org2:5_2_4_8_4_2
-
-
-Number of Orgs in new gen: 10
-Active Threads per org:
-
-File 6_6_5_9_5_1
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 6_3_5_2_5_1
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 6_4_5_6_5_8
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 6_7_5_0_5_3
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 6_1_5_6_5_8
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 6_0_5_6_5_5
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 6_9_5_2_5_6
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 6_2_5_5_5_1
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 6_5_5_9_5_5
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 6_8_5_5_5_8
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-
- mean performances for each org in population: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-
---------------------------------------------------
-Calculating the Std Error of the mean: 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Stddv: 0.0  StdErr: 0.0
-------------------------------------------------------------
- 
-
-quartiles: {'mean_threads': 1.0, 'min': 1, 'Generation': 6, 'max': 1, 'gen_size': 10, 'mode': 1, 'stderr': 0.0}
-
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-------------------------------------------------------------
-Crossing Generation:
-
-fours [u'6_6_5_9_5_1', u'6_3_5_2_5_1']
-threes [u'6_4_5_6_5_8', u'6_7_5_0_5_3']
-twos [u'6_1_5_6_5_8', u'6_0_5_6_5_5']
-ones [u'6_9_5_2_5_6', u'6_2_5_5_5_1']
-org1 6_3_5_2_5_1, org2 6_6_5_9_5_1
-crossing org1:6_3_5_2_5_1 with org2:6_6_5_9_5_1
-
-fours []
-threes [u'6_4_5_6_5_8', u'6_7_5_0_5_3', u'6_3_5_2_5_1', u'6_6_5_9_5_1']
-twos [u'6_1_5_6_5_8', u'6_0_5_6_5_5']
-ones [u'6_9_5_2_5_6', u'6_2_5_5_5_1']
-org1 6_3_5_2_5_1, org2 6_6_5_9_5_1
-crossing org1:6_3_5_2_5_1 with org2:6_6_5_9_5_1
-
-fours []
-threes [u'6_4_5_6_5_8', u'6_7_5_0_5_3']
-twos [u'6_1_5_6_5_8', u'6_0_5_6_5_5', u'6_3_5_2_5_1', u'6_6_5_9_5_1']
-ones [u'6_9_5_2_5_6', u'6_2_5_5_5_1']
-org1 6_4_5_6_5_8, org2 6_7_5_0_5_3
-crossing org1:6_4_5_6_5_8 with org2:6_7_5_0_5_3
-
-fours []
-threes []
-twos [u'6_1_5_6_5_8', u'6_0_5_6_5_5', u'6_3_5_2_5_1', u'6_6_5_9_5_1', u'6_4_5_6_5_8', u'6_7_5_0_5_3']
-ones [u'6_9_5_2_5_6', u'6_2_5_5_5_1']
-org1 6_3_5_2_5_1, org2 6_0_5_6_5_5
-crossing org1:6_3_5_2_5_1 with org2:6_0_5_6_5_5
-
-fours []
-threes []
-twos [u'6_1_5_6_5_8', u'6_6_5_9_5_1', u'6_4_5_6_5_8', u'6_7_5_0_5_3']
-ones [u'6_9_5_2_5_6', u'6_2_5_5_5_1', u'6_3_5_2_5_1', u'6_0_5_6_5_5']
-org1 6_1_5_6_5_8, org2 6_4_5_6_5_8
-crossing org1:6_1_5_6_5_8 with org2:6_4_5_6_5_8
-
-fours []
-threes []
-twos [u'6_6_5_9_5_1', u'6_7_5_0_5_3']
-ones [u'6_9_5_2_5_6', u'6_2_5_5_5_1', u'6_3_5_2_5_1', u'6_0_5_6_5_5', u'6_1_5_6_5_8', u'6_4_5_6_5_8']
-org1 6_6_5_9_5_1, org2 6_7_5_0_5_3
-crossing org1:6_6_5_9_5_1 with org2:6_7_5_0_5_3
-
-fours []
-threes []
-twos []
-ones [u'6_9_5_2_5_6', u'6_2_5_5_5_1', u'6_3_5_2_5_1', u'6_0_5_6_5_5', u'6_1_5_6_5_8', u'6_4_5_6_5_8', u'6_6_5_9_5_1', u'6_7_5_0_5_3']
-org1 6_1_5_6_5_8, org2 6_0_5_6_5_5
-crossing org1:6_1_5_6_5_8 with org2:6_0_5_6_5_5
-
-fours []
-threes []
-twos []
-ones [u'6_9_5_2_5_6', u'6_2_5_5_5_1', u'6_3_5_2_5_1', u'6_4_5_6_5_8', u'6_6_5_9_5_1', u'6_7_5_0_5_3']
-org1 6_4_5_6_5_8, org2 6_3_5_2_5_1
-crossing org1:6_4_5_6_5_8 with org2:6_3_5_2_5_1
-
-fours []
-threes []
-twos []
-ones [u'6_9_5_2_5_6', u'6_2_5_5_5_1', u'6_6_5_9_5_1', u'6_7_5_0_5_3']
-org1 6_2_5_5_5_1, org2 6_7_5_0_5_3
-crossing org1:6_2_5_5_5_1 with org2:6_7_5_0_5_3
-
-fours []
-threes []
-twos []
-ones [u'6_9_5_2_5_6', u'6_6_5_9_5_1']
-org1 6_6_5_9_5_1, org2 6_9_5_2_5_6
-crossing org1:6_6_5_9_5_1 with org2:6_9_5_2_5_6
-
-
-Number of Orgs in new gen: 10
-Active Threads per org:
-
-File 7_9_6_6_6_9
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 7_7_6_3_6_4
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 7_6_6_0_6_1
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 7_0_6_3_6_6
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 7_2_6_7_6_4
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 7_8_6_7_6_2
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 7_3_6_0_6_3
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 7_4_6_1_6_4
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 7_1_6_3_6_6
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 7_5_6_6_6_7
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-
- mean performances for each org in population: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-
---------------------------------------------------
-Calculating the Std Error of the mean: 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Stddv: 0.0  StdErr: 0.0
-------------------------------------------------------------
- 
-
-quartiles: {'mean_threads': 1.0, 'min': 1, 'Generation': 7, 'max': 1, 'gen_size': 10, 'mode': 1, 'stderr': 0.0}
-
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-------------------------------------------------------------
-Crossing Generation:
-
-fours [u'7_9_6_6_6_9', u'7_7_6_3_6_4']
-threes [u'7_6_6_0_6_1', u'7_0_6_3_6_6']
-twos [u'7_2_6_7_6_4', u'7_8_6_7_6_2']
-ones [u'7_3_6_0_6_3', u'7_4_6_1_6_4']
-org1 7_7_6_3_6_4, org2 7_9_6_6_6_9
-crossing org1:7_7_6_3_6_4 with org2:7_9_6_6_6_9
-
-fours []
-threes [u'7_6_6_0_6_1', u'7_0_6_3_6_6', u'7_7_6_3_6_4', u'7_9_6_6_6_9']
-twos [u'7_2_6_7_6_4', u'7_8_6_7_6_2']
-ones [u'7_3_6_0_6_3', u'7_4_6_1_6_4']
-org1 7_7_6_3_6_4, org2 7_0_6_3_6_6
-crossing org1:7_7_6_3_6_4 with org2:7_0_6_3_6_6
-
-fours []
-threes [u'7_6_6_0_6_1', u'7_9_6_6_6_9']
-twos [u'7_2_6_7_6_4', u'7_8_6_7_6_2', u'7_7_6_3_6_4', u'7_0_6_3_6_6']
-ones [u'7_3_6_0_6_3', u'7_4_6_1_6_4']
-org1 7_9_6_6_6_9, org2 7_6_6_0_6_1
-crossing org1:7_9_6_6_6_9 with org2:7_6_6_0_6_1
-
-fours []
-threes []
-twos [u'7_2_6_7_6_4', u'7_8_6_7_6_2', u'7_7_6_3_6_4', u'7_0_6_3_6_6', u'7_9_6_6_6_9', u'7_6_6_0_6_1']
-ones [u'7_3_6_0_6_3', u'7_4_6_1_6_4']
-org1 7_9_6_6_6_9, org2 7_2_6_7_6_4
-crossing org1:7_9_6_6_6_9 with org2:7_2_6_7_6_4
-
-fours []
-threes []
-twos [u'7_8_6_7_6_2', u'7_7_6_3_6_4', u'7_0_6_3_6_6', u'7_6_6_0_6_1']
-ones [u'7_3_6_0_6_3', u'7_4_6_1_6_4', u'7_9_6_6_6_9', u'7_2_6_7_6_4']
-org1 7_7_6_3_6_4, org2 7_0_6_3_6_6
-crossing org1:7_7_6_3_6_4 with org2:7_0_6_3_6_6
-
-fours []
-threes []
-twos [u'7_8_6_7_6_2', u'7_6_6_0_6_1']
-ones [u'7_3_6_0_6_3', u'7_4_6_1_6_4', u'7_9_6_6_6_9', u'7_2_6_7_6_4', u'7_7_6_3_6_4', u'7_0_6_3_6_6']
-org1 7_8_6_7_6_2, org2 7_6_6_0_6_1
-crossing org1:7_8_6_7_6_2 with org2:7_6_6_0_6_1
-
-fours []
-threes []
-twos []
-ones [u'7_3_6_0_6_3', u'7_4_6_1_6_4', u'7_9_6_6_6_9', u'7_2_6_7_6_4', u'7_7_6_3_6_4', u'7_0_6_3_6_6', u'7_8_6_7_6_2', u'7_6_6_0_6_1']
-org1 7_9_6_6_6_9, org2 7_7_6_3_6_4
-crossing org1:7_9_6_6_6_9 with org2:7_7_6_3_6_4
-
-fours []
-threes []
-twos []
-ones [u'7_3_6_0_6_3', u'7_4_6_1_6_4', u'7_2_6_7_6_4', u'7_0_6_3_6_6', u'7_8_6_7_6_2', u'7_6_6_0_6_1']
-org1 7_0_6_3_6_6, org2 7_4_6_1_6_4
-crossing org1:7_0_6_3_6_6 with org2:7_4_6_1_6_4
-
-fours []
-threes []
-twos []
-ones [u'7_3_6_0_6_3', u'7_2_6_7_6_4', u'7_8_6_7_6_2', u'7_6_6_0_6_1']
-org1 7_3_6_0_6_3, org2 7_2_6_7_6_4
-crossing org1:7_3_6_0_6_3 with org2:7_2_6_7_6_4
-
-fours []
-threes []
-twos []
-ones [u'7_8_6_7_6_2', u'7_6_6_0_6_1']
-org1 7_8_6_7_6_2, org2 7_6_6_0_6_1
-crossing org1:7_8_6_7_6_2 with org2:7_6_6_0_6_1
-
-
-Number of Orgs in new gen: 10
-Active Threads per org:
-
-File 8_8_7_3_7_2
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 8_1_7_7_7_0
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 8_3_7_2_7_9
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 8_9_7_6_7_8
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 8_7_7_4_7_0
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 8_2_7_9_7_6
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 8_6_7_9_7_7
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 8_5_7_6_7_8
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 8_0_7_9_7_7
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 8_4_7_7_7_0
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-
- mean performances for each org in population: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-
---------------------------------------------------
-Calculating the Std Error of the mean: 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Stddv: 0.0  StdErr: 0.0
-------------------------------------------------------------
- 
-
-quartiles: {'mean_threads': 1.0, 'min': 1, 'Generation': 8, 'max': 1, 'gen_size': 10, 'mode': 1, 'stderr': 0.0}
-
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-------------------------------------------------------------
-Crossing Generation:
-
-fours [u'8_8_7_3_7_2', u'8_1_7_7_7_0']
-threes [u'8_3_7_2_7_9', u'8_9_7_6_7_8']
-twos [u'8_7_7_4_7_0', u'8_2_7_9_7_6']
-ones [u'8_6_7_9_7_7', u'8_5_7_6_7_8']
-org1 8_1_7_7_7_0, org2 8_8_7_3_7_2
-crossing org1:8_1_7_7_7_0 with org2:8_8_7_3_7_2
-
-fours []
-threes [u'8_3_7_2_7_9', u'8_9_7_6_7_8', u'8_1_7_7_7_0', u'8_8_7_3_7_2']
-twos [u'8_7_7_4_7_0', u'8_2_7_9_7_6']
-ones [u'8_6_7_9_7_7', u'8_5_7_6_7_8']
-org1 8_3_7_2_7_9, org2 8_8_7_3_7_2
-crossing org1:8_3_7_2_7_9 with org2:8_8_7_3_7_2
-
-fours []
-threes [u'8_9_7_6_7_8', u'8_1_7_7_7_0']
-twos [u'8_7_7_4_7_0', u'8_2_7_9_7_6', u'8_3_7_2_7_9', u'8_8_7_3_7_2']
-ones [u'8_6_7_9_7_7', u'8_5_7_6_7_8']
-org1 8_9_7_6_7_8, org2 8_1_7_7_7_0
-crossing org1:8_9_7_6_7_8 with org2:8_1_7_7_7_0
-
-fours []
-threes []
-twos [u'8_7_7_4_7_0', u'8_2_7_9_7_6', u'8_3_7_2_7_9', u'8_8_7_3_7_2', u'8_9_7_6_7_8', u'8_1_7_7_7_0']
-ones [u'8_6_7_9_7_7', u'8_5_7_6_7_8']
-org1 8_1_7_7_7_0, org2 8_9_7_6_7_8
-crossing org1:8_1_7_7_7_0 with org2:8_9_7_6_7_8
-
-fours []
-threes []
-twos [u'8_7_7_4_7_0', u'8_2_7_9_7_6', u'8_3_7_2_7_9', u'8_8_7_3_7_2']
-ones [u'8_6_7_9_7_7', u'8_5_7_6_7_8', u'8_1_7_7_7_0', u'8_9_7_6_7_8']
-org1 8_3_7_2_7_9, org2 8_8_7_3_7_2
-crossing org1:8_3_7_2_7_9 with org2:8_8_7_3_7_2
-
-fours []
-threes []
-twos [u'8_7_7_4_7_0', u'8_2_7_9_7_6']
-ones [u'8_6_7_9_7_7', u'8_5_7_6_7_8', u'8_1_7_7_7_0', u'8_9_7_6_7_8', u'8_3_7_2_7_9', u'8_8_7_3_7_2']
-org1 8_2_7_9_7_6, org2 8_7_7_4_7_0
-crossing org1:8_2_7_9_7_6 with org2:8_7_7_4_7_0
-
-fours []
-threes []
-twos []
-ones [u'8_6_7_9_7_7', u'8_5_7_6_7_8', u'8_1_7_7_7_0', u'8_9_7_6_7_8', u'8_3_7_2_7_9', u'8_8_7_3_7_2', u'8_2_7_9_7_6', u'8_7_7_4_7_0']
-org1 8_5_7_6_7_8, org2 8_9_7_6_7_8
-crossing org1:8_5_7_6_7_8 with org2:8_9_7_6_7_8
-
-fours []
-threes []
-twos []
-ones [u'8_6_7_9_7_7', u'8_1_7_7_7_0', u'8_3_7_2_7_9', u'8_8_7_3_7_2', u'8_2_7_9_7_6', u'8_7_7_4_7_0']
-org1 8_8_7_3_7_2, org2 8_3_7_2_7_9
-crossing org1:8_8_7_3_7_2 with org2:8_3_7_2_7_9
-
-fours []
-threes []
-twos []
-ones [u'8_6_7_9_7_7', u'8_1_7_7_7_0', u'8_2_7_9_7_6', u'8_7_7_4_7_0']
-org1 8_7_7_4_7_0, org2 8_6_7_9_7_7
-crossing org1:8_7_7_4_7_0 with org2:8_6_7_9_7_7
-
-fours []
-threes []
-twos []
-ones [u'8_1_7_7_7_0', u'8_2_7_9_7_6']
-org1 8_1_7_7_7_0, org2 8_2_7_9_7_6
-crossing org1:8_1_7_7_7_0 with org2:8_2_7_9_7_6
-
-
-Number of Orgs in new gen: 10
-Active Threads per org:
-
-File 9_9_8_2_8_1
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 9_1_8_8_8_3
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 9_3_8_9_8_1
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 9_6_8_5_8_9
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 9_5_8_7_8_2
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 9_0_8_1_8_8
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 9_8_8_7_8_6
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 9_2_8_9_8_1
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 9_4_8_3_8_8
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 9_7_8_3_8_8
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-
- mean performances for each org in population: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-
---------------------------------------------------
-Calculating the Std Error of the mean: 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Stddv: 0.0  StdErr: 0.0
-------------------------------------------------------------
- 
-
-quartiles: {'mean_threads': 1.0, 'min': 1, 'Generation': 9, 'max': 1, 'gen_size': 10, 'mode': 1, 'stderr': 0.0}
-
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-------------------------------------------------------------
-Crossing Generation:
-
-fours [u'9_9_8_2_8_1', u'9_1_8_8_8_3']
-threes [u'9_3_8_9_8_1', u'9_6_8_5_8_9']
-twos [u'9_5_8_7_8_2', u'9_0_8_1_8_8']
-ones [u'9_8_8_7_8_6', u'9_2_8_9_8_1']
-org1 9_9_8_2_8_1, org2 9_1_8_8_8_3
-crossing org1:9_9_8_2_8_1 with org2:9_1_8_8_8_3
-
-fours []
-threes [u'9_3_8_9_8_1', u'9_6_8_5_8_9', u'9_9_8_2_8_1', u'9_1_8_8_8_3']
-twos [u'9_5_8_7_8_2', u'9_0_8_1_8_8']
-ones [u'9_8_8_7_8_6', u'9_2_8_9_8_1']
-org1 9_6_8_5_8_9, org2 9_9_8_2_8_1
-crossing org1:9_6_8_5_8_9 with org2:9_9_8_2_8_1
-
-fours []
-threes [u'9_3_8_9_8_1', u'9_1_8_8_8_3']
-twos [u'9_5_8_7_8_2', u'9_0_8_1_8_8', u'9_6_8_5_8_9', u'9_9_8_2_8_1']
-ones [u'9_8_8_7_8_6', u'9_2_8_9_8_1']
-org1 9_3_8_9_8_1, org2 9_1_8_8_8_3
-crossing org1:9_3_8_9_8_1 with org2:9_1_8_8_8_3
-
-Char mutation at index: 73
-0 --> 1
-fours []
-threes []
-twos [u'9_5_8_7_8_2', u'9_0_8_1_8_8', u'9_6_8_5_8_9', u'9_9_8_2_8_1', u'9_3_8_9_8_1', u'9_1_8_8_8_3']
-ones [u'9_8_8_7_8_6', u'9_2_8_9_8_1']
-org1 9_1_8_8_8_3, org2 9_3_8_9_8_1
-crossing org1:9_1_8_8_8_3 with org2:9_3_8_9_8_1
-
-fours []
-threes []
-twos [u'9_5_8_7_8_2', u'9_0_8_1_8_8', u'9_6_8_5_8_9', u'9_9_8_2_8_1']
-ones [u'9_8_8_7_8_6', u'9_2_8_9_8_1', u'9_1_8_8_8_3', u'9_3_8_9_8_1']
-org1 9_5_8_7_8_2, org2 9_0_8_1_8_8
-crossing org1:9_5_8_7_8_2 with org2:9_0_8_1_8_8
-
-fours []
-threes []
-twos [u'9_6_8_5_8_9', u'9_9_8_2_8_1']
-ones [u'9_8_8_7_8_6', u'9_2_8_9_8_1', u'9_1_8_8_8_3', u'9_3_8_9_8_1', u'9_5_8_7_8_2', u'9_0_8_1_8_8']
-org1 9_9_8_2_8_1, org2 9_6_8_5_8_9
-crossing org1:9_9_8_2_8_1 with org2:9_6_8_5_8_9
-
-fours []
-threes []
-twos []
-ones [u'9_8_8_7_8_6', u'9_2_8_9_8_1', u'9_1_8_8_8_3', u'9_3_8_9_8_1', u'9_5_8_7_8_2', u'9_0_8_1_8_8', u'9_9_8_2_8_1', u'9_6_8_5_8_9']
-org1 9_3_8_9_8_1, org2 9_2_8_9_8_1
-crossing org1:9_3_8_9_8_1 with org2:9_2_8_9_8_1
-
-fours []
-threes []
-twos []
-ones [u'9_8_8_7_8_6', u'9_1_8_8_8_3', u'9_5_8_7_8_2', u'9_0_8_1_8_8', u'9_9_8_2_8_1', u'9_6_8_5_8_9']
-org1 9_5_8_7_8_2, org2 9_1_8_8_8_3
-crossing org1:9_5_8_7_8_2 with org2:9_1_8_8_8_3
-
-fours []
-threes []
-twos []
-ones [u'9_8_8_7_8_6', u'9_0_8_1_8_8', u'9_9_8_2_8_1', u'9_6_8_5_8_9']
-org1 9_8_8_7_8_6, org2 9_0_8_1_8_8
-crossing org1:9_8_8_7_8_6 with org2:9_0_8_1_8_8
-
-fours []
-threes []
-twos []
-ones [u'9_9_8_2_8_1', u'9_6_8_5_8_9']
-org1 9_6_8_5_8_9, org2 9_9_8_2_8_1
-crossing org1:9_6_8_5_8_9 with org2:9_9_8_2_8_1
-
-
-Number of Orgs in new gen: 10
-Active Threads per org:
-
-File 10_7_9_5_9_1
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 10_3_9_3_9_1
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 10_9_9_6_9_9
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 10_2_9_1_9_3
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 10_5_9_9_9_6
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 10_0_9_1_9_9
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 10_8_9_8_9_0
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 10_6_9_2_9_3
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 10_4_9_5_9_0
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-File 10_1_9_9_9_6
-genome length 420
-thread len.: 6
-thread len.: 0
-
-thread count 1
-
-
- mean performances for each org in population: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
-
---------------------------------------------------
-Calculating the Std Error of the mean: 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Stddv: 0.0  StdErr: 0.0
-------------------------------------------------------------
- 
-
-quartiles: {'mean_threads': 1.0, 'min': 1, 'Generation': 10, 'max': 1, 'gen_size': 10, 'mode': 1, 'stderr': 0.0}
-
-1
-1
-1
-1
-1
-1
-1
-1
-1
-1
-------------------------------------------------------------
-Crossing Generation:
-
-fours [u'10_7_9_5_9_1', u'10_3_9_3_9_1']
-threes [u'10_9_9_6_9_9', u'10_2_9_1_9_3']
-twos [u'10_5_9_9_9_6', u'10_0_9_1_9_9']
-ones [u'10_8_9_8_9_0', u'10_6_9_2_9_3']
-org1 10_7_9_5_9_1, org2 10_3_9_3_9_1
-crossing org1:10_7_9_5_9_1 with org2:10_3_9_3_9_1
-
-fours []
-threes [u'10_9_9_6_9_9', u'10_2_9_1_9_3', u'10_7_9_5_9_1', u'10_3_9_3_9_1']
-twos [u'10_5_9_9_9_6', u'10_0_9_1_9_9']
-ones [u'10_8_9_8_9_0', u'10_6_9_2_9_3']
-org1 10_2_9_1_9_3, org2 10_3_9_3_9_1
-crossing org1:10_2_9_1_9_3 with org2:10_3_9_3_9_1
-
-fours []
-threes [u'10_9_9_6_9_9', u'10_7_9_5_9_1']
-twos [u'10_5_9_9_9_6', u'10_0_9_1_9_9', u'10_2_9_1_9_3', u'10_3_9_3_9_1']
-ones [u'10_8_9_8_9_0', u'10_6_9_2_9_3']
-org1 10_9_9_6_9_9, org2 10_7_9_5_9_1
-crossing org1:10_9_9_6_9_9 with org2:10_7_9_5_9_1
-
-Char mutation at index: 43
-0 --> 1
-fours []
-threes []
-twos [u'10_5_9_9_9_6', u'10_0_9_1_9_9', u'10_2_9_1_9_3', u'10_3_9_3_9_1', u'10_9_9_6_9_9', u'10_7_9_5_9_1']
-ones [u'10_8_9_8_9_0', u'10_6_9_2_9_3']
-org1 10_9_9_6_9_9, org2 10_0_9_1_9_9
-crossing org1:10_9_9_6_9_9 with org2:10_0_9_1_9_9
-
-fours []
-threes []
-twos [u'10_5_9_9_9_6', u'10_2_9_1_9_3', u'10_3_9_3_9_1', u'10_7_9_5_9_1']
-ones [u'10_8_9_8_9_0', u'10_6_9_2_9_3', u'10_9_9_6_9_9', u'10_0_9_1_9_9']
-org1 10_7_9_5_9_1, org2 10_2_9_1_9_3
-crossing org1:10_7_9_5_9_1 with org2:10_2_9_1_9_3
-
-fours []
-threes []
-twos [u'10_5_9_9_9_6', u'10_3_9_3_9_1']
-ones [u'10_8_9_8_9_0', u'10_6_9_2_9_3', u'10_9_9_6_9_9', u'10_0_9_1_9_9', u'10_7_9_5_9_1', u'10_2_9_1_9_3']
-org1 10_3_9_3_9_1, org2 10_5_9_9_9_6
-crossing org1:10_3_9_3_9_1 with org2:10_5_9_9_9_6
-
-fours []
-threes []
-twos []
-ones [u'10_8_9_8_9_0', u'10_6_9_2_9_3', u'10_9_9_6_9_9', u'10_0_9_1_9_9', u'10_7_9_5_9_1', u'10_2_9_1_9_3', u'10_3_9_3_9_1', u'10_5_9_9_9_6']
-org1 10_5_9_9_9_6, org2 10_0_9_1_9_9
-crossing org1:10_5_9_9_9_6 with org2:10_0_9_1_9_9
-
-fours []
-threes []
-twos []
-ones [u'10_8_9_8_9_0', u'10_6_9_2_9_3', u'10_9_9_6_9_9', u'10_7_9_5_9_1', u'10_2_9_1_9_3', u'10_3_9_3_9_1']
-org1 10_7_9_5_9_1, org2 10_2_9_1_9_3
-crossing org1:10_7_9_5_9_1 with org2:10_2_9_1_9_3
-
-fours []
-threes []
-twos []
-ones [u'10_8_9_8_9_0', u'10_6_9_2_9_3', u'10_9_9_6_9_9', u'10_3_9_3_9_1']
-org1 10_6_9_2_9_3, org2 10_8_9_8_9_0
-crossing org1:10_6_9_2_9_3 with org2:10_8_9_8_9_0
-
-fours []
-threes []
-twos []
-ones [u'10_9_9_6_9_9', u'10_3_9_3_9_1']
-org1 10_9_9_6_9_9, org2 10_3_9_3_9_1
-crossing org1:10_9_9_6_9_9 with org2:10_3_9_3_9_1
-
-
-Number of Orgs in new gen: 10
-#+end_example
 

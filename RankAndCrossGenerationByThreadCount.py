@@ -1,3 +1,4 @@
+
 __author__ = 'JakeBrawer'
 from json_load_file import json_load_file
 import random
@@ -65,6 +66,7 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
                         thread_count = 0
                         for thread in org.threads:
                             print 'thread len.:',len(thread.connected_pins)
+                            print "thread binary len:", len(thread.binary)
                             if len(thread.connected_pins) > 0:
                                 thread_count += 1
                         org.performance_1 = thread_count
