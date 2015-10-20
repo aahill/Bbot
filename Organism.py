@@ -1,3 +1,4 @@
+
 from BaseAndInstructionSet import *
 from Decoder import Decoder
 from PinAndPinGroup import *
@@ -22,6 +23,8 @@ class Organism:
         self.reproduction_possibilities = None
         self.generation = generation
         self.generational_index = generational_index
+        self.thread_length = thread_length
+        self.genome_size = genome_size 
         # store organizational and naming information
         #NOTE: no longer saves a reference to parent org object
         #as that resulted in gigundus file sizes
@@ -67,6 +70,7 @@ class Organism:
         self.create_threads(thread_length)
         self.generate_thread_instructions()
         self.build_thread_coordinates()
+
     """
     creates the string for the organism's filename
     """
@@ -384,16 +388,16 @@ def reproduce(org1, org2, path):
         for root, dirs, files in os.walk(path, topdown=False):
             for name in files:
                 count += 1
-        child_instruction_set = InstructionSet(2100, 2,True,300)
+        child_instruction_set = InstructionSet(dom.genome_size, 2,True,dom.thread_length)
         child_instruction_set.setGenome(child1_genome)
         child_instruction_set.mutate()
-        child1 = Organism(dom.generation + 1, count,2100,2,True,300, dom, rec, child_instruction_set.genome)
+        child1 = Organism(dom.generation + 1, count,dom.genome_size,2,True,dom.thread_length, dom, rec, child_instruction_set.genome)
     else:
         os.makedirs(path)
-        child_instruction_set = InstructionSet(2100, 2,True,300)
+        child_instruction_set = InstructionSet(dom.genome_size, 2,True,dom.thread_length)
         child_instruction_set.setGenome(child1_genome)
         child_instruction_set.mutate()
-        child1 = Organism(dom.generation + 1, 0,2100,2,True,300, dom, rec, child_instruction_set.genome)
+        child1 = Organism(dom.generation + 1, 0,dom.genome_size,2,True,dom.thread_length, dom, rec, child_instruction_set.genome)
         #print [i.char for i in child1.genome]
    # print 'child %s threads:' % child1.filename
    # for thread in child1.threads:

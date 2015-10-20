@@ -1,3 +1,4 @@
+
 import csv
 from collections import defaultdict
 def energyAcquired(*args):
