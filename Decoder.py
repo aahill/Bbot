@@ -1,7 +1,3 @@
-
-import random
-from BaseAndInstructionSet import *
-
 class Decoder:
     def __init__(self):
         self.index = 0
@@ -36,17 +32,17 @@ class Decoder:
         elif binary_string == "1001":
             return 9
         elif binary_string == "1010":
-            return
+            return 10
         elif binary_string == "1011":
-            return
+            return 11
         elif binary_string == "1100":
-            return
+            return 12
         elif binary_string == "1101":
-            return
+            return 13
         elif binary_string == "1110":
-            return
+            return  14
         elif binary_string == "1111":
-            return
+            return  15
 
     def binary_to_decimal(self, binary_list):
         dec_list = []
