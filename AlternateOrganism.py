@@ -330,105 +330,105 @@ class Organism:
       
       
 
-  def reproduce(org1, org2, path):
-      dom = random.choice([org1, org2])  # Parent whose crossover points are being used
-      rec = filter(lambda y: y != dom, [org1, org2])
-      rec = rec[0]# Other parent
-      child1_genome = []
-      gen_count = 0
-      index = 0
-      # This is how the offsprings genome is made
-      #allows for crossing over at nonhotspots at 1/100000 chance.
-      """"while index < len(dom.genome):
-          child1_genome.append(dom.genome[index])
-          if dom.genome[index].crossover_point == 1:
-              while dom.genome[index + 1].crossover_point != 1 and \
-                      index + 1 < len(dom.genome) - 1:
-                          child1_genome.append(rec.genome[index + 1])
-                          index += 1
-          index += 1"""
-  
-      dom_genome_copy = True
-      dom_stuff =[]
-      rec_stuff=[]
-      while index <= len(dom.genome) - 1:
-          """if index  % 4 == 0:
-              dom_stuff.append('')
-              #rec_stuff.append('|')"""
-          if dom_genome_copy:
-              child1_genome.append(dom.genome[index])
-              dom_stuff.append(dom.genome[index].char)
-              rec_stuff.append(rec.genome[index].char)
-              if dom.genome[index].crossover_point == 1:
-                  dom_stuff.append('HERE')
-                  rec_stuff.append('HERE')
-                  dom_genome_copy = False
-              index += 1
-          else:
-              child1_genome.append(rec.genome[index])
-              dom_stuff.append(rec.genome[index].char)
-              rec_stuff.append(rec.genome[index].char)
-              if rec.genome[index].crossover_point == 1:
-                  dom_stuff.append('HERE')
-                  rec_stuff.append('HERE')
-                  dom_genome_copy = True
-              index +=1
-      """"for i in range (0, len(dom_stuff)- 1):
-          print '%s  %s' %  (dom_stuff[i], rec_stuff[i])
-      print dom_stuff"""
-  
-  
-      # This takes care of  of saving the Org.
-      # if the path specified does not exist a new directory
-      # will be created
-  
-      count = 0
-      if os.path.isdir(path):
-          for root, dirs, files in os.walk(path, topdown=False):
-              for name in files:
-                  count += 1
-          child_instruction_set = InstructionSet(dom.genome_size, 2,True,dom.thread_length)
-          child_instruction_set.setGenome(child1_genome)
-          child_instruction_set.mutate()
-          child1 = Organism(dom.generation + 1, count,dom.genome_size,2,True,dom.thread_length, dom, rec, child_instruction_set.genome)
-      else:
-          os.makedirs(path)
-          child_instruction_set = InstructionSet(dom.genome_size, 2,True,dom.thread_length)
-          child_instruction_set.setGenome(child1_genome)
-          child_instruction_set.mutate()
-          child1 = Organism(dom.generation + 1, 0,dom.genome_size,2,True,dom.thread_length, dom, rec, child_instruction_set.genome)
-          #print [i.char for i in child1.genome]
-     # print 'child %s threads:' % child1.filename
-     # for thread in child1.threads:
-     #     print thread.decoded_instructions
-     #     print [i.group_id for i in thread.connected_pins]
-      child1.save_to_file(path)
-     # print 'Dom  Rec  Crossover  real_offspring'
-     # for i in range(len(child1_genome) - 1):
-     #     print '%s      %s      %s          %s' % (dom.genome[i].char, rec.genome[i].char, child1_genome[i].crossover_point,child1_genome[i].char)
-      #if is_same_genome(dom, child1): print 'THEYRE SAME'
-      #else: print 'THYRE DIFF'
-      return child1
-  def generate_viable():
-      # writes a 'progress bar' to the console
-      def progress(x):
-          out = '\r %s organisms tested' % x  # The output
-          print out,
-  
-      genomes_tested = 0
-      finished = False
-      while not finished:
-          test = Organism(0, 0)
-          if test.is_viable():
-              print "-------------------------------------//"
-              print "connections: "
-              for thread in test.threads:
-                  print "new thread connections:"
-                  for connection in thread.connected_pins:
-                      print connection.group_id, connection.number
-              print "-------------------------------------//"
-              finished = True
-          else:
-              del test
-              genomes_tested += 1
-              progress(genomes_tested)
+def reproduce(org1, org2, path):
+    dom = random.choice([org1, org2])  # Parent whose crossover points are being used
+    rec = filter(lambda y: y != dom, [org1, org2])
+    rec = rec[0]# Other parent
+    child1_genome = []
+    gen_count = 0
+    index = 0
+    # This is how the offsprings genome is made
+    #allows for crossing over at nonhotspots at 1/100000 chance.
+    """"while index < len(dom.genome):
+        child1_genome.append(dom.genome[index])
+        if dom.genome[index].crossover_point == 1:
+            while dom.genome[index + 1].crossover_point != 1 and \
+                    index + 1 < len(dom.genome) - 1:
+                        child1_genome.append(rec.genome[index + 1])
+                        index += 1
+        index += 1"""
+
+    dom_genome_copy = True
+    dom_stuff =[]
+    rec_stuff=[]
+    while index <= len(dom.genome) - 1:
+        """if index  % 4 == 0:
+            dom_stuff.append('')
+            #rec_stuff.append('|')"""
+        if dom_genome_copy:
+            child1_genome.append(dom.genome[index])
+            dom_stuff.append(dom.genome[index].char)
+            rec_stuff.append(rec.genome[index].char)
+            if dom.genome[index].crossover_point == 1:
+                dom_stuff.append('HERE')
+                rec_stuff.append('HERE')
+                dom_genome_copy = False
+            index += 1
+        else:
+            child1_genome.append(rec.genome[index])
+            dom_stuff.append(rec.genome[index].char)
+            rec_stuff.append(rec.genome[index].char)
+            if rec.genome[index].crossover_point == 1:
+                dom_stuff.append('HERE')
+                rec_stuff.append('HERE')
+                dom_genome_copy = True
+            index +=1
+    """"for i in range (0, len(dom_stuff)- 1):
+        print '%s  %s' %  (dom_stuff[i], rec_stuff[i])
+    print dom_stuff"""
+
+
+    # This takes care of  of saving the Org.
+    # if the path specified does not exist a new directory
+    # will be created
+
+    count = 0
+    if os.path.isdir(path):
+        for root, dirs, files in os.walk(path, topdown=False):
+            for name in files:
+                count += 1
+        child_instruction_set = InstructionSet(dom.genome_size, 2,True,dom.thread_length)
+        child_instruction_set.setGenome(child1_genome)
+        child_instruction_set.mutate()
+        child1 = Organism(dom.generation + 1, count,dom.genome_size,2,True,dom.thread_length, dom, rec, child_instruction_set.genome)
+    else:
+        os.makedirs(path)
+        child_instruction_set = InstructionSet(dom.genome_size, 2,True,dom.thread_length)
+        child_instruction_set.setGenome(child1_genome)
+        child_instruction_set.mutate()
+        child1 = Organism(dom.generation + 1, 0,dom.genome_size,2,True,dom.thread_length, dom, rec, child_instruction_set.genome)
+        #print [i.char for i in child1.genome]
+   # print 'child %s threads:' % child1.filename
+   # for thread in child1.threads:
+   #     print thread.decoded_instructions
+   #     print [i.group_id for i in thread.connected_pins]
+    child1.save_to_file(path)
+   # print 'Dom  Rec  Crossover  real_offspring'
+   # for i in range(len(child1_genome) - 1):
+   #     print '%s      %s      %s          %s' % (dom.genome[i].char, rec.genome[i].char, child1_genome[i].crossover_point,child1_genome[i].char)
+    #if is_same_genome(dom, child1): print 'THEYRE SAME'
+    #else: print 'THYRE DIFF'
+    return child1
+def generate_viable():
+    # writes a 'progress bar' to the console
+    def progress(x):
+        out = '\r %s organisms tested' % x  # The output
+        print out,
+
+    genomes_tested = 0
+    finished = False
+    while not finished:
+        test = Organism(0, 0)
+        if test.is_viable():
+            print "-------------------------------------//"
+            print "connections: "
+            for thread in test.threads:
+                print "new thread connections:"
+                for connection in thread.connected_pins:
+                    print connection.group_id, connection.number
+            print "-------------------------------------//"
+            finished = True
+        else:
+            del test
+            genomes_tested += 1
+            progress(genomes_tested)

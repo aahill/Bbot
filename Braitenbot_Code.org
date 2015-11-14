@@ -2294,14 +2294,14 @@ Pretty much the same as [[RankAndCrossGeneration]] except it selects for the num
                       print connection.group_id, connection.number
               print "-------------------------------------//"
           tested += 1
-          #progress(tested_gen(10, "/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/coding_region_300/Double_Crossover_1/Gen1")
+          #progress(tested_gen(10, "/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/coding_region_300/Double_Crossover_2/Gen1")
 
-  initial_gen( 10, "/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_300/Double_Crossover_1/Gen1")
+  initial_gen( 10, "/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_300/Double_Crossover_2/Gen1")
   gen = 1
   while (gen < 11):
-      path1 = "/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_300/Double_Crossover_1/Gen"+str(gen)
-      path2 = "/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_300/Double_Crossover_1/Gen"+str(gen+1)
-      thresholdedCrossGeneration("/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_300/Double_Crossover_1", path1, path2)
+      path1 = "/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_300/Double_Crossover_2/Gen"+str(gen)
+      path2 = "/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_300/Double_Crossover_2/Gen"+str(gen+1)
+      thresholdedCrossGeneration("/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_300/Double_Crossover_2", path1, path2)
       gen+=1
 
 #+END_SRC

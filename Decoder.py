@@ -1,6 +1,3 @@
-import random
-from BaseAndInstructionSet import *
-
 class Decoder:
     def __init__(self):
         self.index = 0
@@ -64,7 +61,7 @@ class Decoder:
         #print
     
 
-    def generate_coords(self, binary_string):
+    def generate_coords(self, binaryList):
         """
         method for getting the next non-NONE value from decList
         return: either the value of decList at index self.index, unless an error is found; in which case
@@ -99,7 +96,7 @@ class Decoder:
         # the input decList must have at least one digit for the creation of the initial pin coordinate,
         # and 3 more for the creation of a terminal pin.
         # If this condition is met, generate initial x,y coord from first value in the array
-        decList = self.binary_to_decimal(binary_string)
+        decList = self.binary_to_decimal(binaryList)
         #print "Direction key: 0: y+=Distance,1:x+=distance, y+=distance, 2:x+=distance, 3:x=distance, y-=distance\n"+\
         #"4:y-=distance, 5:x-=distance, y-=distance, 6: x-=distance, 7: x-=distance, y-=distance"
         #print decList
