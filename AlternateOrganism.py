@@ -1,5 +1,5 @@
 from BaseAndInstructionSet import *
-from AlternateDecoder import Decoder
+from Decoder import Decoder
 from AlternatePinAndPinGroup import *
 import random
 import os

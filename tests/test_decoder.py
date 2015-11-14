@@ -52,7 +52,7 @@ def test_binary_list_to_decimal():
 		assert_equal(x, list_of_dec[x])
 
 def test_generate_coords():
-	#test_input = ["0001","0001","0001","0001","0001","0001","0001","0001"]
+	#below string of decimal 1's equates to 8 decimals
 	test_input = "00010001000100010001000100010001"
 	test_output = test_decoder.generate_coords(test_input)
 	assert_equal(test_output, [(1,1),(2,1,1)])

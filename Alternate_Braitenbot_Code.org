@@ -647,7 +647,7 @@ class GroupFr(MotorSensorPinGroup):
 #+RESULTS: MotorSensorGroups
 
 * Decoder Code
-#+BEGIN_SRC python :noweb yes :tangle AlternateDecoder.py
+#+BEGIN_SRC python :noweb yes :tangle Decoder.py
 <<Decoder_Imports>>
 
 <<Decoder>>
@@ -657,7 +657,7 @@ class GroupFr(MotorSensorPinGroup):
 #+NAME: Decoder_Imports
 #+BEGIN_SRC python 
 import random
-from AlternateBaseAndInstructionSet import *
+from BaseAndInstructionSet import *
 #+END_SRC
 ** Class: Decoder
 *Input:* None\\
@@ -1172,7 +1172,7 @@ For each Base in InstructionSet, there is 2/20000 of the Base being mutated.
 #+NAME: ThreadAndOrganism_Imports 
 #+BEGIN_SRC python 
 from BaseAndInstructionSet import *
-from AlternateDecoder import Decoder
+from Decoder import Decoder
 from AlternatePinAndPinGroup import *
 import random
 import os
@@ -2315,3 +2315,27 @@ Pretty much the same as [[RankAndCrossGeneration]] except it selects for the num
 #+RESULTS:
 
  
+* Generate single alternate organism
+#+BEGIN_SRC python :noweb yes :tangle OrganismTest.py :results output
+  from AlternateOrganism import *
+
+  #self, generation, generational_index,genome_size, num_crossover_points, unrestricted_crossover_point_distribution, thread_length, parent1=None, parent2=None, genome=None):
+ 
+
+  done = False
+  while not done:
+    test = Organism(0,0,2100,4,True,300)
+    pins = []
+    for thread in test.threads:
+      for connection in thread.connected_pins:
+        id = connection.group_id + ',' + str(connection.number)
+        pins.append(id)
+    if len(set(pins)) != len(pins):
+      done = True
+      print pins
+
+#+END_SRC
+
+#+RESULTS:
+: ['e5,1', 'i2,0', 'n2,1', 'i2,0']
+

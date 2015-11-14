@@ -6,11 +6,7 @@ from AlternateOrganism import *
 done = False
 while not done:
   test = Organism(0,0,2100,4,True,300)
-  pins = []
-  for thread in test.threads:
-    for connection in thread.connected_pins:
-      id = connection.group_id + ',' + str(connection.number)
-      pins.append(id)
-  if len(set(pins)) != len(pins):
-    done = True
-    print pins
+  if test.is_viable():
+      for thread in test.threads:
+          for connection in thread.connected_pins:
+              print connection
