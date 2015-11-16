@@ -15,15 +15,16 @@ class Thread:
     def decode(self):
         self.decoded_instructions = self.decoder.generate_coords(self.binary)
 class Organism:
-      def __init__(self, generation, generational_index,genome_size, num_crossover_points, unrestricted_crossover_point_distribution, thread_length, parent1=None, parent2=None, genome=None):
+      def __init__(self, generation, generational_index,genome_size, num_crossover_points, unrestricted_crossover_point_distribution, thread_length,mutation_rate, parent1=None, parent2=None, genome=None):
           # store perfromance on behavioral task
-          self.performance_3 = None
-          self.performance_3 = None
+          self.performance_1 = None
+          self.performance_1 = None
           self.reproduction_possibilities = None
           self.generation = generation
           self.generational_index = generational_index
           self.thread_length = thread_length
           self.genome_size = genome_size 
+          self.mutation_rate = mutation_rate
           # store organizational and naming information
           #NOTE: no longer saves a reference to parent org object
           #as that resulted in gigundus file sizes
@@ -37,7 +38,7 @@ class Organism:
               pass
           self.filename = self.set_file_name()
           thread_length = thread_length
-          self.instruction_set = InstructionSet(genome_size, num_crossover_points,unrestricted_crossover_point_distribution, thread_length)
+          self.instruction_set = InstructionSet(genome_size, num_crossover_points,unrestricted_crossover_point_distribution, thread_length,mutation_rate)
           #This conditional is recquired for threads to build with
           # recombinated genome
           if genome is None: self.genome = self.instruction_set.genome
@@ -373,9 +374,9 @@ def reproduce(org1, org2, path):
                 rec_stuff.append('HERE')
                 dom_genome_copy = True
             index +=1
-    """"for i in range (0, len(dom_stuff)- 1):
-        print '%s  %s' %  (dom_stuff[i], rec_stuff[i])
-    print dom_stuff"""
+    #for i in range (0, len(dom_stuff)- 1):
+        #print '%s  %s' %  (dom_stuff[i], rec_stuff[i])
+    #print dom_stuff
 
 
     # This takes care of  of saving the Org.
@@ -387,16 +388,16 @@ def reproduce(org1, org2, path):
         for root, dirs, files in os.walk(path, topdown=False):
             for name in files:
                 count += 1
-        child_instruction_set = InstructionSet(dom.genome_size, 2,True,dom.thread_length)
+        child_instruction_set = InstructionSet(dom.genome_size, 2,True,dom.thread_length, dom.mutation_rate)
         child_instruction_set.setGenome(child1_genome)
         child_instruction_set.mutate()
-        child1 = Organism(dom.generation + 1, count,dom.genome_size,2,True,dom.thread_length, dom, rec, child_instruction_set.genome)
+        child1 = Organism(dom.generation + 1, count,dom.genome_size,2,True,dom.thread_length, dom, rec, child_instruction_set.genome, dom.mutation_rate)
     else:
         os.makedirs(path)
-        child_instruction_set = InstructionSet(dom.genome_size, 2,True,dom.thread_length)
+        child_instruction_set = InstructionSet(dom.genome_size, 2,True,dom.thread_length, dom.mutation_rate)
         child_instruction_set.setGenome(child1_genome)
         child_instruction_set.mutate()
-        child1 = Organism(dom.generation + 1, 0,dom.genome_size,2,True,dom.thread_length, dom, rec, child_instruction_set.genome)
+        child1 = Organism(dom.generation + 1, 0,dom.genome_size,2,True,dom.thread_length, dom, rec, child_instruction_set.genome, dom.mutation_rate)
         #print [i.char for i in child1.genome]
    # print 'child %s threads:' % child1.filename
    # for thread in child1.threads:
