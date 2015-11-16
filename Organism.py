@@ -38,7 +38,7 @@ class Organism:
               pass
           self.filename = self.set_file_name()
           thread_length = thread_length
-          self.instruction_set = InstructionSet(genome_size, num_crossover_points,unrestricted_crossover_point_distribution, thread_length,mutation_rate)
+          self.instruction_set = InstructionSet(genome_size, num_crossover_points,unrestricted_crossover_point_distribution, thread_length, mutation_rate)
           #This conditional is recquired for threads to build with
           # recombinated genome
           if genome is None: self.genome = self.instruction_set.genome
@@ -391,13 +391,13 @@ def reproduce(org1, org2, path):
         child_instruction_set = InstructionSet(dom.genome_size, 2,True,dom.thread_length, dom.mutation_rate)
         child_instruction_set.setGenome(child1_genome)
         child_instruction_set.mutate()
-        child1 = Organism(dom.generation + 1, count,dom.genome_size,2,True,dom.thread_length, dom, rec, child_instruction_set.genome, dom.mutation_rate)
+        child1 = Organism(dom.generation + 1, count,dom.genome_size,2,True,dom.thread_length,dom.mutation_rate, dom, rec, child_instruction_set.genome)
     else:
         os.makedirs(path)
         child_instruction_set = InstructionSet(dom.genome_size, 2,True,dom.thread_length, dom.mutation_rate)
         child_instruction_set.setGenome(child1_genome)
         child_instruction_set.mutate()
-        child1 = Organism(dom.generation + 1, 0,dom.genome_size,2,True,dom.thread_length, dom, rec, child_instruction_set.genome, dom.mutation_rate)
+        child1 = Organism(dom.generation + 1, 0,dom.genome_size,2,True,dom.thread_length, dom.mutation_rate, dom, rec, child_instruction_set.genome)
         #print [i.char for i in child1.genome]
    # print 'child %s threads:' % child1.filename
    # for thread in child1.threads:

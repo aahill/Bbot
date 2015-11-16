@@ -19,7 +19,8 @@ class Base:
 class InstructionSet:
     def __init__(self, size, crossover_point_number,unrestricted_distribution, gene_length, mutation_rate ):
         self.genome = []
-        x = size  # a place holder, the length of the genome
+        self.mutation_chance = mutation_rate
+        x = size  # a plac holder, the length of the genome
         counter = 0 
         for num in range(0, x ):
             self.genome.append(Base())
@@ -49,7 +50,7 @@ class InstructionSet:
     
     def mutate(self):
         #mutation_chance = 20000 #THIS IS THE REAL ONE
-        mutation_chance = mutation_rate
+        mutation_chance = self.mutation_chance
         for i in range(len(self.genome)):
             rand_int1 = random.randint(1, mutation_chance)
             rand_int2 = random.randint(1, mutation_chance)
