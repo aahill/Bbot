@@ -17,8 +17,8 @@ class Thread:
 class Organism:
       def __init__(self, generation, generational_index,genome_size, num_crossover_points, unrestricted_crossover_point_distribution, thread_length,mutation_rate, parent1=None, parent2=None, genome=None):
           # store perfromance on behavioral task
-          self.performance_1 = None
-          self.performance_1 = None
+          self.performance_And_Double_Crossover_1 = None
+          self.performance_And_Double_Crossover_1 = None
           self.reproduction_possibilities = None
           self.generation = generation
           self.generational_index = generational_index
