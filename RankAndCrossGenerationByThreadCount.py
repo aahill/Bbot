@@ -240,4 +240,4 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
     gc.collect()
 
 
-#thresholdedCrossGeneration('/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_And_More_Mutation_And_Double_Crossover_1', '/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_1/Gen11' ,'/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_1/Gen12' )
+#thresholdedCrossGeneration('/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_And_Default_1', '/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_1/Gen11' ,'/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_1/Gen12' )

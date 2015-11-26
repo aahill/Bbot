@@ -37,15 +37,15 @@ class Decoder:
         elif binary_string == "1010":
             return 10
         elif binary_string == "1011":
-            return 11
+            return
         elif binary_string == "1100":
-            return 12 
+            return  
         elif binary_string == "1101":
-            return 13 
+            return  
         elif binary_string == "1110":
-            return 14  
+            return   
         elif binary_string == "1111":
-            return 15  
+            return   
 
     def binary_to_decimal(self, binary_list):
         dec_list = []

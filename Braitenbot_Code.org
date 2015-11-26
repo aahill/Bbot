@@ -708,15 +708,15 @@ from BaseAndInstructionSet import *
         elif binary_string == "1010":
             return 10
         elif binary_string == "1011":
-            return 11
+            return
         elif binary_string == "1100":
-            return 12 
+            return  
         elif binary_string == "1101":
-            return 13 
+            return  
         elif binary_string == "1110":
-            return 14  
+            return   
         elif binary_string == "1111":
-            return 15  
+            return   
 #+END_SRC
 **** binary to decimal 
 *Input:* binary_list, an n-bit list
