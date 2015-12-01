@@ -667,8 +667,6 @@ from BaseAndInstructionSet import *
 
       <<generate_coords>>
 
-
-
 #+END_SRC
 *** Methods
 **** decode binary 
@@ -1071,24 +1069,21 @@ InstructionSet 10 length: 20, # of Crossover_points: 2
       #mutation_chance = 20000 #THIS IS THE REAL ONE
       mutation_chance = self.mutation_chance
       for i in range(len(self.genome)):
-          rand_int1 = random.randint(1, mutation_chance)
-          rand_int2 = random.randint(1, mutation_chance)
+          rand_int1 = random.randint(0, mutation_chance)
+          rand_int2 = random.randint(0, mutation_chance)
           if rand_int1 == mutation_chance:
               print 'Crossover_point mutation at index: %s' % i
               if self.genome[i].crossover_point == 0:
                   self.genome[i].set_crossover_point(1)
                   print '0 --> %s' % self.genome[i].crossover_point
-                  return True
               else:
                   self.genome[i].set_crossover_point(0)
                   print '1 --> %s' % self.genome[i].crossover_point
-                  return True
           if rand_int2 == mutation_chance:
               print 'Char mutation at index: %s' % i
               if self.genome[i].char == 0:
                   self.genome[i].set_char(1)
                   print '0 --> %s' % self.genome[i].char
-                  return True
               else:
                   self.genome[i].set_char(0) 
                   print '1 --> %s' % self.genome[i].char
@@ -2271,7 +2266,7 @@ Pretty much the same as [[RankAndCrossGeneration]] except it selects for the num
       gc.collect()
 
 
-  #thresholdedCrossGeneration('/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_And_Default_1', '/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_1/Gen11' ,'/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_1/Gen12' )
+  #thresholdedCrossGeneration('/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_And_More_Mutation_2', '/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_1/Gen11' ,'/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_1/Gen12' )
 
 
 
@@ -2286,7 +2281,7 @@ Pretty much the same as [[RankAndCrossGeneration]] except it selects for the num
       while orgs < number_of_orgs:
       #Organism params in order: generation, generational index, genome_len, num crossover points
           # Unrestricted crossover distribution, coding region len, mutation rate
-          org = Organism.Organism(1, orgs,560,2,True, 80, 20000)
+          org = Organism.Organism(1, orgs,560,2,True, 80, 2000)
           if org.is_viable():
               org.save_to_file(path)
               orgs += 1
@@ -2298,14 +2293,14 @@ Pretty much the same as [[RankAndCrossGeneration]] except it selects for the num
                       print connection.group_id, connection.number
               print "-------------------------------------//"
           tested += 1
-          #progress(tested_gen(10, "/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/coding_region_80/Default_1/Gen1")
+          #progress(tested_gen(10, "/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/coding_region_80/More_Mutation_2/Gen1")
 
-  initial_gen( 10, "/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_80/D2/Default_1/Gen1")
+  initial_gen( 10, "/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_80/D1/More_Mutation_2/Gen1")
   gen = 1
   while (gen < 11):
-      path1 = "/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_80/D2/Default_1/Gen"+str(gen)
-      path2 = "/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_80/D2/Default_1/Gen"+str(gen+1)
-      thresholdedCrossGeneration("/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_80/D2/Default_1", path1, path2)
+      path1 = "/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_80/D1/More_Mutation_2/Gen"+str(gen)
+      path2 = "/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_80/D1/More_Mutation_2/Gen"+str(gen+1)
+      thresholdedCrossGeneration("/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_80/D1/More_Mutation_2", path1, path2)
       gen+=1
 
 #+END_SRC
@@ -2316,10 +2311,132 @@ Pretty much the same as [[RankAndCrossGeneration]] except it selects for the num
 connections: 
 new thread connections:
 new thread connections:
-fl 0
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+pl 2
+fl 2
+fl 3
+fr 3
+new thread connections:
+-------------------------------------//
+-------------------------------------//
+connections: 
+new thread connections:
+new thread connections:
+new thread connections:
+bl 1
+pr 1
 pr 0
-pr 5
-fr 0
+br 1
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+-------------------------------------//
+-------------------------------------//
+connections: 
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+pr 1
+bl 0
+bl 2
+br 1
+-------------------------------------//
+-------------------------------------//
+connections: 
+new thread connections:
+new thread connections:
+pr 3
+fr 3
+fr 2
+fl 3
+new thread connections:
+i2 0
+e5 0
+t5 1
+e4 0
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+i3 2
+i4 2
+-------------------------------------//
+-------------------------------------//
+connections: 
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+pl 3
+bl 3
+bl 1
+br 3
+new thread connections:
+new thread connections:
+-------------------------------------//
+-------------------------------------//
+connections: 
+new thread connections:
+new thread connections:
+pr 0
+rr 0
+rr 2
+br 0
+br 1
+bl 1
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+e1 1
+e5 1
+new thread connections:
+-------------------------------------//
+-------------------------------------//
+connections: 
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+bl 2
+pr 3
+pr 2
+br 3
+new thread connections:
+new thread connections:
+-------------------------------------//
+-------------------------------------//
+connections: 
+new thread connections:
+bl 2
+br 1
+br 3
+pl 1
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+-------------------------------------//
+-------------------------------------//
+connections: 
+new thread connections:
+new thread connections:
+pr 2
+br 2
+br 3
+bl 3
 new thread connections:
 new thread connections:
 new thread connections:
@@ -2332,127 +2449,13 @@ new thread connections:
 new thread connections:
 new thread connections:
 new thread connections:
-br 1
-rl 5
 new thread connections:
 new thread connections:
 new thread connections:
 bl 3
-br 3
-br 2
-pr 5
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-fl 0
-pr 3
-pr 1
-fr 3
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-new thread connections:
-br 1
-pr 3
-pr 1
-bl 2
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-fl 1
-pr 1
-pr 5
-fr 1
-new thread connections:
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-pr 5
-fl 2
-fl 0
-fr 1
-new thread connections:
-new thread connections:
-new thread connections:
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-br 1
-bl 0
-bl 1
-pr 0
-new thread connections:
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-bl 0
-br 0
-br 2
 pr 2
-new thread connections:
-new thread connections:
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
-pr 3
-br 1
-br 3
-bl 0
-new thread connections:
-new thread connections:
-new thread connections:
--------------------------------------//
--------------------------------------//
-connections: 
-new thread connections:
-new thread connections:
-new thread connections:
-new thread connections:
 pr 1
-bl 2
-bl 1
-br 3
-new thread connections:
-new thread connections:
-new thread connections:
+br 0
 -------------------------------------//
 Active Threads per org:
 
@@ -2466,9 +2469,9 @@ thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
 thread len.: 4
+thread binary len: 80
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
@@ -2481,18 +2484,18 @@ thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 2
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
 
-thread count 2
+thread count 1
 
 File 1_9_ _ _ _ 
 genome length 560
@@ -2502,13 +2505,13 @@ thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 1
@@ -2517,34 +2520,34 @@ File 1_5_ _ _ _
 genome length 560
 thread len.: 0
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
+thread len.: 6
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 2
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 
-thread count 1
+thread count 2
 
 File 1_0_ _ _ _ 
 genome length 560
 thread len.: 0
 thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
@@ -2561,9 +2564,9 @@ thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
 thread len.: 4
+thread binary len: 80
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
@@ -2591,15 +2594,15 @@ thread count 1
 
 File 1_7_ _ _ _ 
 genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
 thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
@@ -2614,7 +2617,7 @@ thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
-thread len.: 0
+thread len.: 4
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
@@ -2622,20 +2625,20 @@ thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 0
+thread len.: 2
 thread binary len: 80
 
-thread count 1
+thread count 3
 
 File 1_8_ _ _ _ 
 genome length 560
 thread len.: 0
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
 thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
@@ -2647,28 +2650,28 @@ thread binary len: 80
 thread count 1
 
 
- mean performances for each org in population: [1, 2, 1, 1, 1, 1, 1, 1, 1, 1]
+ mean performances for each org in population: [1, 1, 1, 2, 1, 1, 1, 1, 3, 1]
 
 --------------------------------------------------
 Calculating the Std Error of the mean: 
-Org mean perf: 1 Pop mean: 1.1 Diffsqrd: 0.01 SumDiffsqrd: 0.01 
-Org mean perf: 2 Pop mean: 1.1 Diffsqrd: 0.81 SumDiffsqrd: 0.82 
-Org mean perf: 1 Pop mean: 1.1 Diffsqrd: 0.01 SumDiffsqrd: 0.83 
-Org mean perf: 1 Pop mean: 1.1 Diffsqrd: 0.01 SumDiffsqrd: 0.84 
-Org mean perf: 1 Pop mean: 1.1 Diffsqrd: 0.01 SumDiffsqrd: 0.85 
-Org mean perf: 1 Pop mean: 1.1 Diffsqrd: 0.01 SumDiffsqrd: 0.86 
-Org mean perf: 1 Pop mean: 1.1 Diffsqrd: 0.01 SumDiffsqrd: 0.87 
-Org mean perf: 1 Pop mean: 1.1 Diffsqrd: 0.01 SumDiffsqrd: 0.88 
-Org mean perf: 1 Pop mean: 1.1 Diffsqrd: 0.01 SumDiffsqrd: 0.89 
-Org mean perf: 1 Pop mean: 1.1 Diffsqrd: 0.01 SumDiffsqrd: 0.9 
-Stddv: 0.3  StdErr: 0.0948683298051
+Org mean perf: 1 Pop mean: 1.3 Diffsqrd: 0.09 SumDiffsqrd: 0.09 
+Org mean perf: 1 Pop mean: 1.3 Diffsqrd: 0.09 SumDiffsqrd: 0.18 
+Org mean perf: 1 Pop mean: 1.3 Diffsqrd: 0.09 SumDiffsqrd: 0.27 
+Org mean perf: 2 Pop mean: 1.3 Diffsqrd: 0.49 SumDiffsqrd: 0.76 
+Org mean perf: 1 Pop mean: 1.3 Diffsqrd: 0.09 SumDiffsqrd: 0.85 
+Org mean perf: 1 Pop mean: 1.3 Diffsqrd: 0.09 SumDiffsqrd: 0.94 
+Org mean perf: 1 Pop mean: 1.3 Diffsqrd: 0.09 SumDiffsqrd: 1.03 
+Org mean perf: 1 Pop mean: 1.3 Diffsqrd: 0.09 SumDiffsqrd: 1.12 
+Org mean perf: 3 Pop mean: 1.3 Diffsqrd: 2.89 SumDiffsqrd: 4.01 
+Org mean perf: 1 Pop mean: 1.3 Diffsqrd: 0.09 SumDiffsqrd: 4.1 
+Stddv: 0.640312423743  StdErr: 0.202484567313
 ------------------------------------------------------------
  
 
-quartiles: {'mean_threads': 1.1, 'min': 1, 'Generation': 1, 'max': 2, 'gen_size': 10, 'mode': 1, 'stderr': 0.09486832980505137}
+quartiles: {'mean_threads': 1.3, 'min': 1, 'Generation': 1, 'max': 3, 'gen_size': 10, 'mode': 1, 'stderr': 0.20248456731316586}
 
+3
 2
-1
 1
 1
 1
@@ -2680,138 +2683,81 @@ quartiles: {'mean_threads': 1.1, 'min': 1, 'Generation': 1, 'max': 2, 'gen_size'
 ------------------------------------------------------------
 Crossing Generation:
 
-fours [u'1_1_ _ _ _ ', u'1_6_ _ _ _ ']
-threes [u'1_9_ _ _ _ ', u'1_5_ _ _ _ ']
-twos [u'1_0_ _ _ _ ', u'1_4_ _ _ _ ']
-ones [u'1_2_ _ _ _ ', u'1_7_ _ _ _ ']
+fours [u'1_3_ _ _ _ ', u'1_5_ _ _ _ ']
+threes [u'1_6_ _ _ _ ', u'1_1_ _ _ _ ']
+twos [u'1_9_ _ _ _ ', u'1_0_ _ _ _ ']
+ones [u'1_4_ _ _ _ ', u'1_2_ _ _ _ ']
+org1 1_3_ _ _ _ , org2 1_5_ _ _ _ 
+crossing org1:1_3_ _ _ _  with org2:1_5_ _ _ _ 
+
+fours []
+threes [u'1_6_ _ _ _ ', u'1_1_ _ _ _ ', u'1_3_ _ _ _ ', u'1_5_ _ _ _ ']
+twos [u'1_9_ _ _ _ ', u'1_0_ _ _ _ ']
+ones [u'1_4_ _ _ _ ', u'1_2_ _ _ _ ']
+org1 1_3_ _ _ _ , org2 1_5_ _ _ _ 
+crossing org1:1_3_ _ _ _  with org2:1_5_ _ _ _ 
+
+fours []
+threes [u'1_6_ _ _ _ ', u'1_1_ _ _ _ ']
+twos [u'1_9_ _ _ _ ', u'1_0_ _ _ _ ', u'1_3_ _ _ _ ', u'1_5_ _ _ _ ']
+ones [u'1_4_ _ _ _ ', u'1_2_ _ _ _ ']
 org1 1_6_ _ _ _ , org2 1_1_ _ _ _ 
 crossing org1:1_6_ _ _ _  with org2:1_1_ _ _ _ 
 
 fours []
-threes [u'1_9_ _ _ _ ', u'1_5_ _ _ _ ', u'1_6_ _ _ _ ', u'1_1_ _ _ _ ']
-twos [u'1_0_ _ _ _ ', u'1_4_ _ _ _ ']
-ones [u'1_2_ _ _ _ ', u'1_7_ _ _ _ ']
-org1 1_1_ _ _ _ , org2 1_9_ _ _ _ 
-crossing org1:1_1_ _ _ _  with org2:1_9_ _ _ _ 
-
-fours []
-threes [u'1_5_ _ _ _ ', u'1_6_ _ _ _ ']
-twos [u'1_0_ _ _ _ ', u'1_4_ _ _ _ ', u'1_1_ _ _ _ ', u'1_9_ _ _ _ ']
-ones [u'1_2_ _ _ _ ', u'1_7_ _ _ _ ']
-org1 1_5_ _ _ _ , org2 1_6_ _ _ _ 
-crossing org1:1_5_ _ _ _  with org2:1_6_ _ _ _ 
+threes []
+twos [u'1_9_ _ _ _ ', u'1_0_ _ _ _ ', u'1_3_ _ _ _ ', u'1_5_ _ _ _ ', u'1_6_ _ _ _ ', u'1_1_ _ _ _ ']
+ones [u'1_4_ _ _ _ ', u'1_2_ _ _ _ ']
+org1 1_6_ _ _ _ , org2 1_5_ _ _ _ 
+crossing org1:1_6_ _ _ _  with org2:1_5_ _ _ _ 
 
 fours []
 threes []
-twos [u'1_0_ _ _ _ ', u'1_4_ _ _ _ ', u'1_1_ _ _ _ ', u'1_9_ _ _ _ ', u'1_5_ _ _ _ ', u'1_6_ _ _ _ ']
-ones [u'1_2_ _ _ _ ', u'1_7_ _ _ _ ']
-org1 1_6_ _ _ _ , org2 1_4_ _ _ _ 
-crossing org1:1_6_ _ _ _  with org2:1_4_ _ _ _ 
+twos [u'1_9_ _ _ _ ', u'1_0_ _ _ _ ', u'1_3_ _ _ _ ', u'1_1_ _ _ _ ']
+ones [u'1_4_ _ _ _ ', u'1_2_ _ _ _ ', u'1_6_ _ _ _ ', u'1_5_ _ _ _ ']
+org1 1_1_ _ _ _ , org2 1_0_ _ _ _ 
+crossing org1:1_1_ _ _ _  with org2:1_0_ _ _ _ 
 
 fours []
 threes []
-twos [u'1_0_ _ _ _ ', u'1_1_ _ _ _ ', u'1_9_ _ _ _ ', u'1_5_ _ _ _ ']
-ones [u'1_2_ _ _ _ ', u'1_7_ _ _ _ ', u'1_6_ _ _ _ ', u'1_4_ _ _ _ ']
-org1 1_0_ _ _ _ , org2 1_9_ _ _ _ 
-crossing org1:1_0_ _ _ _  with org2:1_9_ _ _ _ 
+twos [u'1_9_ _ _ _ ', u'1_3_ _ _ _ ']
+ones [u'1_4_ _ _ _ ', u'1_2_ _ _ _ ', u'1_6_ _ _ _ ', u'1_5_ _ _ _ ', u'1_1_ _ _ _ ', u'1_0_ _ _ _ ']
+org1 1_9_ _ _ _ , org2 1_3_ _ _ _ 
+crossing org1:1_9_ _ _ _  with org2:1_3_ _ _ _ 
 
 fours []
 threes []
-twos [u'1_1_ _ _ _ ', u'1_5_ _ _ _ ']
-ones [u'1_2_ _ _ _ ', u'1_7_ _ _ _ ', u'1_6_ _ _ _ ', u'1_4_ _ _ _ ', u'1_0_ _ _ _ ', u'1_9_ _ _ _ ']
+twos []
+ones [u'1_4_ _ _ _ ', u'1_2_ _ _ _ ', u'1_6_ _ _ _ ', u'1_5_ _ _ _ ', u'1_1_ _ _ _ ', u'1_0_ _ _ _ ', u'1_9_ _ _ _ ', u'1_3_ _ _ _ ']
+org1 1_6_ _ _ _ , org2 1_2_ _ _ _ 
+crossing org1:1_6_ _ _ _  with org2:1_2_ _ _ _ 
+
+fours []
+threes []
+twos []
+ones [u'1_4_ _ _ _ ', u'1_5_ _ _ _ ', u'1_1_ _ _ _ ', u'1_0_ _ _ _ ', u'1_9_ _ _ _ ', u'1_3_ _ _ _ ']
+org1 1_3_ _ _ _ , org2 1_0_ _ _ _ 
+crossing org1:1_3_ _ _ _  with org2:1_0_ _ _ _ 
+
+fours []
+threes []
+twos []
+ones [u'1_4_ _ _ _ ', u'1_5_ _ _ _ ', u'1_1_ _ _ _ ', u'1_9_ _ _ _ ']
+org1 1_9_ _ _ _ , org2 1_4_ _ _ _ 
+crossing org1:1_9_ _ _ _  with org2:1_4_ _ _ _ 
+
+fours []
+threes []
+twos []
+ones [u'1_5_ _ _ _ ', u'1_1_ _ _ _ ']
 org1 1_1_ _ _ _ , org2 1_5_ _ _ _ 
 crossing org1:1_1_ _ _ _  with org2:1_5_ _ _ _ 
-
-fours []
-threes []
-twos []
-ones [u'1_2_ _ _ _ ', u'1_7_ _ _ _ ', u'1_6_ _ _ _ ', u'1_4_ _ _ _ ', u'1_0_ _ _ _ ', u'1_9_ _ _ _ ', u'1_1_ _ _ _ ', u'1_5_ _ _ _ ']
-org1 1_7_ _ _ _ , org2 1_5_ _ _ _ 
-crossing org1:1_7_ _ _ _  with org2:1_5_ _ _ _ 
-
-fours []
-threes []
-twos []
-ones [u'1_2_ _ _ _ ', u'1_6_ _ _ _ ', u'1_4_ _ _ _ ', u'1_0_ _ _ _ ', u'1_9_ _ _ _ ', u'1_1_ _ _ _ ']
-org1 1_0_ _ _ _ , org2 1_4_ _ _ _ 
-crossing org1:1_0_ _ _ _  with org2:1_4_ _ _ _ 
-
-fours []
-threes []
-twos []
-ones [u'1_2_ _ _ _ ', u'1_6_ _ _ _ ', u'1_9_ _ _ _ ', u'1_1_ _ _ _ ']
-org1 1_6_ _ _ _ , org2 1_9_ _ _ _ 
-crossing org1:1_6_ _ _ _  with org2:1_9_ _ _ _ 
-
-fours []
-threes []
-twos []
-ones [u'1_2_ _ _ _ ', u'1_1_ _ _ _ ']
-org1 1_1_ _ _ _ , org2 1_2_ _ _ _ 
-crossing org1:1_1_ _ _ _  with org2:1_2_ _ _ _ 
 
 
 Number of Orgs in new gen: 10
 Active Threads per org:
 
-File 2_2_1_6_1_5
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 0
-
-File 2_6_1_7_1_5
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 0
-
-File 2_7_1_0_1_4
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 1
-
-File 2_3_1_4_1_6
+File 2_7_1_0_1_3
 genome length 560
 thread len.: 0
 thread binary len: 80
@@ -2830,8 +2776,33 @@ thread binary len: 80
 
 thread count 1
 
-File 2_1_1_1_1_9
+File 2_2_1_1_1_6
 genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+
+thread count 1
+
+File 2_1_1_3_1_5
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 0
@@ -2840,7 +2811,39 @@ thread len.: 0
 thread binary len: 80
 thread len.: 2
 thread binary len: 80
+
+thread count 3
+
+File 2_3_1_5_1_6
+genome length 560
 thread len.: 0
+thread binary len: 80
+thread len.: 6
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+
+thread count 2
+
+File 2_8_1_9_1_4
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
@@ -2849,7 +2852,7 @@ thread binary len: 80
 
 thread count 1
 
-File 2_8_1_6_1_9
+File 2_4_1_1_1_0
 genome length 560
 thread len.: 0
 thread binary len: 80
@@ -2868,27 +2871,33 @@ thread binary len: 80
 
 thread count 0
 
-File 2_4_1_0_1_9
+File 2_6_1_2_1_6
 genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
+thread len.: 0
+thread binary len: 80
+
+thread count 1
+
+File 2_0_1_3_1_5
+genome length 560
+thread len.: 0
+thread binary len: 80
 thread len.: 4
 thread binary len: 80
-thread len.: 0
+thread len.: 4
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 2
-
-File 2_5_1_1_1_5
-genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 0
@@ -2897,6 +2906,19 @@ thread len.: 0
 thread binary len: 80
 thread len.: 2
 thread binary len: 80
+
+thread count 3
+
+File 2_9_1_5_1_1
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 6
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 0
@@ -2906,13 +2928,13 @@ thread binary len: 80
 
 thread count 1
 
-File 2_9_1_2_1_1
+File 2_5_1_3_1_9
 genome length 560
 thread len.: 0
 thread binary len: 80
-thread len.: 0
+thread len.: 4
 thread binary len: 80
-thread len.: 0
+thread len.: 4
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
@@ -2923,222 +2945,129 @@ thread binary len: 80
 thread len.: 4
 thread binary len: 80
 
-thread count 1
-
-File 2_0_1_6_1_1
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-
-thread count 2
+thread count 3
 
 
- mean performances for each org in population: [0, 0, 1, 1, 1, 0, 2, 1, 1, 2]
+ mean performances for each org in population: [1, 1, 3, 2, 1, 0, 1, 3, 1, 3]
 
 --------------------------------------------------
 Calculating the Std Error of the mean: 
-Org mean perf: 0 Pop mean: 0.9 Diffsqrd: 0.81 SumDiffsqrd: 0.81 
-Org mean perf: 0 Pop mean: 0.9 Diffsqrd: 0.81 SumDiffsqrd: 1.62 
-Org mean perf: 1 Pop mean: 0.9 Diffsqrd: 0.01 SumDiffsqrd: 1.63 
-Org mean perf: 1 Pop mean: 0.9 Diffsqrd: 0.01 SumDiffsqrd: 1.64 
-Org mean perf: 1 Pop mean: 0.9 Diffsqrd: 0.01 SumDiffsqrd: 1.65 
-Org mean perf: 0 Pop mean: 0.9 Diffsqrd: 0.81 SumDiffsqrd: 2.46 
-Org mean perf: 2 Pop mean: 0.9 Diffsqrd: 1.21 SumDiffsqrd: 3.67 
-Org mean perf: 1 Pop mean: 0.9 Diffsqrd: 0.01 SumDiffsqrd: 3.68 
-Org mean perf: 1 Pop mean: 0.9 Diffsqrd: 0.01 SumDiffsqrd: 3.69 
-Org mean perf: 2 Pop mean: 0.9 Diffsqrd: 1.21 SumDiffsqrd: 4.9 
-Stddv: 0.7  StdErr: 0.221359436212
+Org mean perf: 1 Pop mean: 1.6 Diffsqrd: 0.36 SumDiffsqrd: 0.36 
+Org mean perf: 1 Pop mean: 1.6 Diffsqrd: 0.36 SumDiffsqrd: 0.72 
+Org mean perf: 3 Pop mean: 1.6 Diffsqrd: 1.96 SumDiffsqrd: 2.68 
+Org mean perf: 2 Pop mean: 1.6 Diffsqrd: 0.16 SumDiffsqrd: 2.84 
+Org mean perf: 1 Pop mean: 1.6 Diffsqrd: 0.36 SumDiffsqrd: 3.2 
+Org mean perf: 0 Pop mean: 1.6 Diffsqrd: 2.56 SumDiffsqrd: 5.76 
+Org mean perf: 1 Pop mean: 1.6 Diffsqrd: 0.36 SumDiffsqrd: 6.12 
+Org mean perf: 3 Pop mean: 1.6 Diffsqrd: 1.96 SumDiffsqrd: 8.08 
+Org mean perf: 1 Pop mean: 1.6 Diffsqrd: 0.36 SumDiffsqrd: 8.44 
+Org mean perf: 3 Pop mean: 1.6 Diffsqrd: 1.96 SumDiffsqrd: 10.4 
+Stddv: 1.01980390272  StdErr: 0.322490309932
 ------------------------------------------------------------
  
 
-quartiles: {'mean_threads': 0.9, 'min': 0, 'Generation': 2, 'max': 2, 'gen_size': 10, 'mode': 1, 'stderr': 0.22135943621178653}
+quartiles: {'mean_threads': 1.6, 'min': 0, 'Generation': 2, 'max': 3, 'gen_size': 10, 'mode': 1, 'stderr': 0.32249030993194194}
 
+3
+3
+3
 2
-2
 1
 1
 1
 1
 1
-0
-0
 0
 ------------------------------------------------------------
 Crossing Generation:
 
-fours [u'2_4_1_0_1_9', u'2_0_1_6_1_1']
-threes [u'2_7_1_0_1_4', u'2_3_1_4_1_6']
-twos [u'2_1_1_1_1_9', u'2_5_1_1_1_5']
-ones [u'2_9_1_2_1_1', u'2_2_1_6_1_5']
-org1 2_0_1_6_1_1, org2 2_4_1_0_1_9
-crossing org1:2_0_1_6_1_1 with org2:2_4_1_0_1_9
+fours [u'2_1_1_3_1_5', u'2_0_1_3_1_5']
+threes [u'2_5_1_3_1_9', u'2_3_1_5_1_6']
+twos [u'2_7_1_0_1_3', u'2_2_1_1_1_6']
+ones [u'2_8_1_9_1_4', u'2_6_1_2_1_6']
+org1 2_1_1_3_1_5, org2 2_0_1_3_1_5
+crossing org1:2_1_1_3_1_5 with org2:2_0_1_3_1_5
 
 fours []
-threes [u'2_7_1_0_1_4', u'2_3_1_4_1_6', u'2_0_1_6_1_1', u'2_4_1_0_1_9']
-twos [u'2_1_1_1_1_9', u'2_5_1_1_1_5']
-ones [u'2_9_1_2_1_1', u'2_2_1_6_1_5']
-org1 2_4_1_0_1_9, org2 2_3_1_4_1_6
-crossing org1:2_4_1_0_1_9 with org2:2_3_1_4_1_6
+threes [u'2_5_1_3_1_9', u'2_3_1_5_1_6', u'2_1_1_3_1_5', u'2_0_1_3_1_5']
+twos [u'2_7_1_0_1_3', u'2_2_1_1_1_6']
+ones [u'2_8_1_9_1_4', u'2_6_1_2_1_6']
+org1 2_3_1_5_1_6, org2 2_1_1_3_1_5
+crossing org1:2_3_1_5_1_6 with org2:2_1_1_3_1_5
 
 fours []
-threes [u'2_7_1_0_1_4', u'2_0_1_6_1_1']
-twos [u'2_1_1_1_1_9', u'2_5_1_1_1_5', u'2_4_1_0_1_9', u'2_3_1_4_1_6']
-ones [u'2_9_1_2_1_1', u'2_2_1_6_1_5']
-org1 2_7_1_0_1_4, org2 2_0_1_6_1_1
-crossing org1:2_7_1_0_1_4 with org2:2_0_1_6_1_1
-
-fours []
-threes []
-twos [u'2_1_1_1_1_9', u'2_5_1_1_1_5', u'2_4_1_0_1_9', u'2_3_1_4_1_6', u'2_7_1_0_1_4', u'2_0_1_6_1_1']
-ones [u'2_9_1_2_1_1', u'2_2_1_6_1_5']
-org1 2_5_1_1_1_5, org2 2_0_1_6_1_1
-crossing org1:2_5_1_1_1_5 with org2:2_0_1_6_1_1
+threes [u'2_5_1_3_1_9', u'2_0_1_3_1_5']
+twos [u'2_7_1_0_1_3', u'2_2_1_1_1_6', u'2_3_1_5_1_6', u'2_1_1_3_1_5']
+ones [u'2_8_1_9_1_4', u'2_6_1_2_1_6']
+org1 2_0_1_3_1_5, org2 2_5_1_3_1_9
+crossing org1:2_0_1_3_1_5 with org2:2_5_1_3_1_9
 
 fours []
 threes []
-twos [u'2_1_1_1_1_9', u'2_4_1_0_1_9', u'2_3_1_4_1_6', u'2_7_1_0_1_4']
-ones [u'2_9_1_2_1_1', u'2_2_1_6_1_5', u'2_5_1_1_1_5', u'2_0_1_6_1_1']
-org1 2_7_1_0_1_4, org2 2_3_1_4_1_6
-crossing org1:2_7_1_0_1_4 with org2:2_3_1_4_1_6
+twos [u'2_7_1_0_1_3', u'2_2_1_1_1_6', u'2_3_1_5_1_6', u'2_1_1_3_1_5', u'2_0_1_3_1_5', u'2_5_1_3_1_9']
+ones [u'2_8_1_9_1_4', u'2_6_1_2_1_6']
+org1 2_2_1_1_1_6, org2 2_0_1_3_1_5
+crossing org1:2_2_1_1_1_6 with org2:2_0_1_3_1_5
+
+Char mutation at index: 75
+1 --> 0
+fours []
+threes []
+twos [u'2_7_1_0_1_3', u'2_3_1_5_1_6', u'2_1_1_3_1_5', u'2_5_1_3_1_9']
+ones [u'2_8_1_9_1_4', u'2_6_1_2_1_6', u'2_2_1_1_1_6', u'2_0_1_3_1_5']
+org1 2_3_1_5_1_6, org2 2_1_1_3_1_5
+crossing org1:2_3_1_5_1_6 with org2:2_1_1_3_1_5
 
 fours []
 threes []
-twos [u'2_1_1_1_1_9', u'2_4_1_0_1_9']
-ones [u'2_9_1_2_1_1', u'2_2_1_6_1_5', u'2_5_1_1_1_5', u'2_0_1_6_1_1', u'2_7_1_0_1_4', u'2_3_1_4_1_6']
-org1 2_1_1_1_1_9, org2 2_4_1_0_1_9
-crossing org1:2_1_1_1_1_9 with org2:2_4_1_0_1_9
-
-fours []
-threes []
-twos []
-ones [u'2_9_1_2_1_1', u'2_2_1_6_1_5', u'2_5_1_1_1_5', u'2_0_1_6_1_1', u'2_7_1_0_1_4', u'2_3_1_4_1_6', u'2_1_1_1_1_9', u'2_4_1_0_1_9']
-org1 2_5_1_1_1_5, org2 2_9_1_2_1_1
-crossing org1:2_5_1_1_1_5 with org2:2_9_1_2_1_1
+twos [u'2_7_1_0_1_3', u'2_5_1_3_1_9']
+ones [u'2_8_1_9_1_4', u'2_6_1_2_1_6', u'2_2_1_1_1_6', u'2_0_1_3_1_5', u'2_3_1_5_1_6', u'2_1_1_3_1_5']
+org1 2_7_1_0_1_3, org2 2_5_1_3_1_9
+crossing org1:2_7_1_0_1_3 with org2:2_5_1_3_1_9
 
 fours []
 threes []
 twos []
-ones [u'2_2_1_6_1_5', u'2_0_1_6_1_1', u'2_7_1_0_1_4', u'2_3_1_4_1_6', u'2_1_1_1_1_9', u'2_4_1_0_1_9']
-org1 2_4_1_0_1_9, org2 2_3_1_4_1_6
-crossing org1:2_4_1_0_1_9 with org2:2_3_1_4_1_6
+ones [u'2_8_1_9_1_4', u'2_6_1_2_1_6', u'2_2_1_1_1_6', u'2_0_1_3_1_5', u'2_3_1_5_1_6', u'2_1_1_3_1_5', u'2_7_1_0_1_3', u'2_5_1_3_1_9']
+org1 2_6_1_2_1_6, org2 2_3_1_5_1_6
+crossing org1:2_6_1_2_1_6 with org2:2_3_1_5_1_6
 
 fours []
 threes []
 twos []
-ones [u'2_2_1_6_1_5', u'2_0_1_6_1_1', u'2_7_1_0_1_4', u'2_1_1_1_1_9']
-org1 2_1_1_1_1_9, org2 2_7_1_0_1_4
-crossing org1:2_1_1_1_1_9 with org2:2_7_1_0_1_4
+ones [u'2_8_1_9_1_4', u'2_2_1_1_1_6', u'2_0_1_3_1_5', u'2_1_1_3_1_5', u'2_7_1_0_1_3', u'2_5_1_3_1_9']
+org1 2_2_1_1_1_6, org2 2_8_1_9_1_4
+crossing org1:2_2_1_1_1_6 with org2:2_8_1_9_1_4
 
 fours []
 threes []
 twos []
-ones [u'2_2_1_6_1_5', u'2_0_1_6_1_1']
-org1 2_0_1_6_1_1, org2 2_2_1_6_1_5
-crossing org1:2_0_1_6_1_1 with org2:2_2_1_6_1_5
+ones [u'2_0_1_3_1_5', u'2_1_1_3_1_5', u'2_7_1_0_1_3', u'2_5_1_3_1_9']
+org1 2_1_1_3_1_5, org2 2_7_1_0_1_3
+crossing org1:2_1_1_3_1_5 with org2:2_7_1_0_1_3
+
+fours []
+threes []
+twos []
+ones [u'2_0_1_3_1_5', u'2_5_1_3_1_9']
+org1 2_0_1_3_1_5, org2 2_5_1_3_1_9
+crossing org1:2_0_1_3_1_5 with org2:2_5_1_3_1_9
 
 
 Number of Orgs in new gen: 10
 Active Threads per org:
 
-File 3_3_2_0_2_5
+File 3_4_2_3_2_1
 genome length 560
 thread len.: 0
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
+thread len.: 6
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 1
-
-File 3_4_2_7_2_3
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 1
-
-File 3_0_2_4_2_0
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 1
-
-File 3_6_2_5_2_9
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 2
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 1
-
-File 3_5_2_4_2_1
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 2
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
@@ -3147,10 +3076,103 @@ thread binary len: 80
 
 thread count 2
 
-File 3_2_2_0_2_7
+File 3_5_2_5_2_7
 genome length 560
 thread len.: 0
 thread binary len: 80
+thread len.: 2
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 2
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+
+thread count 3
+
+File 3_6_2_3_2_6
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 6
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+
+thread count 2
+
+File 3_9_2_0_2_5
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 3_0_2_0_2_1
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 2
+thread binary len: 80
+
+thread count 3
+
+File 3_1_2_1_2_3
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+
+thread count 1
+
+File 3_3_2_2_2_0
+genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 0
@@ -3163,14 +3185,18 @@ thread len.: 4
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
+thread len.: 0
+thread binary len: 80
 
 thread count 1
 
-File 3_1_2_3_2_4
+File 3_2_2_0_2_5
 genome length 560
 thread len.: 0
 thread binary len: 80
-thread len.: 0
+thread len.: 4
+thread binary len: 80
+thread len.: 4
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
@@ -3178,60 +3204,37 @@ thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 0
-
-File 3_9_2_0_2_2
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
+thread len.: 4
 thread binary len: 80
 
-thread count 0
-
-File 3_7_2_3_2_4
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 0
+thread count 3
 
 File 3_8_2_7_2_1
 genome length 560
 thread len.: 0
 thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
 thread len.: 4
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+
+thread count 1
+
+File 3_7_2_2_2_8
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
@@ -3239,156 +3242,179 @@ thread len.: 4
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
+thread len.: 0
+thread binary len: 80
 
-thread count 3
+thread count 1
 
 
- mean performances for each org in population: [1, 1, 1, 1, 2, 1, 0, 0, 0, 3]
+ mean performances for each org in population: [2, 3, 2, 3, 3, 1, 1, 3, 1, 1]
 
 --------------------------------------------------
 Calculating the Std Error of the mean: 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
-Org mean perf: 2 Pop mean: 1.0 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
-Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 1.0 
-Org mean perf: 0 Pop mean: 1.0 Diffsqrd: 1.0 SumDiffsqrd: 2.0 
-Org mean perf: 0 Pop mean: 1.0 Diffsqrd: 1.0 SumDiffsqrd: 3.0 
-Org mean perf: 0 Pop mean: 1.0 Diffsqrd: 1.0 SumDiffsqrd: 4.0 
-Org mean perf: 3 Pop mean: 1.0 Diffsqrd: 4.0 SumDiffsqrd: 8.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 1.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 2.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 3.0 
+Org mean perf: 1 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 4.0 
+Org mean perf: 1 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 5.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 6.0 
+Org mean perf: 1 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 7.0 
+Org mean perf: 1 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 8.0 
 Stddv: 0.894427191  StdErr: 0.282842712475
 ------------------------------------------------------------
  
 
-quartiles: {'mean_threads': 1.0, 'min': 0, 'Generation': 3, 'max': 3, 'gen_size': 10, 'mode': 1, 'stderr': 0.282842712474619}
+quartiles: {'mean_threads': 2.0, 'min': 1, 'Generation': 3, 'max': 3, 'gen_size': 10, 'mode': 1, 'stderr': 0.282842712474619}
 
 3
+3
+3
+3
+2
 2
 1
 1
 1
 1
-1
-0
-0
-0
 ------------------------------------------------------------
 Crossing Generation:
 
-fours [u'3_8_2_7_2_1', u'3_5_2_4_2_1']
-threes [u'3_3_2_0_2_5', u'3_4_2_7_2_3']
-twos [u'3_0_2_4_2_0', u'3_6_2_5_2_9']
-ones [u'3_2_2_0_2_7', u'3_1_2_3_2_4']
-org1 3_5_2_4_2_1, org2 3_8_2_7_2_1
-crossing org1:3_5_2_4_2_1 with org2:3_8_2_7_2_1
+fours [u'3_5_2_5_2_7', u'3_9_2_0_2_5']
+threes [u'3_0_2_0_2_1', u'3_2_2_0_2_5']
+twos [u'3_4_2_3_2_1', u'3_6_2_3_2_6']
+ones [u'3_1_2_1_2_3', u'3_3_2_2_2_0']
+org1 3_9_2_0_2_5, org2 3_5_2_5_2_7
+crossing org1:3_9_2_0_2_5 with org2:3_5_2_5_2_7
 
 fours []
-threes [u'3_3_2_0_2_5', u'3_4_2_7_2_3', u'3_5_2_4_2_1', u'3_8_2_7_2_1']
-twos [u'3_0_2_4_2_0', u'3_6_2_5_2_9']
-ones [u'3_2_2_0_2_7', u'3_1_2_3_2_4']
-org1 3_4_2_7_2_3, org2 3_5_2_4_2_1
-crossing org1:3_4_2_7_2_3 with org2:3_5_2_4_2_1
+threes [u'3_0_2_0_2_1', u'3_2_2_0_2_5', u'3_9_2_0_2_5', u'3_5_2_5_2_7']
+twos [u'3_4_2_3_2_1', u'3_6_2_3_2_6']
+ones [u'3_1_2_1_2_3', u'3_3_2_2_2_0']
+org1 3_5_2_5_2_7, org2 3_0_2_0_2_1
+crossing org1:3_5_2_5_2_7 with org2:3_0_2_0_2_1
 
 fours []
-threes [u'3_3_2_0_2_5', u'3_8_2_7_2_1']
-twos [u'3_0_2_4_2_0', u'3_6_2_5_2_9', u'3_4_2_7_2_3', u'3_5_2_4_2_1']
-ones [u'3_2_2_0_2_7', u'3_1_2_3_2_4']
-org1 3_8_2_7_2_1, org2 3_3_2_0_2_5
-crossing org1:3_8_2_7_2_1 with org2:3_3_2_0_2_5
+threes [u'3_2_2_0_2_5', u'3_9_2_0_2_5']
+twos [u'3_4_2_3_2_1', u'3_6_2_3_2_6', u'3_5_2_5_2_7', u'3_0_2_0_2_1']
+ones [u'3_1_2_1_2_3', u'3_3_2_2_2_0']
+org1 3_2_2_0_2_5, org2 3_9_2_0_2_5
+crossing org1:3_2_2_0_2_5 with org2:3_9_2_0_2_5
+
+Char mutation at index: 159
+1 --> 0
+fours []
+threes []
+twos [u'3_4_2_3_2_1', u'3_6_2_3_2_6', u'3_5_2_5_2_7', u'3_0_2_0_2_1', u'3_2_2_0_2_5', u'3_9_2_0_2_5']
+ones [u'3_1_2_1_2_3', u'3_3_2_2_2_0']
+org1 3_9_2_0_2_5, org2 3_4_2_3_2_1
+crossing org1:3_9_2_0_2_5 with org2:3_4_2_3_2_1
 
 fours []
 threes []
-twos [u'3_0_2_4_2_0', u'3_6_2_5_2_9', u'3_4_2_7_2_3', u'3_5_2_4_2_1', u'3_8_2_7_2_1', u'3_3_2_0_2_5']
-ones [u'3_2_2_0_2_7', u'3_1_2_3_2_4']
-org1 3_5_2_4_2_1, org2 3_6_2_5_2_9
-crossing org1:3_5_2_4_2_1 with org2:3_6_2_5_2_9
+twos [u'3_6_2_3_2_6', u'3_5_2_5_2_7', u'3_0_2_0_2_1', u'3_2_2_0_2_5']
+ones [u'3_1_2_1_2_3', u'3_3_2_2_2_0', u'3_9_2_0_2_5', u'3_4_2_3_2_1']
+org1 3_5_2_5_2_7, org2 3_2_2_0_2_5
+crossing org1:3_5_2_5_2_7 with org2:3_2_2_0_2_5
 
 fours []
 threes []
-twos [u'3_0_2_4_2_0', u'3_4_2_7_2_3', u'3_8_2_7_2_1', u'3_3_2_0_2_5']
-ones [u'3_2_2_0_2_7', u'3_1_2_3_2_4', u'3_5_2_4_2_1', u'3_6_2_5_2_9']
-org1 3_0_2_4_2_0, org2 3_8_2_7_2_1
-crossing org1:3_0_2_4_2_0 with org2:3_8_2_7_2_1
-
-fours []
-threes []
-twos [u'3_4_2_7_2_3', u'3_3_2_0_2_5']
-ones [u'3_2_2_0_2_7', u'3_1_2_3_2_4', u'3_5_2_4_2_1', u'3_6_2_5_2_9', u'3_0_2_4_2_0', u'3_8_2_7_2_1']
-org1 3_3_2_0_2_5, org2 3_4_2_7_2_3
-crossing org1:3_3_2_0_2_5 with org2:3_4_2_7_2_3
-
-fours []
-threes []
-twos []
-ones [u'3_2_2_0_2_7', u'3_1_2_3_2_4', u'3_5_2_4_2_1', u'3_6_2_5_2_9', u'3_0_2_4_2_0', u'3_8_2_7_2_1', u'3_3_2_0_2_5', u'3_4_2_7_2_3']
-org1 3_0_2_4_2_0, org2 3_2_2_0_2_7
-crossing org1:3_0_2_4_2_0 with org2:3_2_2_0_2_7
+twos [u'3_6_2_3_2_6', u'3_0_2_0_2_1']
+ones [u'3_1_2_1_2_3', u'3_3_2_2_2_0', u'3_9_2_0_2_5', u'3_4_2_3_2_1', u'3_5_2_5_2_7', u'3_2_2_0_2_5']
+org1 3_6_2_3_2_6, org2 3_0_2_0_2_1
+crossing org1:3_6_2_3_2_6 with org2:3_0_2_0_2_1
 
 fours []
 threes []
 twos []
-ones [u'3_1_2_3_2_4', u'3_5_2_4_2_1', u'3_6_2_5_2_9', u'3_8_2_7_2_1', u'3_3_2_0_2_5', u'3_4_2_7_2_3']
-org1 3_4_2_7_2_3, org2 3_5_2_4_2_1
-crossing org1:3_4_2_7_2_3 with org2:3_5_2_4_2_1
+ones [u'3_1_2_1_2_3', u'3_3_2_2_2_0', u'3_9_2_0_2_5', u'3_4_2_3_2_1', u'3_5_2_5_2_7', u'3_2_2_0_2_5', u'3_6_2_3_2_6', u'3_0_2_0_2_1']
+org1 3_0_2_0_2_1, org2 3_2_2_0_2_5
+crossing org1:3_0_2_0_2_1 with org2:3_2_2_0_2_5
 
 fours []
 threes []
 twos []
-ones [u'3_1_2_3_2_4', u'3_6_2_5_2_9', u'3_8_2_7_2_1', u'3_3_2_0_2_5']
-org1 3_3_2_0_2_5, org2 3_8_2_7_2_1
-crossing org1:3_3_2_0_2_5 with org2:3_8_2_7_2_1
+ones [u'3_1_2_1_2_3', u'3_3_2_2_2_0', u'3_9_2_0_2_5', u'3_4_2_3_2_1', u'3_5_2_5_2_7', u'3_6_2_3_2_6']
+org1 3_6_2_3_2_6, org2 3_9_2_0_2_5
+crossing org1:3_6_2_3_2_6 with org2:3_9_2_0_2_5
 
 fours []
 threes []
 twos []
-ones [u'3_1_2_3_2_4', u'3_6_2_5_2_9']
-org1 3_1_2_3_2_4, org2 3_6_2_5_2_9
-crossing org1:3_1_2_3_2_4 with org2:3_6_2_5_2_9
+ones [u'3_1_2_1_2_3', u'3_3_2_2_2_0', u'3_4_2_3_2_1', u'3_5_2_5_2_7']
+org1 3_3_2_2_2_0, org2 3_5_2_5_2_7
+crossing org1:3_3_2_2_2_0 with org2:3_5_2_5_2_7
+
+fours []
+threes []
+twos []
+ones [u'3_1_2_1_2_3', u'3_4_2_3_2_1']
+org1 3_4_2_3_2_1, org2 3_1_2_1_2_3
+crossing org1:3_4_2_3_2_1 with org2:3_1_2_1_2_3
 
 
 Number of Orgs in new gen: 10
 Active Threads per org:
 
-File 4_2_3_8_3_3
+File 4_1_3_5_3_0
 genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 2
-
-File 4_0_3_8_3_5
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 2
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 4_2_3_9_3_2
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 4_4_3_2_3_5
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 2
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 2
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 
 thread count 3
 
-File 4_7_3_5_3_4
+File 4_8_3_5_3_3
 genome length 560
 thread len.: 0
 thread binary len: 80
@@ -3400,33 +3426,33 @@ thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 4
-thread binary len: 80
 thread len.: 0
-thread binary len: 80
-
-thread count 2
-
-File 4_8_3_3_3_8
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 
 thread count 1
 
-File 4_1_3_5_3_4
+File 4_6_3_2_3_0
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 4_7_3_9_3_6
 genome length 560
 thread len.: 0
 thread binary len: 80
@@ -3438,18 +3464,22 @@ thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 4
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 
-thread count 2
+thread count 1
 
-File 4_3_3_5_3_6
+File 4_0_3_5_3_9
 genome length 560
 thread len.: 0
 thread binary len: 80
+thread len.: 2
+thread binary len: 80
 thread len.: 4
+thread binary len: 80
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
@@ -3457,6 +3487,21 @@ thread len.: 2
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
+
+thread count 3
+
+File 4_5_3_6_3_0
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 6
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 0
@@ -3464,26 +3509,7 @@ thread binary len: 80
 
 thread count 2
 
-File 4_9_3_1_3_6
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 0
-
-File 4_6_3_0_3_2
+File 4_9_3_1_3_4
 genome length 560
 thread len.: 0
 thread binary len: 80
@@ -3502,32 +3528,11 @@ thread binary len: 80
 
 thread count 1
 
-File 4_4_3_8_3_0
+File 4_3_3_4_3_9
 genome length 560
 thread len.: 0
 thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 1
-
-File 4_5_3_3_3_4
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
+thread len.: 6
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
@@ -3537,141 +3542,149 @@ thread len.: 4
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
+thread len.: 0
+thread binary len: 80
 
-thread count 1
+thread count 2
 
 
- mean performances for each org in population: [2, 3, 2, 1, 2, 2, 0, 1, 1, 1]
+ mean performances for each org in population: [3, 3, 3, 1, 3, 1, 3, 2, 1, 2]
 
 --------------------------------------------------
 Calculating the Std Error of the mean: 
-Org mean perf: 2 Pop mean: 1.5 Diffsqrd: 0.25 SumDiffsqrd: 0.25 
-Org mean perf: 3 Pop mean: 1.5 Diffsqrd: 2.25 SumDiffsqrd: 2.5 
-Org mean perf: 2 Pop mean: 1.5 Diffsqrd: 0.25 SumDiffsqrd: 2.75 
-Org mean perf: 1 Pop mean: 1.5 Diffsqrd: 0.25 SumDiffsqrd: 3.0 
-Org mean perf: 2 Pop mean: 1.5 Diffsqrd: 0.25 SumDiffsqrd: 3.25 
-Org mean perf: 2 Pop mean: 1.5 Diffsqrd: 0.25 SumDiffsqrd: 3.5 
-Org mean perf: 0 Pop mean: 1.5 Diffsqrd: 2.25 SumDiffsqrd: 5.75 
-Org mean perf: 1 Pop mean: 1.5 Diffsqrd: 0.25 SumDiffsqrd: 6.0 
-Org mean perf: 1 Pop mean: 1.5 Diffsqrd: 0.25 SumDiffsqrd: 6.25 
-Org mean perf: 1 Pop mean: 1.5 Diffsqrd: 0.25 SumDiffsqrd: 6.5 
-Stddv: 0.80622577483  StdErr: 0.25495097568
+Org mean perf: 3 Pop mean: 2.2 Diffsqrd: 0.64 SumDiffsqrd: 0.64 
+Org mean perf: 3 Pop mean: 2.2 Diffsqrd: 0.64 SumDiffsqrd: 1.28 
+Org mean perf: 3 Pop mean: 2.2 Diffsqrd: 0.64 SumDiffsqrd: 1.92 
+Org mean perf: 1 Pop mean: 2.2 Diffsqrd: 1.44 SumDiffsqrd: 3.36 
+Org mean perf: 3 Pop mean: 2.2 Diffsqrd: 0.64 SumDiffsqrd: 4.0 
+Org mean perf: 1 Pop mean: 2.2 Diffsqrd: 1.44 SumDiffsqrd: 5.44 
+Org mean perf: 3 Pop mean: 2.2 Diffsqrd: 0.64 SumDiffsqrd: 6.08 
+Org mean perf: 2 Pop mean: 2.2 Diffsqrd: 0.04 SumDiffsqrd: 6.12 
+Org mean perf: 1 Pop mean: 2.2 Diffsqrd: 1.44 SumDiffsqrd: 7.56 
+Org mean perf: 2 Pop mean: 2.2 Diffsqrd: 0.04 SumDiffsqrd: 7.6 
+Stddv: 0.871779788708  StdErr: 0.275680975042
 ------------------------------------------------------------
  
 
-quartiles: {'mean_threads': 1.5, 'min': 0, 'Generation': 4, 'max': 3, 'gen_size': 10, 'mode': 1, 'stderr': 0.25495097567963926}
+quartiles: {'mean_threads': 2.2, 'min': 1, 'Generation': 4, 'max': 3, 'gen_size': 10, 'mode': 3, 'stderr': 0.2756809750418044}
 
+3
+3
+3
+3
 3
 2
 2
-2
-2
 1
 1
 1
-1
-0
 ------------------------------------------------------------
 Crossing Generation:
 
-fours [u'4_0_3_8_3_5', u'4_2_3_8_3_3']
-threes [u'4_7_3_5_3_4', u'4_1_3_5_3_4']
-twos [u'4_3_3_5_3_6', u'4_8_3_3_3_8']
-ones [u'4_6_3_0_3_2', u'4_4_3_8_3_0']
-org1 4_0_3_8_3_5, org2 4_2_3_8_3_3
-crossing org1:4_0_3_8_3_5 with org2:4_2_3_8_3_3
+fours [u'4_1_3_5_3_0', u'4_2_3_9_3_2']
+threes [u'4_4_3_2_3_5', u'4_6_3_2_3_0']
+twos [u'4_0_3_5_3_9', u'4_5_3_6_3_0']
+ones [u'4_3_3_4_3_9', u'4_8_3_5_3_3']
+org1 4_1_3_5_3_0, org2 4_2_3_9_3_2
+crossing org1:4_1_3_5_3_0 with org2:4_2_3_9_3_2
+
+Crossover_point mutation at index: 70
+0 --> 1
+fours []
+threes [u'4_4_3_2_3_5', u'4_6_3_2_3_0', u'4_1_3_5_3_0', u'4_2_3_9_3_2']
+twos [u'4_0_3_5_3_9', u'4_5_3_6_3_0']
+ones [u'4_3_3_4_3_9', u'4_8_3_5_3_3']
+org1 4_4_3_2_3_5, org2 4_6_3_2_3_0
+crossing org1:4_4_3_2_3_5 with org2:4_6_3_2_3_0
 
 fours []
-threes [u'4_7_3_5_3_4', u'4_1_3_5_3_4', u'4_0_3_8_3_5', u'4_2_3_8_3_3']
-twos [u'4_3_3_5_3_6', u'4_8_3_3_3_8']
-ones [u'4_6_3_0_3_2', u'4_4_3_8_3_0']
-org1 4_7_3_5_3_4, org2 4_1_3_5_3_4
-crossing org1:4_7_3_5_3_4 with org2:4_1_3_5_3_4
-
-fours []
-threes [u'4_0_3_8_3_5', u'4_2_3_8_3_3']
-twos [u'4_3_3_5_3_6', u'4_8_3_3_3_8', u'4_7_3_5_3_4', u'4_1_3_5_3_4']
-ones [u'4_6_3_0_3_2', u'4_4_3_8_3_0']
-org1 4_0_3_8_3_5, org2 4_2_3_8_3_3
-crossing org1:4_0_3_8_3_5 with org2:4_2_3_8_3_3
-
-fours []
-threes []
-twos [u'4_3_3_5_3_6', u'4_8_3_3_3_8', u'4_7_3_5_3_4', u'4_1_3_5_3_4', u'4_0_3_8_3_5', u'4_2_3_8_3_3']
-ones [u'4_6_3_0_3_2', u'4_4_3_8_3_0']
-org1 4_1_3_5_3_4, org2 4_7_3_5_3_4
-crossing org1:4_1_3_5_3_4 with org2:4_7_3_5_3_4
+threes [u'4_1_3_5_3_0', u'4_2_3_9_3_2']
+twos [u'4_0_3_5_3_9', u'4_5_3_6_3_0', u'4_4_3_2_3_5', u'4_6_3_2_3_0']
+ones [u'4_3_3_4_3_9', u'4_8_3_5_3_3']
+org1 4_2_3_9_3_2, org2 4_1_3_5_3_0
+crossing org1:4_2_3_9_3_2 with org2:4_1_3_5_3_0
 
 fours []
 threes []
-twos [u'4_3_3_5_3_6', u'4_8_3_3_3_8', u'4_0_3_8_3_5', u'4_2_3_8_3_3']
-ones [u'4_6_3_0_3_2', u'4_4_3_8_3_0', u'4_1_3_5_3_4', u'4_7_3_5_3_4']
-org1 4_3_3_5_3_6, org2 4_0_3_8_3_5
-crossing org1:4_3_3_5_3_6 with org2:4_0_3_8_3_5
+twos [u'4_0_3_5_3_9', u'4_5_3_6_3_0', u'4_4_3_2_3_5', u'4_6_3_2_3_0', u'4_2_3_9_3_2', u'4_1_3_5_3_0']
+ones [u'4_3_3_4_3_9', u'4_8_3_5_3_3']
+org1 4_5_3_6_3_0, org2 4_0_3_5_3_9
+crossing org1:4_5_3_6_3_0 with org2:4_0_3_5_3_9
 
 fours []
 threes []
-twos [u'4_8_3_3_3_8', u'4_2_3_8_3_3']
-ones [u'4_6_3_0_3_2', u'4_4_3_8_3_0', u'4_1_3_5_3_4', u'4_7_3_5_3_4', u'4_3_3_5_3_6', u'4_0_3_8_3_5']
-org1 4_2_3_8_3_3, org2 4_8_3_3_3_8
-crossing org1:4_2_3_8_3_3 with org2:4_8_3_3_3_8
+twos [u'4_4_3_2_3_5', u'4_6_3_2_3_0', u'4_2_3_9_3_2', u'4_1_3_5_3_0']
+ones [u'4_3_3_4_3_9', u'4_8_3_5_3_3', u'4_5_3_6_3_0', u'4_0_3_5_3_9']
+org1 4_6_3_2_3_0, org2 4_2_3_9_3_2
+crossing org1:4_6_3_2_3_0 with org2:4_2_3_9_3_2
 
 fours []
 threes []
-twos []
-ones [u'4_6_3_0_3_2', u'4_4_3_8_3_0', u'4_1_3_5_3_4', u'4_7_3_5_3_4', u'4_3_3_5_3_6', u'4_0_3_8_3_5', u'4_2_3_8_3_3', u'4_8_3_3_3_8']
-org1 4_1_3_5_3_4, org2 4_6_3_0_3_2
-crossing org1:4_1_3_5_3_4 with org2:4_6_3_0_3_2
+twos [u'4_4_3_2_3_5', u'4_1_3_5_3_0']
+ones [u'4_3_3_4_3_9', u'4_8_3_5_3_3', u'4_5_3_6_3_0', u'4_0_3_5_3_9', u'4_6_3_2_3_0', u'4_2_3_9_3_2']
+org1 4_4_3_2_3_5, org2 4_1_3_5_3_0
+crossing org1:4_4_3_2_3_5 with org2:4_1_3_5_3_0
 
 fours []
 threes []
 twos []
-ones [u'4_4_3_8_3_0', u'4_7_3_5_3_4', u'4_3_3_5_3_6', u'4_0_3_8_3_5', u'4_2_3_8_3_3', u'4_8_3_3_3_8']
-org1 4_8_3_3_3_8, org2 4_4_3_8_3_0
-crossing org1:4_8_3_3_3_8 with org2:4_4_3_8_3_0
+ones [u'4_3_3_4_3_9', u'4_8_3_5_3_3', u'4_5_3_6_3_0', u'4_0_3_5_3_9', u'4_6_3_2_3_0', u'4_2_3_9_3_2', u'4_4_3_2_3_5', u'4_1_3_5_3_0']
+org1 4_8_3_5_3_3, org2 4_6_3_2_3_0
+crossing org1:4_8_3_5_3_3 with org2:4_6_3_2_3_0
 
 fours []
 threes []
 twos []
-ones [u'4_7_3_5_3_4', u'4_3_3_5_3_6', u'4_0_3_8_3_5', u'4_2_3_8_3_3']
-org1 4_0_3_8_3_5, org2 4_7_3_5_3_4
-crossing org1:4_0_3_8_3_5 with org2:4_7_3_5_3_4
+ones [u'4_3_3_4_3_9', u'4_5_3_6_3_0', u'4_0_3_5_3_9', u'4_2_3_9_3_2', u'4_4_3_2_3_5', u'4_1_3_5_3_0']
+org1 4_4_3_2_3_5, org2 4_2_3_9_3_2
+crossing org1:4_4_3_2_3_5 with org2:4_2_3_9_3_2
 
 fours []
 threes []
 twos []
-ones [u'4_3_3_5_3_6', u'4_2_3_8_3_3']
-org1 4_2_3_8_3_3, org2 4_3_3_5_3_6
-crossing org1:4_2_3_8_3_3 with org2:4_3_3_5_3_6
+ones [u'4_3_3_4_3_9', u'4_5_3_6_3_0', u'4_0_3_5_3_9', u'4_1_3_5_3_0']
+org1 4_1_3_5_3_0, org2 4_0_3_5_3_9
+crossing org1:4_1_3_5_3_0 with org2:4_0_3_5_3_9
+
+fours []
+threes []
+twos []
+ones [u'4_3_3_4_3_9', u'4_5_3_6_3_0']
+org1 4_5_3_6_3_0, org2 4_3_3_4_3_9
+crossing org1:4_5_3_6_3_0 with org2:4_3_3_4_3_9
 
 
 Number of Orgs in new gen: 10
 Active Threads per org:
 
-File 5_1_4_7_4_1
+File 5_8_4_0_4_1
 genome length 560
 thread len.: 0
 thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
+thread len.: 2
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
 
-thread count 2
+thread count 3
 
-File 5_0_4_2_4_0
+File 5_7_4_2_4_4
 genome length 560
 thread len.: 0
 thread binary len: 80
+thread len.: 2
+thread binary len: 80
 thread len.: 4
+thread binary len: 80
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
@@ -3679,38 +3692,36 @@ thread len.: 2
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
 
 thread count 3
 
-File 5_2_4_2_4_0
+File 5_1_4_4_4_6
 genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 2
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
 thread len.: 4
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
 
 thread count 3
 
-File 5_8_4_0_4_7
+File 5_0_4_1_4_2
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 0
@@ -3719,12 +3730,48 @@ thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+
+thread count 3
+
+File 5_2_4_1_4_2
+genome length 560
 thread len.: 0
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
 
-thread count 2
+thread count 3
 
-File 5_6_4_6_4_1
+File 5_5_4_4_4_1
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 2
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 5_6_4_8_4_6
 genome length 560
 thread len.: 0
 thread binary len: 80
@@ -3743,49 +3790,32 @@ thread binary len: 80
 
 thread count 1
 
-File 5_9_4_3_4_2
+File 5_3_4_5_4_0
 genome length 560
 thread len.: 0
 thread binary len: 80
+thread len.: 6
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
 thread len.: 4
 thread binary len: 80
 thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 
 thread count 2
 
-File 5_3_4_1_4_7
+File 5_4_4_2_4_6
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 2
-
-File 5_7_4_8_4_4
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
@@ -3794,44 +3824,23 @@ thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 1
-
-File 5_4_4_0_4_3
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 2
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 3
 
-File 5_5_4_2_4_8
+File 5_9_4_5_4_3
 genome length 560
 thread len.: 0
 thread binary len: 80
+thread len.: 6
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
 thread len.: 4
 thread binary len: 80
 thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
@@ -3839,116 +3848,249 @@ thread binary len: 80
 thread count 2
 
 
- mean performances for each org in population: [2, 3, 3, 2, 1, 2, 2, 1, 3, 2]
+ mean performances for each org in population: [3, 3, 3, 3, 3, 3, 1, 2, 3, 2]
 
 --------------------------------------------------
 Calculating the Std Error of the mean: 
-Org mean perf: 2 Pop mean: 2.1 Diffsqrd: 0.01 SumDiffsqrd: 0.01 
-Org mean perf: 3 Pop mean: 2.1 Diffsqrd: 0.81 SumDiffsqrd: 0.82 
-Org mean perf: 3 Pop mean: 2.1 Diffsqrd: 0.81 SumDiffsqrd: 1.63 
-Org mean perf: 2 Pop mean: 2.1 Diffsqrd: 0.01 SumDiffsqrd: 1.64 
-Org mean perf: 1 Pop mean: 2.1 Diffsqrd: 1.21 SumDiffsqrd: 2.85 
-Org mean perf: 2 Pop mean: 2.1 Diffsqrd: 0.01 SumDiffsqrd: 2.86 
-Org mean perf: 2 Pop mean: 2.1 Diffsqrd: 0.01 SumDiffsqrd: 2.87 
-Org mean perf: 1 Pop mean: 2.1 Diffsqrd: 1.21 SumDiffsqrd: 4.08 
-Org mean perf: 3 Pop mean: 2.1 Diffsqrd: 0.81 SumDiffsqrd: 4.89 
-Org mean perf: 2 Pop mean: 2.1 Diffsqrd: 0.01 SumDiffsqrd: 4.9 
-Stddv: 0.7  StdErr: 0.221359436212
+Org mean perf: 3 Pop mean: 2.6 Diffsqrd: 0.16 SumDiffsqrd: 0.16 
+Org mean perf: 3 Pop mean: 2.6 Diffsqrd: 0.16 SumDiffsqrd: 0.32 
+Org mean perf: 3 Pop mean: 2.6 Diffsqrd: 0.16 SumDiffsqrd: 0.48 
+Org mean perf: 3 Pop mean: 2.6 Diffsqrd: 0.16 SumDiffsqrd: 0.64 
+Org mean perf: 3 Pop mean: 2.6 Diffsqrd: 0.16 SumDiffsqrd: 0.8 
+Org mean perf: 3 Pop mean: 2.6 Diffsqrd: 0.16 SumDiffsqrd: 0.96 
+Org mean perf: 1 Pop mean: 2.6 Diffsqrd: 2.56 SumDiffsqrd: 3.52 
+Org mean perf: 2 Pop mean: 2.6 Diffsqrd: 0.36 SumDiffsqrd: 3.88 
+Org mean perf: 3 Pop mean: 2.6 Diffsqrd: 0.16 SumDiffsqrd: 4.04 
+Org mean perf: 2 Pop mean: 2.6 Diffsqrd: 0.36 SumDiffsqrd: 4.4 
+Stddv: 0.663324958071  StdErr: 0.209761769634
 ------------------------------------------------------------
  
 
-quartiles: {'mean_threads': 2.1, 'min': 1, 'Generation': 5, 'max': 3, 'gen_size': 10, 'mode': 2, 'stderr': 0.22135943621178653}
+quartiles: {'mean_threads': 2.6, 'min': 1, 'Generation': 5, 'max': 3, 'gen_size': 10, 'mode': 3, 'stderr': 0.20976176963403032}
 
 3
 3
 3
+3
+3
+3
+3
 2
 2
-2
-2
-2
-1
 1
 ------------------------------------------------------------
 Crossing Generation:
 
-fours [u'5_0_4_2_4_0', u'5_2_4_2_4_0']
-threes [u'5_4_4_0_4_3', u'5_1_4_7_4_1']
-twos [u'5_8_4_0_4_7', u'5_9_4_3_4_2']
-ones [u'5_3_4_1_4_7', u'5_5_4_2_4_8']
-org1 5_2_4_2_4_0, org2 5_0_4_2_4_0
-crossing org1:5_2_4_2_4_0 with org2:5_0_4_2_4_0
+fours [u'5_8_4_0_4_1', u'5_7_4_2_4_4']
+threes [u'5_1_4_4_4_6', u'5_0_4_1_4_2']
+twos [u'5_2_4_1_4_2', u'5_5_4_4_4_1']
+ones [u'5_4_4_2_4_6', u'5_3_4_5_4_0']
+org1 5_7_4_2_4_4, org2 5_8_4_0_4_1
+crossing org1:5_7_4_2_4_4 with org2:5_8_4_0_4_1
 
 fours []
-threes [u'5_4_4_0_4_3', u'5_1_4_7_4_1', u'5_2_4_2_4_0', u'5_0_4_2_4_0']
-twos [u'5_8_4_0_4_7', u'5_9_4_3_4_2']
-ones [u'5_3_4_1_4_7', u'5_5_4_2_4_8']
-org1 5_0_4_2_4_0, org2 5_4_4_0_4_3
-crossing org1:5_0_4_2_4_0 with org2:5_4_4_0_4_3
+threes [u'5_1_4_4_4_6', u'5_0_4_1_4_2', u'5_7_4_2_4_4', u'5_8_4_0_4_1']
+twos [u'5_2_4_1_4_2', u'5_5_4_4_4_1']
+ones [u'5_4_4_2_4_6', u'5_3_4_5_4_0']
+org1 5_1_4_4_4_6, org2 5_0_4_1_4_2
+crossing org1:5_1_4_4_4_6 with org2:5_0_4_1_4_2
 
 fours []
-threes [u'5_1_4_7_4_1', u'5_2_4_2_4_0']
-twos [u'5_8_4_0_4_7', u'5_9_4_3_4_2', u'5_0_4_2_4_0', u'5_4_4_0_4_3']
-ones [u'5_3_4_1_4_7', u'5_5_4_2_4_8']
-org1 5_2_4_2_4_0, org2 5_1_4_7_4_1
-crossing org1:5_2_4_2_4_0 with org2:5_1_4_7_4_1
-
-fours []
-threes []
-twos [u'5_8_4_0_4_7', u'5_9_4_3_4_2', u'5_0_4_2_4_0', u'5_4_4_0_4_3', u'5_2_4_2_4_0', u'5_1_4_7_4_1']
-ones [u'5_3_4_1_4_7', u'5_5_4_2_4_8']
-org1 5_8_4_0_4_7, org2 5_4_4_0_4_3
-crossing org1:5_8_4_0_4_7 with org2:5_4_4_0_4_3
+threes [u'5_7_4_2_4_4', u'5_8_4_0_4_1']
+twos [u'5_2_4_1_4_2', u'5_5_4_4_4_1', u'5_1_4_4_4_6', u'5_0_4_1_4_2']
+ones [u'5_4_4_2_4_6', u'5_3_4_5_4_0']
+org1 5_8_4_0_4_1, org2 5_7_4_2_4_4
+crossing org1:5_8_4_0_4_1 with org2:5_7_4_2_4_4
 
 fours []
 threes []
-twos [u'5_9_4_3_4_2', u'5_0_4_2_4_0', u'5_2_4_2_4_0', u'5_1_4_7_4_1']
-ones [u'5_3_4_1_4_7', u'5_5_4_2_4_8', u'5_8_4_0_4_7', u'5_4_4_0_4_3']
-org1 5_9_4_3_4_2, org2 5_0_4_2_4_0
-crossing org1:5_9_4_3_4_2 with org2:5_0_4_2_4_0
+twos [u'5_2_4_1_4_2', u'5_5_4_4_4_1', u'5_1_4_4_4_6', u'5_0_4_1_4_2', u'5_8_4_0_4_1', u'5_7_4_2_4_4']
+ones [u'5_4_4_2_4_6', u'5_3_4_5_4_0']
+org1 5_7_4_2_4_4, org2 5_2_4_1_4_2
+crossing org1:5_7_4_2_4_4 with org2:5_2_4_1_4_2
 
 fours []
 threes []
-twos [u'5_2_4_2_4_0', u'5_1_4_7_4_1']
-ones [u'5_3_4_1_4_7', u'5_5_4_2_4_8', u'5_8_4_0_4_7', u'5_4_4_0_4_3', u'5_9_4_3_4_2', u'5_0_4_2_4_0']
-org1 5_1_4_7_4_1, org2 5_2_4_2_4_0
-crossing org1:5_1_4_7_4_1 with org2:5_2_4_2_4_0
+twos [u'5_5_4_4_4_1', u'5_1_4_4_4_6', u'5_0_4_1_4_2', u'5_8_4_0_4_1']
+ones [u'5_4_4_2_4_6', u'5_3_4_5_4_0', u'5_7_4_2_4_4', u'5_2_4_1_4_2']
+org1 5_0_4_1_4_2, org2 5_8_4_0_4_1
+crossing org1:5_0_4_1_4_2 with org2:5_8_4_0_4_1
 
-Crossover_point mutation at index: 90
+Char mutation at index: 530
 0 --> 1
 fours []
 threes []
-twos []
-ones [u'5_3_4_1_4_7', u'5_5_4_2_4_8', u'5_8_4_0_4_7', u'5_4_4_0_4_3', u'5_9_4_3_4_2', u'5_0_4_2_4_0', u'5_1_4_7_4_1', u'5_2_4_2_4_0']
-org1 5_1_4_7_4_1, org2 5_2_4_2_4_0
-crossing org1:5_1_4_7_4_1 with org2:5_2_4_2_4_0
+twos [u'5_5_4_4_4_1', u'5_1_4_4_4_6']
+ones [u'5_4_4_2_4_6', u'5_3_4_5_4_0', u'5_7_4_2_4_4', u'5_2_4_1_4_2', u'5_0_4_1_4_2', u'5_8_4_0_4_1']
+org1 5_1_4_4_4_6, org2 5_5_4_4_4_1
+crossing org1:5_1_4_4_4_6 with org2:5_5_4_4_4_1
 
 fours []
 threes []
 twos []
-ones [u'5_3_4_1_4_7', u'5_5_4_2_4_8', u'5_8_4_0_4_7', u'5_4_4_0_4_3', u'5_9_4_3_4_2', u'5_0_4_2_4_0']
-org1 5_0_4_2_4_0, org2 5_4_4_0_4_3
-crossing org1:5_0_4_2_4_0 with org2:5_4_4_0_4_3
+ones [u'5_4_4_2_4_6', u'5_3_4_5_4_0', u'5_7_4_2_4_4', u'5_2_4_1_4_2', u'5_0_4_1_4_2', u'5_8_4_0_4_1', u'5_1_4_4_4_6', u'5_5_4_4_4_1']
+org1 5_7_4_2_4_4, org2 5_1_4_4_4_6
+crossing org1:5_7_4_2_4_4 with org2:5_1_4_4_4_6
 
 fours []
 threes []
 twos []
-ones [u'5_3_4_1_4_7', u'5_5_4_2_4_8', u'5_8_4_0_4_7', u'5_9_4_3_4_2']
-org1 5_5_4_2_4_8, org2 5_9_4_3_4_2
-crossing org1:5_5_4_2_4_8 with org2:5_9_4_3_4_2
+ones [u'5_4_4_2_4_6', u'5_3_4_5_4_0', u'5_2_4_1_4_2', u'5_0_4_1_4_2', u'5_8_4_0_4_1', u'5_5_4_4_4_1']
+org1 5_5_4_4_4_1, org2 5_2_4_1_4_2
+crossing org1:5_5_4_4_4_1 with org2:5_2_4_1_4_2
 
 fours []
 threes []
 twos []
-ones [u'5_3_4_1_4_7', u'5_8_4_0_4_7']
-org1 5_3_4_1_4_7, org2 5_8_4_0_4_7
-crossing org1:5_3_4_1_4_7 with org2:5_8_4_0_4_7
+ones [u'5_4_4_2_4_6', u'5_3_4_5_4_0', u'5_0_4_1_4_2', u'5_8_4_0_4_1']
+org1 5_8_4_0_4_1, org2 5_0_4_1_4_2
+crossing org1:5_8_4_0_4_1 with org2:5_0_4_1_4_2
+
+fours []
+threes []
+twos []
+ones [u'5_4_4_2_4_6', u'5_3_4_5_4_0']
+org1 5_3_4_5_4_0, org2 5_4_4_2_4_6
+crossing org1:5_3_4_5_4_0 with org2:5_4_4_2_4_6
 
 
 Number of Orgs in new gen: 10
 Active Threads per org:
 
-File 6_9_5_3_5_8
+File 6_2_5_7_5_8
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 2
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 6_0_5_7_5_8
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 2
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 6_5_5_5_5_1
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 2
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 6_4_5_0_5_8
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 6_3_5_2_5_7
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 2
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 6_8_5_8_5_0
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 6_1_5_0_5_1
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 6_9_5_4_5_3
 genome length 560
 thread len.: 0
 thread binary len: 80
@@ -3960,18 +4102,22 @@ thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 4
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 
-thread count 2
+thread count 1
 
-File 6_1_5_4_5_0
+File 6_6_5_1_5_7
 genome length 560
 thread len.: 0
 thread binary len: 80
+thread len.: 2
+thread binary len: 80
 thread len.: 4
+thread binary len: 80
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
@@ -3979,485 +4125,48 @@ thread len.: 2
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
 
 thread count 3
 
-File 6_7_5_0_5_4
+File 6_7_5_5_5_2
 genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 2
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
 thread len.: 4
 thread binary len: 80
 thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
 thread binary len: 80
 
 thread count 3
 
-File 6_6_5_2_5_1
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 2
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
 
-thread count 3
-
-File 6_2_5_1_5_2
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 2
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 3
-
-File 6_0_5_2_5_0
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 2
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 3
-
-File 6_8_5_5_5_9
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 2
-
-File 6_3_5_4_5_8
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 2
-
-File 6_5_5_2_5_1
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 2
-
-File 6_4_5_0_5_9
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 2
-
-
- mean performances for each org in population: [2, 3, 3, 3, 3, 3, 2, 2, 2, 2]
-
---------------------------------------------------
-Calculating the Std Error of the mean: 
-Org mean perf: 2 Pop mean: 2.5 Diffsqrd: 0.25 SumDiffsqrd: 0.25 
-Org mean perf: 3 Pop mean: 2.5 Diffsqrd: 0.25 SumDiffsqrd: 0.5 
-Org mean perf: 3 Pop mean: 2.5 Diffsqrd: 0.25 SumDiffsqrd: 0.75 
-Org mean perf: 3 Pop mean: 2.5 Diffsqrd: 0.25 SumDiffsqrd: 1.0 
-Org mean perf: 3 Pop mean: 2.5 Diffsqrd: 0.25 SumDiffsqrd: 1.25 
-Org mean perf: 3 Pop mean: 2.5 Diffsqrd: 0.25 SumDiffsqrd: 1.5 
-Org mean perf: 2 Pop mean: 2.5 Diffsqrd: 0.25 SumDiffsqrd: 1.75 
-Org mean perf: 2 Pop mean: 2.5 Diffsqrd: 0.25 SumDiffsqrd: 2.0 
-Org mean perf: 2 Pop mean: 2.5 Diffsqrd: 0.25 SumDiffsqrd: 2.25 
-Org mean perf: 2 Pop mean: 2.5 Diffsqrd: 0.25 SumDiffsqrd: 2.5 
-Stddv: 0.5  StdErr: 0.158113883008
-------------------------------------------------------------
- 
-
-quartiles: {'mean_threads': 2.5, 'min': 2, 'Generation': 6, 'max': 3, 'gen_size': 10, 'mode': 2, 'stderr': 0.15811388300841897}
-
-3
-3
-3
-3
-3
-2
-2
-2
-2
-2
-------------------------------------------------------------
-Crossing Generation:
-
-fours [u'6_1_5_4_5_0', u'6_7_5_0_5_4']
-threes [u'6_6_5_2_5_1', u'6_2_5_1_5_2']
-twos [u'6_0_5_2_5_0', u'6_9_5_3_5_8']
-ones [u'6_8_5_5_5_9', u'6_3_5_4_5_8']
-org1 6_1_5_4_5_0, org2 6_7_5_0_5_4
-crossing org1:6_1_5_4_5_0 with org2:6_7_5_0_5_4
-
-fours []
-threes [u'6_6_5_2_5_1', u'6_2_5_1_5_2', u'6_1_5_4_5_0', u'6_7_5_0_5_4']
-twos [u'6_0_5_2_5_0', u'6_9_5_3_5_8']
-ones [u'6_8_5_5_5_9', u'6_3_5_4_5_8']
-org1 6_7_5_0_5_4, org2 6_1_5_4_5_0
-crossing org1:6_7_5_0_5_4 with org2:6_1_5_4_5_0
-
-fours []
-threes [u'6_6_5_2_5_1', u'6_2_5_1_5_2']
-twos [u'6_0_5_2_5_0', u'6_9_5_3_5_8', u'6_7_5_0_5_4', u'6_1_5_4_5_0']
-ones [u'6_8_5_5_5_9', u'6_3_5_4_5_8']
-org1 6_2_5_1_5_2, org2 6_6_5_2_5_1
-crossing org1:6_2_5_1_5_2 with org2:6_6_5_2_5_1
-
-fours []
-threes []
-twos [u'6_0_5_2_5_0', u'6_9_5_3_5_8', u'6_7_5_0_5_4', u'6_1_5_4_5_0', u'6_2_5_1_5_2', u'6_6_5_2_5_1']
-ones [u'6_8_5_5_5_9', u'6_3_5_4_5_8']
-org1 6_2_5_1_5_2, org2 6_1_5_4_5_0
-crossing org1:6_2_5_1_5_2 with org2:6_1_5_4_5_0
-
-fours []
-threes []
-twos [u'6_0_5_2_5_0', u'6_9_5_3_5_8', u'6_7_5_0_5_4', u'6_6_5_2_5_1']
-ones [u'6_8_5_5_5_9', u'6_3_5_4_5_8', u'6_2_5_1_5_2', u'6_1_5_4_5_0']
-org1 6_9_5_3_5_8, org2 6_0_5_2_5_0
-crossing org1:6_9_5_3_5_8 with org2:6_0_5_2_5_0
-
-Crossover_point mutation at index: 355
-0 --> 1
-fours []
-threes []
-twos [u'6_7_5_0_5_4', u'6_6_5_2_5_1']
-ones [u'6_8_5_5_5_9', u'6_3_5_4_5_8', u'6_2_5_1_5_2', u'6_1_5_4_5_0', u'6_9_5_3_5_8', u'6_0_5_2_5_0']
-org1 6_7_5_0_5_4, org2 6_6_5_2_5_1
-crossing org1:6_7_5_0_5_4 with org2:6_6_5_2_5_1
-
-fours []
-threes []
-twos []
-ones [u'6_8_5_5_5_9', u'6_3_5_4_5_8', u'6_2_5_1_5_2', u'6_1_5_4_5_0', u'6_9_5_3_5_8', u'6_0_5_2_5_0', u'6_7_5_0_5_4', u'6_6_5_2_5_1']
-org1 6_7_5_0_5_4, org2 6_6_5_2_5_1
-crossing org1:6_7_5_0_5_4 with org2:6_6_5_2_5_1
-
-fours []
-threes []
-twos []
-ones [u'6_8_5_5_5_9', u'6_3_5_4_5_8', u'6_2_5_1_5_2', u'6_1_5_4_5_0', u'6_9_5_3_5_8', u'6_0_5_2_5_0']
-org1 6_2_5_1_5_2, org2 6_1_5_4_5_0
-crossing org1:6_2_5_1_5_2 with org2:6_1_5_4_5_0
-
-fours []
-threes []
-twos []
-ones [u'6_8_5_5_5_9', u'6_3_5_4_5_8', u'6_9_5_3_5_8', u'6_0_5_2_5_0']
-org1 6_9_5_3_5_8, org2 6_0_5_2_5_0
-crossing org1:6_9_5_3_5_8 with org2:6_0_5_2_5_0
-
-fours []
-threes []
-twos []
-ones [u'6_8_5_5_5_9', u'6_3_5_4_5_8']
-org1 6_3_5_4_5_8, org2 6_8_5_5_5_9
-crossing org1:6_3_5_4_5_8 with org2:6_8_5_5_5_9
-
-
-Number of Orgs in new gen: 10
-Active Threads per org:
-
-File 7_8_6_9_6_0
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 2
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 3
-
-File 7_9_6_3_6_8
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 2
-
-File 7_6_6_7_6_6
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 2
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 3
-
-File 7_3_6_1_6_2
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 2
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 3
-
-File 7_2_6_6_6_2
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 2
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 3
-
-File 7_5_6_7_6_6
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 2
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 3
-
-File 7_0_6_1_6_7
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 2
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 3
-
-File 7_1_6_1_6_7
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 2
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 3
-
-File 7_7_6_1_6_2
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 2
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 3
-
-File 7_4_6_0_6_9
-genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
-thread len.: 0
-thread binary len: 80
-
-thread count 2
-
-
- mean performances for each org in population: [3, 2, 3, 3, 3, 3, 3, 3, 3, 2]
+ mean performances for each org in population: [3, 3, 3, 3, 3, 3, 3, 1, 3, 3]
 
 --------------------------------------------------
 Calculating the Std Error of the mean: 
 Org mean perf: 3 Pop mean: 2.8 Diffsqrd: 0.04 SumDiffsqrd: 0.04 
-Org mean perf: 2 Pop mean: 2.8 Diffsqrd: 0.64 SumDiffsqrd: 0.68 
-Org mean perf: 3 Pop mean: 2.8 Diffsqrd: 0.04 SumDiffsqrd: 0.72 
-Org mean perf: 3 Pop mean: 2.8 Diffsqrd: 0.04 SumDiffsqrd: 0.76 
-Org mean perf: 3 Pop mean: 2.8 Diffsqrd: 0.04 SumDiffsqrd: 0.8 
-Org mean perf: 3 Pop mean: 2.8 Diffsqrd: 0.04 SumDiffsqrd: 0.84 
-Org mean perf: 3 Pop mean: 2.8 Diffsqrd: 0.04 SumDiffsqrd: 0.88 
-Org mean perf: 3 Pop mean: 2.8 Diffsqrd: 0.04 SumDiffsqrd: 0.92 
-Org mean perf: 3 Pop mean: 2.8 Diffsqrd: 0.04 SumDiffsqrd: 0.96 
-Org mean perf: 2 Pop mean: 2.8 Diffsqrd: 0.64 SumDiffsqrd: 1.6 
-Stddv: 0.4  StdErr: 0.126491106407
+Org mean perf: 3 Pop mean: 2.8 Diffsqrd: 0.04 SumDiffsqrd: 0.08 
+Org mean perf: 3 Pop mean: 2.8 Diffsqrd: 0.04 SumDiffsqrd: 0.12 
+Org mean perf: 3 Pop mean: 2.8 Diffsqrd: 0.04 SumDiffsqrd: 0.16 
+Org mean perf: 3 Pop mean: 2.8 Diffsqrd: 0.04 SumDiffsqrd: 0.2 
+Org mean perf: 3 Pop mean: 2.8 Diffsqrd: 0.04 SumDiffsqrd: 0.24 
+Org mean perf: 3 Pop mean: 2.8 Diffsqrd: 0.04 SumDiffsqrd: 0.28 
+Org mean perf: 1 Pop mean: 2.8 Diffsqrd: 3.24 SumDiffsqrd: 3.52 
+Org mean perf: 3 Pop mean: 2.8 Diffsqrd: 0.04 SumDiffsqrd: 3.56 
+Org mean perf: 3 Pop mean: 2.8 Diffsqrd: 0.04 SumDiffsqrd: 3.6 
+Stddv: 0.6  StdErr: 0.18973665961
 ------------------------------------------------------------
  
 
-quartiles: {'mean_threads': 2.8, 'min': 2, 'Generation': 7, 'max': 3, 'gen_size': 10, 'mode': 3, 'stderr': 0.12649110640673517}
+quartiles: {'mean_threads': 2.8, 'min': 1, 'Generation': 6, 'max': 3, 'gen_size': 10, 'mode': 3, 'stderr': 0.18973665961010275}
 
 3
 3
@@ -4467,271 +4176,571 @@ quartiles: {'mean_threads': 2.8, 'min': 2, 'Generation': 7, 'max': 3, 'gen_size'
 3
 3
 3
-2
-2
+3
+1
 ------------------------------------------------------------
 Crossing Generation:
 
-fours [u'7_8_6_9_6_0', u'7_6_6_7_6_6']
-threes [u'7_3_6_1_6_2', u'7_2_6_6_6_2']
-twos [u'7_5_6_7_6_6', u'7_0_6_1_6_7']
-ones [u'7_1_6_1_6_7', u'7_7_6_1_6_2']
-org1 7_6_6_7_6_6, org2 7_8_6_9_6_0
-crossing org1:7_6_6_7_6_6 with org2:7_8_6_9_6_0
+fours [u'6_2_5_7_5_8', u'6_0_5_7_5_8']
+threes [u'6_5_5_5_5_1', u'6_4_5_0_5_8']
+twos [u'6_3_5_2_5_7', u'6_8_5_8_5_0']
+ones [u'6_1_5_0_5_1', u'6_6_5_1_5_7']
+org1 6_2_5_7_5_8, org2 6_0_5_7_5_8
+crossing org1:6_2_5_7_5_8 with org2:6_0_5_7_5_8
 
 fours []
-threes [u'7_3_6_1_6_2', u'7_2_6_6_6_2', u'7_6_6_7_6_6', u'7_8_6_9_6_0']
-twos [u'7_5_6_7_6_6', u'7_0_6_1_6_7']
-ones [u'7_1_6_1_6_7', u'7_7_6_1_6_2']
-org1 7_8_6_9_6_0, org2 7_2_6_6_6_2
-crossing org1:7_8_6_9_6_0 with org2:7_2_6_6_6_2
+threes [u'6_5_5_5_5_1', u'6_4_5_0_5_8', u'6_2_5_7_5_8', u'6_0_5_7_5_8']
+twos [u'6_3_5_2_5_7', u'6_8_5_8_5_0']
+ones [u'6_1_5_0_5_1', u'6_6_5_1_5_7']
+org1 6_5_5_5_5_1, org2 6_2_5_7_5_8
+crossing org1:6_5_5_5_5_1 with org2:6_2_5_7_5_8
 
 fours []
-threes [u'7_3_6_1_6_2', u'7_6_6_7_6_6']
-twos [u'7_5_6_7_6_6', u'7_0_6_1_6_7', u'7_8_6_9_6_0', u'7_2_6_6_6_2']
-ones [u'7_1_6_1_6_7', u'7_7_6_1_6_2']
-org1 7_6_6_7_6_6, org2 7_3_6_1_6_2
-crossing org1:7_6_6_7_6_6 with org2:7_3_6_1_6_2
-
-fours []
-threes []
-twos [u'7_5_6_7_6_6', u'7_0_6_1_6_7', u'7_8_6_9_6_0', u'7_2_6_6_6_2', u'7_6_6_7_6_6', u'7_3_6_1_6_2']
-ones [u'7_1_6_1_6_7', u'7_7_6_1_6_2']
-org1 7_3_6_1_6_2, org2 7_2_6_6_6_2
-crossing org1:7_3_6_1_6_2 with org2:7_2_6_6_6_2
+threes [u'6_4_5_0_5_8', u'6_0_5_7_5_8']
+twos [u'6_3_5_2_5_7', u'6_8_5_8_5_0', u'6_5_5_5_5_1', u'6_2_5_7_5_8']
+ones [u'6_1_5_0_5_1', u'6_6_5_1_5_7']
+org1 6_0_5_7_5_8, org2 6_4_5_0_5_8
+crossing org1:6_0_5_7_5_8 with org2:6_4_5_0_5_8
 
 fours []
 threes []
-twos [u'7_5_6_7_6_6', u'7_0_6_1_6_7', u'7_8_6_9_6_0', u'7_6_6_7_6_6']
-ones [u'7_1_6_1_6_7', u'7_7_6_1_6_2', u'7_3_6_1_6_2', u'7_2_6_6_6_2']
-org1 7_5_6_7_6_6, org2 7_6_6_7_6_6
-crossing org1:7_5_6_7_6_6 with org2:7_6_6_7_6_6
+twos [u'6_3_5_2_5_7', u'6_8_5_8_5_0', u'6_5_5_5_5_1', u'6_2_5_7_5_8', u'6_0_5_7_5_8', u'6_4_5_0_5_8']
+ones [u'6_1_5_0_5_1', u'6_6_5_1_5_7']
+org1 6_2_5_7_5_8, org2 6_3_5_2_5_7
+crossing org1:6_2_5_7_5_8 with org2:6_3_5_2_5_7
 
 fours []
 threes []
-twos [u'7_0_6_1_6_7', u'7_8_6_9_6_0']
-ones [u'7_1_6_1_6_7', u'7_7_6_1_6_2', u'7_3_6_1_6_2', u'7_2_6_6_6_2', u'7_5_6_7_6_6', u'7_6_6_7_6_6']
-org1 7_8_6_9_6_0, org2 7_0_6_1_6_7
-crossing org1:7_8_6_9_6_0 with org2:7_0_6_1_6_7
+twos [u'6_8_5_8_5_0', u'6_5_5_5_5_1', u'6_0_5_7_5_8', u'6_4_5_0_5_8']
+ones [u'6_1_5_0_5_1', u'6_6_5_1_5_7', u'6_2_5_7_5_8', u'6_3_5_2_5_7']
+org1 6_5_5_5_5_1, org2 6_4_5_0_5_8
+crossing org1:6_5_5_5_5_1 with org2:6_4_5_0_5_8
 
 fours []
 threes []
-twos []
-ones [u'7_1_6_1_6_7', u'7_7_6_1_6_2', u'7_3_6_1_6_2', u'7_2_6_6_6_2', u'7_5_6_7_6_6', u'7_6_6_7_6_6', u'7_8_6_9_6_0', u'7_0_6_1_6_7']
-org1 7_1_6_1_6_7, org2 7_6_6_7_6_6
-crossing org1:7_1_6_1_6_7 with org2:7_6_6_7_6_6
+twos [u'6_8_5_8_5_0', u'6_0_5_7_5_8']
+ones [u'6_1_5_0_5_1', u'6_6_5_1_5_7', u'6_2_5_7_5_8', u'6_3_5_2_5_7', u'6_5_5_5_5_1', u'6_4_5_0_5_8']
+org1 6_8_5_8_5_0, org2 6_0_5_7_5_8
+crossing org1:6_8_5_8_5_0 with org2:6_0_5_7_5_8
 
 fours []
 threes []
 twos []
-ones [u'7_7_6_1_6_2', u'7_3_6_1_6_2', u'7_2_6_6_6_2', u'7_5_6_7_6_6', u'7_8_6_9_6_0', u'7_0_6_1_6_7']
-org1 7_8_6_9_6_0, org2 7_0_6_1_6_7
-crossing org1:7_8_6_9_6_0 with org2:7_0_6_1_6_7
+ones [u'6_1_5_0_5_1', u'6_6_5_1_5_7', u'6_2_5_7_5_8', u'6_3_5_2_5_7', u'6_5_5_5_5_1', u'6_4_5_0_5_8', u'6_8_5_8_5_0', u'6_0_5_7_5_8']
+org1 6_6_5_1_5_7, org2 6_3_5_2_5_7
+crossing org1:6_6_5_1_5_7 with org2:6_3_5_2_5_7
 
 fours []
 threes []
 twos []
-ones [u'7_7_6_1_6_2', u'7_3_6_1_6_2', u'7_2_6_6_6_2', u'7_5_6_7_6_6']
-org1 7_2_6_6_6_2, org2 7_7_6_1_6_2
-crossing org1:7_2_6_6_6_2 with org2:7_7_6_1_6_2
+ones [u'6_1_5_0_5_1', u'6_2_5_7_5_8', u'6_5_5_5_5_1', u'6_4_5_0_5_8', u'6_8_5_8_5_0', u'6_0_5_7_5_8']
+org1 6_4_5_0_5_8, org2 6_5_5_5_5_1
+crossing org1:6_4_5_0_5_8 with org2:6_5_5_5_5_1
 
 fours []
 threes []
 twos []
-ones [u'7_3_6_1_6_2', u'7_5_6_7_6_6']
-org1 7_3_6_1_6_2, org2 7_5_6_7_6_6
-crossing org1:7_3_6_1_6_2 with org2:7_5_6_7_6_6
+ones [u'6_1_5_0_5_1', u'6_2_5_7_5_8', u'6_8_5_8_5_0', u'6_0_5_7_5_8']
+org1 6_0_5_7_5_8, org2 6_1_5_0_5_1
+crossing org1:6_0_5_7_5_8 with org2:6_1_5_0_5_1
+
+fours []
+threes []
+twos []
+ones [u'6_2_5_7_5_8', u'6_8_5_8_5_0']
+org1 6_8_5_8_5_0, org2 6_2_5_7_5_8
+crossing org1:6_8_5_8_5_0 with org2:6_2_5_7_5_8
 
 
 Number of Orgs in new gen: 10
 Active Threads per org:
 
-File 8_9_7_3_7_5
+File 7_3_6_2_6_3
 genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 2
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
 thread len.: 4
 thread binary len: 80
 thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
 thread binary len: 80
 
 thread count 3
 
-File 8_3_7_2_7_3
+File 7_6_6_3_6_6
 genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 2
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
 thread len.: 4
 thread binary len: 80
 thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
 thread binary len: 80
 
 thread count 3
 
-File 8_1_7_8_7_2
+File 7_2_6_4_6_0
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 3
 
-File 8_4_7_6_7_5
+File 7_0_6_0_6_2
 genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 2
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
 thread len.: 4
 thread binary len: 80
 thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
 thread binary len: 80
 
 thread count 3
 
-File 8_8_7_7_7_2
+File 7_1_6_2_6_5
 genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 2
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
 thread len.: 4
 thread binary len: 80
 thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
 thread binary len: 80
 
 thread count 3
 
-File 8_5_7_8_7_0
+File 7_5_6_0_6_8
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 3
 
-File 8_6_7_1_7_6
+File 7_7_6_4_6_5
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 3
 
-File 8_0_7_8_7_6
+File 7_9_6_8_6_2
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 3
 
-File 8_2_7_6_7_3
+File 7_4_6_4_6_5
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 3
 
-File 8_7_7_8_7_0
+File 7_8_6_0_6_1
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+
+thread count 3
+
+
+ mean performances for each org in population: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 3 Pop mean: 3.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 3 Pop mean: 3.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 3 Pop mean: 3.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 3 Pop mean: 3.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 3 Pop mean: 3.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 3 Pop mean: 3.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 3 Pop mean: 3.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 3 Pop mean: 3.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 3 Pop mean: 3.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 3 Pop mean: 3.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Stddv: 0.0  StdErr: 0.0
+------------------------------------------------------------
+ 
+
+quartiles: {'mean_threads': 3.0, 'min': 3, 'Generation': 7, 'max': 3, 'gen_size': 10, 'mode': 3, 'stderr': 0.0}
+
+3
+3
+3
+3
+3
+3
+3
+3
+3
+3
+------------------------------------------------------------
+Crossing Generation:
+
+fours [u'7_3_6_2_6_3', u'7_6_6_3_6_6']
+threes [u'7_2_6_4_6_0', u'7_0_6_0_6_2']
+twos [u'7_1_6_2_6_5', u'7_5_6_0_6_8']
+ones [u'7_7_6_4_6_5', u'7_9_6_8_6_2']
+org1 7_3_6_2_6_3, org2 7_6_6_3_6_6
+crossing org1:7_3_6_2_6_3 with org2:7_6_6_3_6_6
+
+fours []
+threes [u'7_2_6_4_6_0', u'7_0_6_0_6_2', u'7_3_6_2_6_3', u'7_6_6_3_6_6']
+twos [u'7_1_6_2_6_5', u'7_5_6_0_6_8']
+ones [u'7_7_6_4_6_5', u'7_9_6_8_6_2']
+org1 7_6_6_3_6_6, org2 7_0_6_0_6_2
+crossing org1:7_6_6_3_6_6 with org2:7_0_6_0_6_2
+
+fours []
+threes [u'7_2_6_4_6_0', u'7_3_6_2_6_3']
+twos [u'7_1_6_2_6_5', u'7_5_6_0_6_8', u'7_6_6_3_6_6', u'7_0_6_0_6_2']
+ones [u'7_7_6_4_6_5', u'7_9_6_8_6_2']
+org1 7_3_6_2_6_3, org2 7_2_6_4_6_0
+crossing org1:7_3_6_2_6_3 with org2:7_2_6_4_6_0
+
+fours []
+threes []
+twos [u'7_1_6_2_6_5', u'7_5_6_0_6_8', u'7_6_6_3_6_6', u'7_0_6_0_6_2', u'7_3_6_2_6_3', u'7_2_6_4_6_0']
+ones [u'7_7_6_4_6_5', u'7_9_6_8_6_2']
+org1 7_5_6_0_6_8, org2 7_2_6_4_6_0
+crossing org1:7_5_6_0_6_8 with org2:7_2_6_4_6_0
+
+fours []
+threes []
+twos [u'7_1_6_2_6_5', u'7_6_6_3_6_6', u'7_0_6_0_6_2', u'7_3_6_2_6_3']
+ones [u'7_7_6_4_6_5', u'7_9_6_8_6_2', u'7_5_6_0_6_8', u'7_2_6_4_6_0']
+org1 7_3_6_2_6_3, org2 7_1_6_2_6_5
+crossing org1:7_3_6_2_6_3 with org2:7_1_6_2_6_5
+
+fours []
+threes []
+twos [u'7_6_6_3_6_6', u'7_0_6_0_6_2']
+ones [u'7_7_6_4_6_5', u'7_9_6_8_6_2', u'7_5_6_0_6_8', u'7_2_6_4_6_0', u'7_3_6_2_6_3', u'7_1_6_2_6_5']
+org1 7_0_6_0_6_2, org2 7_6_6_3_6_6
+crossing org1:7_0_6_0_6_2 with org2:7_6_6_3_6_6
+
+fours []
+threes []
+twos []
+ones [u'7_7_6_4_6_5', u'7_9_6_8_6_2', u'7_5_6_0_6_8', u'7_2_6_4_6_0', u'7_3_6_2_6_3', u'7_1_6_2_6_5', u'7_0_6_0_6_2', u'7_6_6_3_6_6']
+org1 7_7_6_4_6_5, org2 7_9_6_8_6_2
+crossing org1:7_7_6_4_6_5 with org2:7_9_6_8_6_2
+
+fours []
+threes []
+twos []
+ones [u'7_5_6_0_6_8', u'7_2_6_4_6_0', u'7_3_6_2_6_3', u'7_1_6_2_6_5', u'7_0_6_0_6_2', u'7_6_6_3_6_6']
+org1 7_5_6_0_6_8, org2 7_1_6_2_6_5
+crossing org1:7_5_6_0_6_8 with org2:7_1_6_2_6_5
+
+fours []
+threes []
+twos []
+ones [u'7_2_6_4_6_0', u'7_3_6_2_6_3', u'7_0_6_0_6_2', u'7_6_6_3_6_6']
+org1 7_2_6_4_6_0, org2 7_3_6_2_6_3
+crossing org1:7_2_6_4_6_0 with org2:7_3_6_2_6_3
+
+Crossover_point mutation at index: 373
+0 --> 1
+fours []
+threes []
+twos []
+ones [u'7_0_6_0_6_2', u'7_6_6_3_6_6']
+org1 7_6_6_3_6_6, org2 7_0_6_0_6_2
+crossing org1:7_6_6_3_6_6 with org2:7_0_6_0_6_2
+
+
+Number of Orgs in new gen: 10
+Active Threads per org:
+
+File 8_0_7_3_7_6
+genome length 560
 thread len.: 0
+thread binary len: 80
+thread len.: 2
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 8_6_7_7_7_9
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 8_5_7_6_7_0
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 2
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 8_9_7_0_7_6
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 2
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 8_2_7_2_7_3
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 8_8_7_2_7_3
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 8_1_7_6_7_0
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 2
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 8_7_7_5_7_1
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 8_4_7_1_7_3
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 2
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+
+thread count 3
+
+File 8_3_7_2_7_5
+genome length 560
+thread len.: 0
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 4
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
 thread binary len: 80
 
 thread count 3
@@ -4770,270 +4779,270 @@ quartiles: {'mean_threads': 3.0, 'min': 3, 'Generation': 8, 'max': 3, 'gen_size'
 ------------------------------------------------------------
 Crossing Generation:
 
-fours [u'8_9_7_3_7_5', u'8_3_7_2_7_3']
-threes [u'8_1_7_8_7_2', u'8_4_7_6_7_5']
-twos [u'8_8_7_7_7_2', u'8_5_7_8_7_0']
-ones [u'8_6_7_1_7_6', u'8_0_7_8_7_6']
-org1 8_3_7_2_7_3, org2 8_9_7_3_7_5
-crossing org1:8_3_7_2_7_3 with org2:8_9_7_3_7_5
+fours [u'8_0_7_3_7_6', u'8_6_7_7_7_9']
+threes [u'8_5_7_6_7_0', u'8_9_7_0_7_6']
+twos [u'8_2_7_2_7_3', u'8_8_7_2_7_3']
+ones [u'8_1_7_6_7_0', u'8_7_7_5_7_1']
+org1 8_6_7_7_7_9, org2 8_0_7_3_7_6
+crossing org1:8_6_7_7_7_9 with org2:8_0_7_3_7_6
 
 fours []
-threes [u'8_1_7_8_7_2', u'8_4_7_6_7_5', u'8_3_7_2_7_3', u'8_9_7_3_7_5']
-twos [u'8_8_7_7_7_2', u'8_5_7_8_7_0']
-ones [u'8_6_7_1_7_6', u'8_0_7_8_7_6']
-org1 8_9_7_3_7_5, org2 8_1_7_8_7_2
-crossing org1:8_9_7_3_7_5 with org2:8_1_7_8_7_2
+threes [u'8_5_7_6_7_0', u'8_9_7_0_7_6', u'8_6_7_7_7_9', u'8_0_7_3_7_6']
+twos [u'8_2_7_2_7_3', u'8_8_7_2_7_3']
+ones [u'8_1_7_6_7_0', u'8_7_7_5_7_1']
+org1 8_5_7_6_7_0, org2 8_9_7_0_7_6
+crossing org1:8_5_7_6_7_0 with org2:8_9_7_0_7_6
 
 fours []
-threes [u'8_4_7_6_7_5', u'8_3_7_2_7_3']
-twos [u'8_8_7_7_7_2', u'8_5_7_8_7_0', u'8_9_7_3_7_5', u'8_1_7_8_7_2']
-ones [u'8_6_7_1_7_6', u'8_0_7_8_7_6']
-org1 8_4_7_6_7_5, org2 8_3_7_2_7_3
-crossing org1:8_4_7_6_7_5 with org2:8_3_7_2_7_3
+threes [u'8_6_7_7_7_9', u'8_0_7_3_7_6']
+twos [u'8_2_7_2_7_3', u'8_8_7_2_7_3', u'8_5_7_6_7_0', u'8_9_7_0_7_6']
+ones [u'8_1_7_6_7_0', u'8_7_7_5_7_1']
+org1 8_0_7_3_7_6, org2 8_6_7_7_7_9
+crossing org1:8_0_7_3_7_6 with org2:8_6_7_7_7_9
 
 fours []
 threes []
-twos [u'8_8_7_7_7_2', u'8_5_7_8_7_0', u'8_9_7_3_7_5', u'8_1_7_8_7_2', u'8_4_7_6_7_5', u'8_3_7_2_7_3']
-ones [u'8_6_7_1_7_6', u'8_0_7_8_7_6']
-org1 8_3_7_2_7_3, org2 8_8_7_7_7_2
-crossing org1:8_3_7_2_7_3 with org2:8_8_7_7_7_2
+twos [u'8_2_7_2_7_3', u'8_8_7_2_7_3', u'8_5_7_6_7_0', u'8_9_7_0_7_6', u'8_0_7_3_7_6', u'8_6_7_7_7_9']
+ones [u'8_1_7_6_7_0', u'8_7_7_5_7_1']
+org1 8_8_7_2_7_3, org2 8_6_7_7_7_9
+crossing org1:8_8_7_2_7_3 with org2:8_6_7_7_7_9
 
-Crossover_point mutation at index: 501
+fours []
+threes []
+twos [u'8_2_7_2_7_3', u'8_5_7_6_7_0', u'8_9_7_0_7_6', u'8_0_7_3_7_6']
+ones [u'8_1_7_6_7_0', u'8_7_7_5_7_1', u'8_8_7_2_7_3', u'8_6_7_7_7_9']
+org1 8_5_7_6_7_0, org2 8_2_7_2_7_3
+crossing org1:8_5_7_6_7_0 with org2:8_2_7_2_7_3
+
+fours []
+threes []
+twos [u'8_9_7_0_7_6', u'8_0_7_3_7_6']
+ones [u'8_1_7_6_7_0', u'8_7_7_5_7_1', u'8_8_7_2_7_3', u'8_6_7_7_7_9', u'8_5_7_6_7_0', u'8_2_7_2_7_3']
+org1 8_0_7_3_7_6, org2 8_9_7_0_7_6
+crossing org1:8_0_7_3_7_6 with org2:8_9_7_0_7_6
+
+Crossover_point mutation at index: 354
 0 --> 1
 fours []
 threes []
-twos [u'8_5_7_8_7_0', u'8_9_7_3_7_5', u'8_1_7_8_7_2', u'8_4_7_6_7_5']
-ones [u'8_6_7_1_7_6', u'8_0_7_8_7_6', u'8_3_7_2_7_3', u'8_8_7_7_7_2']
-org1 8_5_7_8_7_0, org2 8_1_7_8_7_2
-crossing org1:8_5_7_8_7_0 with org2:8_1_7_8_7_2
+twos []
+ones [u'8_1_7_6_7_0', u'8_7_7_5_7_1', u'8_8_7_2_7_3', u'8_6_7_7_7_9', u'8_5_7_6_7_0', u'8_2_7_2_7_3', u'8_0_7_3_7_6', u'8_9_7_0_7_6']
+org1 8_6_7_7_7_9, org2 8_2_7_2_7_3
+crossing org1:8_6_7_7_7_9 with org2:8_2_7_2_7_3
 
+Char mutation at index: 401
+0 --> 1
 fours []
 threes []
-twos [u'8_9_7_3_7_5', u'8_4_7_6_7_5']
-ones [u'8_6_7_1_7_6', u'8_0_7_8_7_6', u'8_3_7_2_7_3', u'8_8_7_7_7_2', u'8_5_7_8_7_0', u'8_1_7_8_7_2']
-org1 8_9_7_3_7_5, org2 8_4_7_6_7_5
-crossing org1:8_9_7_3_7_5 with org2:8_4_7_6_7_5
+twos []
+ones [u'8_1_7_6_7_0', u'8_7_7_5_7_1', u'8_8_7_2_7_3', u'8_5_7_6_7_0', u'8_0_7_3_7_6', u'8_9_7_0_7_6']
+org1 8_0_7_3_7_6, org2 8_7_7_5_7_1
+crossing org1:8_0_7_3_7_6 with org2:8_7_7_5_7_1
 
 fours []
 threes []
 twos []
-ones [u'8_6_7_1_7_6', u'8_0_7_8_7_6', u'8_3_7_2_7_3', u'8_8_7_7_7_2', u'8_5_7_8_7_0', u'8_1_7_8_7_2', u'8_9_7_3_7_5', u'8_4_7_6_7_5']
-org1 8_9_7_3_7_5, org2 8_0_7_8_7_6
-crossing org1:8_9_7_3_7_5 with org2:8_0_7_8_7_6
+ones [u'8_1_7_6_7_0', u'8_8_7_2_7_3', u'8_5_7_6_7_0', u'8_9_7_0_7_6']
+org1 8_5_7_6_7_0, org2 8_9_7_0_7_6
+crossing org1:8_5_7_6_7_0 with org2:8_9_7_0_7_6
 
 fours []
 threes []
 twos []
-ones [u'8_6_7_1_7_6', u'8_3_7_2_7_3', u'8_8_7_7_7_2', u'8_5_7_8_7_0', u'8_1_7_8_7_2', u'8_4_7_6_7_5']
-org1 8_6_7_1_7_6, org2 8_4_7_6_7_5
-crossing org1:8_6_7_1_7_6 with org2:8_4_7_6_7_5
-
-fours []
-threes []
-twos []
-ones [u'8_3_7_2_7_3', u'8_8_7_7_7_2', u'8_5_7_8_7_0', u'8_1_7_8_7_2']
-org1 8_8_7_7_7_2, org2 8_3_7_2_7_3
-crossing org1:8_8_7_7_7_2 with org2:8_3_7_2_7_3
-
-Char mutation at index: 498
-1 --> 0
-fours []
-threes []
-twos []
-ones [u'8_5_7_8_7_0', u'8_1_7_8_7_2']
-org1 8_5_7_8_7_0, org2 8_1_7_8_7_2
-crossing org1:8_5_7_8_7_0 with org2:8_1_7_8_7_2
+ones [u'8_1_7_6_7_0', u'8_8_7_2_7_3']
+org1 8_8_7_2_7_3, org2 8_1_7_6_7_0
+crossing org1:8_8_7_2_7_3 with org2:8_1_7_6_7_0
 
 
 Number of Orgs in new gen: 10
 Active Threads per org:
 
-File 9_5_8_9_8_4
+File 9_9_8_1_8_8
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 3
 
-File 9_1_8_1_8_9
+File 9_2_8_0_8_6
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 3
 
-File 9_8_8_3_8_8
+File 9_3_8_8_8_6
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 3
 
-File 9_7_8_6_8_4
+File 9_0_8_0_8_6
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 3
 
-File 9_2_8_3_8_4
+File 9_7_8_0_8_7
 genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 2
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
 thread len.: 4
 thread binary len: 80
 thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
 thread binary len: 80
 
 thread count 3
 
-File 9_3_8_3_8_8
+File 9_8_8_9_8_5
 genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 2
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
 thread len.: 4
 thread binary len: 80
 thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
 thread binary len: 80
 
 thread count 3
 
-File 9_9_8_5_8_1
+File 9_1_8_5_8_9
 genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 2
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
 thread len.: 4
 thread binary len: 80
 thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
 thread binary len: 80
 
 thread count 3
 
-File 9_6_8_9_8_0
+File 9_5_8_0_8_9
 genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 2
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
 thread len.: 4
 thread binary len: 80
 thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
 thread binary len: 80
 
 thread count 3
 
-File 9_0_8_9_8_3
+File 9_4_8_5_8_2
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 3
 
-File 9_4_8_5_8_1
+File 9_6_8_2_8_6
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 3
@@ -5072,268 +5081,266 @@ quartiles: {'mean_threads': 3.0, 'min': 3, 'Generation': 9, 'max': 3, 'gen_size'
 ------------------------------------------------------------
 Crossing Generation:
 
-fours [u'9_5_8_9_8_4', u'9_1_8_1_8_9']
-threes [u'9_8_8_3_8_8', u'9_7_8_6_8_4']
-twos [u'9_2_8_3_8_4', u'9_3_8_3_8_8']
-ones [u'9_9_8_5_8_1', u'9_6_8_9_8_0']
-org1 9_5_8_9_8_4, org2 9_1_8_1_8_9
-crossing org1:9_5_8_9_8_4 with org2:9_1_8_1_8_9
+fours [u'9_9_8_1_8_8', u'9_2_8_0_8_6']
+threes [u'9_3_8_8_8_6', u'9_0_8_0_8_6']
+twos [u'9_7_8_0_8_7', u'9_8_8_9_8_5']
+ones [u'9_1_8_5_8_9', u'9_5_8_0_8_9']
+org1 9_2_8_0_8_6, org2 9_9_8_1_8_8
+crossing org1:9_2_8_0_8_6 with org2:9_9_8_1_8_8
 
 fours []
-threes [u'9_8_8_3_8_8', u'9_7_8_6_8_4', u'9_5_8_9_8_4', u'9_1_8_1_8_9']
-twos [u'9_2_8_3_8_4', u'9_3_8_3_8_8']
-ones [u'9_9_8_5_8_1', u'9_6_8_9_8_0']
-org1 9_8_8_3_8_8, org2 9_7_8_6_8_4
-crossing org1:9_8_8_3_8_8 with org2:9_7_8_6_8_4
+threes [u'9_3_8_8_8_6', u'9_0_8_0_8_6', u'9_2_8_0_8_6', u'9_9_8_1_8_8']
+twos [u'9_7_8_0_8_7', u'9_8_8_9_8_5']
+ones [u'9_1_8_5_8_9', u'9_5_8_0_8_9']
+org1 9_2_8_0_8_6, org2 9_0_8_0_8_6
+crossing org1:9_2_8_0_8_6 with org2:9_0_8_0_8_6
 
 fours []
-threes [u'9_5_8_9_8_4', u'9_1_8_1_8_9']
-twos [u'9_2_8_3_8_4', u'9_3_8_3_8_8', u'9_8_8_3_8_8', u'9_7_8_6_8_4']
-ones [u'9_9_8_5_8_1', u'9_6_8_9_8_0']
-org1 9_1_8_1_8_9, org2 9_5_8_9_8_4
-crossing org1:9_1_8_1_8_9 with org2:9_5_8_9_8_4
-
-fours []
-threes []
-twos [u'9_2_8_3_8_4', u'9_3_8_3_8_8', u'9_8_8_3_8_8', u'9_7_8_6_8_4', u'9_1_8_1_8_9', u'9_5_8_9_8_4']
-ones [u'9_9_8_5_8_1', u'9_6_8_9_8_0']
-org1 9_7_8_6_8_4, org2 9_3_8_3_8_8
-crossing org1:9_7_8_6_8_4 with org2:9_3_8_3_8_8
+threes [u'9_3_8_8_8_6', u'9_9_8_1_8_8']
+twos [u'9_7_8_0_8_7', u'9_8_8_9_8_5', u'9_2_8_0_8_6', u'9_0_8_0_8_6']
+ones [u'9_1_8_5_8_9', u'9_5_8_0_8_9']
+org1 9_9_8_1_8_8, org2 9_3_8_8_8_6
+crossing org1:9_9_8_1_8_8 with org2:9_3_8_8_8_6
 
 fours []
 threes []
-twos [u'9_2_8_3_8_4', u'9_8_8_3_8_8', u'9_1_8_1_8_9', u'9_5_8_9_8_4']
-ones [u'9_9_8_5_8_1', u'9_6_8_9_8_0', u'9_7_8_6_8_4', u'9_3_8_3_8_8']
-org1 9_5_8_9_8_4, org2 9_1_8_1_8_9
-crossing org1:9_5_8_9_8_4 with org2:9_1_8_1_8_9
+twos [u'9_7_8_0_8_7', u'9_8_8_9_8_5', u'9_2_8_0_8_6', u'9_0_8_0_8_6', u'9_9_8_1_8_8', u'9_3_8_8_8_6']
+ones [u'9_1_8_5_8_9', u'9_5_8_0_8_9']
+org1 9_8_8_9_8_5, org2 9_9_8_1_8_8
+crossing org1:9_8_8_9_8_5 with org2:9_9_8_1_8_8
 
 fours []
 threes []
-twos [u'9_2_8_3_8_4', u'9_8_8_3_8_8']
-ones [u'9_9_8_5_8_1', u'9_6_8_9_8_0', u'9_7_8_6_8_4', u'9_3_8_3_8_8', u'9_5_8_9_8_4', u'9_1_8_1_8_9']
-org1 9_8_8_3_8_8, org2 9_2_8_3_8_4
-crossing org1:9_8_8_3_8_8 with org2:9_2_8_3_8_4
+twos [u'9_7_8_0_8_7', u'9_2_8_0_8_6', u'9_0_8_0_8_6', u'9_3_8_8_8_6']
+ones [u'9_1_8_5_8_9', u'9_5_8_0_8_9', u'9_8_8_9_8_5', u'9_9_8_1_8_8']
+org1 9_3_8_8_8_6, org2 9_2_8_0_8_6
+crossing org1:9_3_8_8_8_6 with org2:9_2_8_0_8_6
 
 fours []
 threes []
-twos []
-ones [u'9_9_8_5_8_1', u'9_6_8_9_8_0', u'9_7_8_6_8_4', u'9_3_8_3_8_8', u'9_5_8_9_8_4', u'9_1_8_1_8_9', u'9_8_8_3_8_8', u'9_2_8_3_8_4']
-org1 9_3_8_3_8_8, org2 9_1_8_1_8_9
-crossing org1:9_3_8_3_8_8 with org2:9_1_8_1_8_9
+twos [u'9_7_8_0_8_7', u'9_0_8_0_8_6']
+ones [u'9_1_8_5_8_9', u'9_5_8_0_8_9', u'9_8_8_9_8_5', u'9_9_8_1_8_8', u'9_3_8_8_8_6', u'9_2_8_0_8_6']
+org1 9_7_8_0_8_7, org2 9_0_8_0_8_6
+crossing org1:9_7_8_0_8_7 with org2:9_0_8_0_8_6
 
 fours []
 threes []
 twos []
-ones [u'9_9_8_5_8_1', u'9_6_8_9_8_0', u'9_7_8_6_8_4', u'9_5_8_9_8_4', u'9_8_8_3_8_8', u'9_2_8_3_8_4']
-org1 9_2_8_3_8_4, org2 9_7_8_6_8_4
-crossing org1:9_2_8_3_8_4 with org2:9_7_8_6_8_4
-
-Crossover_point mutation at index: 236
-0 --> 1
-fours []
-threes []
-twos []
-ones [u'9_9_8_5_8_1', u'9_6_8_9_8_0', u'9_5_8_9_8_4', u'9_8_8_3_8_8']
-org1 9_6_8_9_8_0, org2 9_9_8_5_8_1
-crossing org1:9_6_8_9_8_0 with org2:9_9_8_5_8_1
+ones [u'9_1_8_5_8_9', u'9_5_8_0_8_9', u'9_8_8_9_8_5', u'9_9_8_1_8_8', u'9_3_8_8_8_6', u'9_2_8_0_8_6', u'9_7_8_0_8_7', u'9_0_8_0_8_6']
+org1 9_9_8_1_8_8, org2 9_5_8_0_8_9
+crossing org1:9_9_8_1_8_8 with org2:9_5_8_0_8_9
 
 fours []
 threes []
 twos []
-ones [u'9_5_8_9_8_4', u'9_8_8_3_8_8']
-org1 9_8_8_3_8_8, org2 9_5_8_9_8_4
-crossing org1:9_8_8_3_8_8 with org2:9_5_8_9_8_4
+ones [u'9_1_8_5_8_9', u'9_8_8_9_8_5', u'9_3_8_8_8_6', u'9_2_8_0_8_6', u'9_7_8_0_8_7', u'9_0_8_0_8_6']
+org1 9_3_8_8_8_6, org2 9_8_8_9_8_5
+crossing org1:9_3_8_8_8_6 with org2:9_8_8_9_8_5
+
+fours []
+threes []
+twos []
+ones [u'9_1_8_5_8_9', u'9_2_8_0_8_6', u'9_7_8_0_8_7', u'9_0_8_0_8_6']
+org1 9_7_8_0_8_7, org2 9_1_8_5_8_9
+crossing org1:9_7_8_0_8_7 with org2:9_1_8_5_8_9
+
+fours []
+threes []
+twos []
+ones [u'9_2_8_0_8_6', u'9_0_8_0_8_6']
+org1 9_0_8_0_8_6, org2 9_2_8_0_8_6
+crossing org1:9_0_8_0_8_6 with org2:9_2_8_0_8_6
 
 
 Number of Orgs in new gen: 10
 Active Threads per org:
 
-File 10_8_9_9_9_6
+File 10_8_9_1_9_7
 genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 2
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
 thread len.: 4
 thread binary len: 80
 thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
 thread binary len: 80
 
 thread count 3
 
-File 10_9_9_5_9_8
+File 10_0_9_2_9_9
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 3
 
-File 10_4_9_1_9_5
+File 10_4_9_2_9_3
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 3
 
-File 10_7_9_7_9_2
+File 10_9_9_2_9_0
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 3
 
-File 10_1_9_8_9_7
+File 10_1_9_2_9_0
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 3
 
-File 10_6_9_3_9_1
+File 10_6_9_5_9_9
 genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 2
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
 thread len.: 4
 thread binary len: 80
 thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
 thread binary len: 80
 
 thread count 3
 
-File 10_0_9_5_9_1
+File 10_7_9_8_9_3
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 3
 
-File 10_2_9_1_9_5
+File 10_2_9_3_9_9
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 3
 
-File 10_5_9_8_9_2
+File 10_3_9_8_9_9
 genome length 560
-thread len.: 0
-thread binary len: 80
-thread len.: 4
-thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 2
 thread binary len: 80
-thread len.: 0
-thread binary len: 80
 thread len.: 4
 thread binary len: 80
 thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 0
+thread binary len: 80
+thread len.: 4
 thread binary len: 80
 
 thread count 3
 
-File 10_3_9_7_9_3
+File 10_5_9_7_9_0
 genome length 560
 thread len.: 0
 thread binary len: 80
 thread len.: 4
 thread binary len: 80
+thread len.: 4
+thread binary len: 80
 thread len.: 0
 thread binary len: 80
-thread len.: 2
+thread len.: 0
 thread binary len: 80
 thread len.: 0
 thread binary len: 80
 thread len.: 4
-thread binary len: 80
-thread len.: 0
 thread binary len: 80
 
 thread count 3
@@ -5372,77 +5379,75 @@ quartiles: {'mean_threads': 3.0, 'min': 3, 'Generation': 10, 'max': 3, 'gen_size
 ------------------------------------------------------------
 Crossing Generation:
 
-fours [u'10_8_9_9_9_6', u'10_9_9_5_9_8']
-threes [u'10_4_9_1_9_5', u'10_7_9_7_9_2']
-twos [u'10_1_9_8_9_7', u'10_6_9_3_9_1']
-ones [u'10_0_9_5_9_1', u'10_2_9_1_9_5']
-org1 10_8_9_9_9_6, org2 10_9_9_5_9_8
-crossing org1:10_8_9_9_9_6 with org2:10_9_9_5_9_8
+fours [u'10_8_9_1_9_7', u'10_0_9_2_9_9']
+threes [u'10_4_9_2_9_3', u'10_9_9_2_9_0']
+twos [u'10_1_9_2_9_0', u'10_6_9_5_9_9']
+ones [u'10_7_9_8_9_3', u'10_2_9_3_9_9']
+org1 10_0_9_2_9_9, org2 10_8_9_1_9_7
+crossing org1:10_0_9_2_9_9 with org2:10_8_9_1_9_7
 
 fours []
-threes [u'10_4_9_1_9_5', u'10_7_9_7_9_2', u'10_8_9_9_9_6', u'10_9_9_5_9_8']
-twos [u'10_1_9_8_9_7', u'10_6_9_3_9_1']
-ones [u'10_0_9_5_9_1', u'10_2_9_1_9_5']
-org1 10_9_9_5_9_8, org2 10_7_9_7_9_2
-crossing org1:10_9_9_5_9_8 with org2:10_7_9_7_9_2
+threes [u'10_4_9_2_9_3', u'10_9_9_2_9_0', u'10_0_9_2_9_9', u'10_8_9_1_9_7']
+twos [u'10_1_9_2_9_0', u'10_6_9_5_9_9']
+ones [u'10_7_9_8_9_3', u'10_2_9_3_9_9']
+org1 10_4_9_2_9_3, org2 10_0_9_2_9_9
+crossing org1:10_4_9_2_9_3 with org2:10_0_9_2_9_9
 
 fours []
-threes [u'10_4_9_1_9_5', u'10_8_9_9_9_6']
-twos [u'10_1_9_8_9_7', u'10_6_9_3_9_1', u'10_9_9_5_9_8', u'10_7_9_7_9_2']
-ones [u'10_0_9_5_9_1', u'10_2_9_1_9_5']
-org1 10_4_9_1_9_5, org2 10_8_9_9_9_6
-crossing org1:10_4_9_1_9_5 with org2:10_8_9_9_9_6
-
-fours []
-threes []
-twos [u'10_1_9_8_9_7', u'10_6_9_3_9_1', u'10_9_9_5_9_8', u'10_7_9_7_9_2', u'10_4_9_1_9_5', u'10_8_9_9_9_6']
-ones [u'10_0_9_5_9_1', u'10_2_9_1_9_5']
-org1 10_4_9_1_9_5, org2 10_8_9_9_9_6
-crossing org1:10_4_9_1_9_5 with org2:10_8_9_9_9_6
+threes [u'10_9_9_2_9_0', u'10_8_9_1_9_7']
+twos [u'10_1_9_2_9_0', u'10_6_9_5_9_9', u'10_4_9_2_9_3', u'10_0_9_2_9_9']
+ones [u'10_7_9_8_9_3', u'10_2_9_3_9_9']
+org1 10_9_9_2_9_0, org2 10_8_9_1_9_7
+crossing org1:10_9_9_2_9_0 with org2:10_8_9_1_9_7
 
 fours []
 threes []
-twos [u'10_1_9_8_9_7', u'10_6_9_3_9_1', u'10_9_9_5_9_8', u'10_7_9_7_9_2']
-ones [u'10_0_9_5_9_1', u'10_2_9_1_9_5', u'10_4_9_1_9_5', u'10_8_9_9_9_6']
-org1 10_7_9_7_9_2, org2 10_1_9_8_9_7
-crossing org1:10_7_9_7_9_2 with org2:10_1_9_8_9_7
+twos [u'10_1_9_2_9_0', u'10_6_9_5_9_9', u'10_4_9_2_9_3', u'10_0_9_2_9_9', u'10_9_9_2_9_0', u'10_8_9_1_9_7']
+ones [u'10_7_9_8_9_3', u'10_2_9_3_9_9']
+org1 10_8_9_1_9_7, org2 10_6_9_5_9_9
+crossing org1:10_8_9_1_9_7 with org2:10_6_9_5_9_9
 
 fours []
 threes []
-twos [u'10_6_9_3_9_1', u'10_9_9_5_9_8']
-ones [u'10_0_9_5_9_1', u'10_2_9_1_9_5', u'10_4_9_1_9_5', u'10_8_9_9_9_6', u'10_7_9_7_9_2', u'10_1_9_8_9_7']
-org1 10_6_9_3_9_1, org2 10_9_9_5_9_8
-crossing org1:10_6_9_3_9_1 with org2:10_9_9_5_9_8
+twos [u'10_1_9_2_9_0', u'10_4_9_2_9_3', u'10_0_9_2_9_9', u'10_9_9_2_9_0']
+ones [u'10_7_9_8_9_3', u'10_2_9_3_9_9', u'10_8_9_1_9_7', u'10_6_9_5_9_9']
+org1 10_0_9_2_9_9, org2 10_1_9_2_9_0
+crossing org1:10_0_9_2_9_9 with org2:10_1_9_2_9_0
 
 fours []
 threes []
-twos []
-ones [u'10_0_9_5_9_1', u'10_2_9_1_9_5', u'10_4_9_1_9_5', u'10_8_9_9_9_6', u'10_7_9_7_9_2', u'10_1_9_8_9_7', u'10_6_9_3_9_1', u'10_9_9_5_9_8']
-org1 10_9_9_5_9_8, org2 10_1_9_8_9_7
-crossing org1:10_9_9_5_9_8 with org2:10_1_9_8_9_7
-
-Crossover_point mutation at index: 485
-0 --> 1
-fours []
-threes []
-twos []
-ones [u'10_0_9_5_9_1', u'10_2_9_1_9_5', u'10_4_9_1_9_5', u'10_8_9_9_9_6', u'10_7_9_7_9_2', u'10_6_9_3_9_1']
-org1 10_8_9_9_9_6, org2 10_6_9_3_9_1
-crossing org1:10_8_9_9_9_6 with org2:10_6_9_3_9_1
+twos [u'10_4_9_2_9_3', u'10_9_9_2_9_0']
+ones [u'10_7_9_8_9_3', u'10_2_9_3_9_9', u'10_8_9_1_9_7', u'10_6_9_5_9_9', u'10_0_9_2_9_9', u'10_1_9_2_9_0']
+org1 10_9_9_2_9_0, org2 10_4_9_2_9_3
+crossing org1:10_9_9_2_9_0 with org2:10_4_9_2_9_3
 
 fours []
 threes []
 twos []
-ones [u'10_0_9_5_9_1', u'10_2_9_1_9_5', u'10_4_9_1_9_5', u'10_7_9_7_9_2']
-org1 10_2_9_1_9_5, org2 10_0_9_5_9_1
-crossing org1:10_2_9_1_9_5 with org2:10_0_9_5_9_1
+ones [u'10_7_9_8_9_3', u'10_2_9_3_9_9', u'10_8_9_1_9_7', u'10_6_9_5_9_9', u'10_0_9_2_9_9', u'10_1_9_2_9_0', u'10_9_9_2_9_0', u'10_4_9_2_9_3']
+org1 10_6_9_5_9_9, org2 10_4_9_2_9_3
+crossing org1:10_6_9_5_9_9 with org2:10_4_9_2_9_3
 
 fours []
 threes []
 twos []
-ones [u'10_4_9_1_9_5', u'10_7_9_7_9_2']
-org1 10_7_9_7_9_2, org2 10_4_9_1_9_5
-crossing org1:10_7_9_7_9_2 with org2:10_4_9_1_9_5
+ones [u'10_7_9_8_9_3', u'10_2_9_3_9_9', u'10_8_9_1_9_7', u'10_0_9_2_9_9', u'10_1_9_2_9_0', u'10_9_9_2_9_0']
+org1 10_9_9_2_9_0, org2 10_8_9_1_9_7
+crossing org1:10_9_9_2_9_0 with org2:10_8_9_1_9_7
+
+fours []
+threes []
+twos []
+ones [u'10_7_9_8_9_3', u'10_2_9_3_9_9', u'10_0_9_2_9_9', u'10_1_9_2_9_0']
+org1 10_2_9_3_9_9, org2 10_1_9_2_9_0
+crossing org1:10_2_9_3_9_9 with org2:10_1_9_2_9_0
+
+fours []
+threes []
+twos []
+ones [u'10_7_9_8_9_3', u'10_0_9_2_9_9']
+org1 10_0_9_2_9_9, org2 10_7_9_8_9_3
+crossing org1:10_0_9_2_9_9 with org2:10_7_9_8_9_3
 
 
 Number of Orgs in new gen: 10

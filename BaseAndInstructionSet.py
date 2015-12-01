@@ -52,24 +52,21 @@ class InstructionSet:
         #mutation_chance = 20000 #THIS IS THE REAL ONE
         mutation_chance = self.mutation_chance
         for i in range(len(self.genome)):
-            rand_int1 = random.randint(1, mutation_chance)
-            rand_int2 = random.randint(1, mutation_chance)
+            rand_int1 = random.randint(0, mutation_chance)
+            rand_int2 = random.randint(0, mutation_chance)
             if rand_int1 == mutation_chance:
                 print 'Crossover_point mutation at index: %s' % i
                 if self.genome[i].crossover_point == 0:
                     self.genome[i].set_crossover_point(1)
                     print '0 --> %s' % self.genome[i].crossover_point
-                    return True
                 else:
                     self.genome[i].set_crossover_point(0)
                     print '1 --> %s' % self.genome[i].crossover_point
-                    return True
             if rand_int2 == mutation_chance:
                 print 'Char mutation at index: %s' % i
                 if self.genome[i].char == 0:
                     self.genome[i].set_char(1)
                     print '0 --> %s' % self.genome[i].char
-                    return True
                 else:
                     self.genome[i].set_char(0) 
                     print '1 --> %s' % self.genome[i].char
