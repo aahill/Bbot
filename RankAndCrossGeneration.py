@@ -56,7 +56,7 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
                     y.append(f)
                     if f.endswith('.pkl') or f.endswith('.txt'):
                         org = json_load_file(root + '/' + f,'rb')
-                        print  rooty + '/'+ f
+                        #print  rooty + '/'+ f
                         #print [i.crossover_point for i in org.genome]
                     elif f.endswith('.csv'):
                         if f == 'quartile_data.csv':
@@ -65,9 +65,9 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
                             if performance_1 == 0:
                                 #rooty denotes the path to subdir, f a file in root. Concatenating
                                 # the two results in the full path to file
-                                performance_1 = HoboAnalysis.energyAcquired(rooty +'/' + f) 
+                                performance_1 = HoboAnalysis.energyAcquired(root +'/' + f) 
                             else:
-                                performance_2 = HoboAnalysis.energyAcquired(rooty + '/' + f)
+                                performance_2 = HoboAnalysis.energyAcquired(root + '/' + f)
                 except AttributeError:
                     pass
             try:
