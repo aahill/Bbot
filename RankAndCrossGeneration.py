@@ -37,7 +37,59 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
         new_gen_size = int( new_gen_size[0]) #turns the input (a tuple) into an int
     except IndexError:
         new_gen_size = None #No size input given
-    
+    def evaluateGenerationPerformance(gen_directory):
+        global global_quartiles
+        mean_performance_per_org = [] 
+        mean_performance_per_pop = 0
+        list_of_vals = []
+        y = []
+        #walks through files belonging to an organism, one org at a time
+        print "All the org files in this directory:"
+        for root, dir, files in os.walk(gen_directory):
+            org = None
+            #will store the amount of light collected on both trials
+            performance_1 = 0
+            performance_2 = 0
+            y.append(root)
+            for f in files:
+                try:
+                    y.append(f)
+                    if f.endswith('.pkl') or f.endswith('.txt'):
+                        org = json_load_file(root + '/' + f,'rb')
+                        print  rooty + '/'+ f
+                        #print [i.crossover_point for i in org.genome]
+                    elif f.endswith('.csv'):
+                        if f == 'quartile_data.csv':
+                            pass
+                        else:
+                            if performance_1 == 0:
+                                #rooty denotes the path to subdir, f a file in root. Concatenating
+                                # the two results in the full path to file
+                                performance_1 = HoboAnalysis.energyAcquired(rooty +'/' + f) 
+                            else:
+                                performance_2 = HoboAnalysis.energyAcquired(rooty + '/' + f)
+                except AttributeError:
+                    pass
+            try:
+                org.performance_1 = performance_1
+                org.performance_2 = performance_1
+                #append the average of two performances to list
+                #for use later in calculating stddev
+                mean_performance_per_org.append((org.performance_1 + org.performance_1)/2)
+                unpickled_orgs.append(org)
+                # org.save_to_file(f)
+            except AttributeError:
+                pass
+    #for org in unpickled_orgs:
+        #   mean_performance_per_org.append((org.performance_1 + org.performance_1) / 2.0 )"""
+        print'\n mean performances for each org in population:', mean_performance_per_org
+        #Calculates quartiles: Q1 = mean * .5, Q2 = mean, Q3 = mean * 1.5
+        mean_performance_per_pop = sum(mean_performance_per_org)/len(mean_performance_per_org)
+        #Saves quartile information and stdev of pop mean to a dict
+        quartiles = {'Generation': unpickled_orgs[0].generation, 'mean': mean_performance_per_pop, 'stderr': calculateStdError(mean_performance_per_org, mean_performance_per_pop)}
+        print '\nquartiles: %s\n' % quartiles  
+        global_quartiles = quartiles
+        return quartiles
     def calculateRankings(gen_directory):
         evaluateGenerationPerformance(gen_directory)
         sorted_orgs = sorted(unpickled_orgs, key=lambda x: (x.performance_1 + x.performance_1)/2.0,\

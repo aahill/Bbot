@@ -1814,7 +1814,7 @@ stddev = 0.0
 #OUTPUT: Calculates performance thresholds based on the mean pop. performance
         #orgs < Q1 dont reproduce, Q1<= org < Q2 can reproduce once, Q2 <= org <Q3
         #twice, etc.
-#+NAME: evaluateGenerationPeformance
+#+NAME: evaluateGenerationPerformance
 #+BEGIN_SRC python 
     def evaluateGenerationPerformance(gen_directory):
         global global_quartiles
