@@ -1999,7 +1999,7 @@ stddev = 0.0
       print '\nNumber of Orgs in new gen: %s' % count
 #+END_SRC
 *** SubMethod: wrtieQuartilesToCsv
-#+NAME: writeQuartilesToCsv
+#+NAME: writeQuartilesToCSV
 #+BEGIN_SRC python
     def writeQuartilesToCsv(data_dict, dir):
         #os.mkdir(dir)

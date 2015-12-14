@@ -195,7 +195,21 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
                 chooseTwoToCross(path_to_new_gen)
                 count += 1
             print '\nNumber of Orgs in new gen: %s' % count
+    def writeQuartilesToCsv(data_dict, dir):
+        #os.mkdir(dir)
+        data_file =  dir + '/' + 'experiment_data.csv' 
+        if os.path.isfile(data_file):
+            with open(dir + '/' + 'experiment_data.csv' , 'a') as f:
+                fieldnames = ['Generation', 'mean', 'stderr']
+                writer = csv.DictWriter(f, fieldnames=fieldnames)
+                writer.writerow(data_dict)
+        else:
+            with open(dir + '/' + 'experiment_data.csv' , 'wb') as f:
+                fieldnames = ['Generation', 'mean', 'stderr']
+                writer = csv.DictWriter(f, fieldnames=fieldnames)
     
+                writer.writeheader()
+                writer.writerow(data_dict)
 
     crossAndSaveGeneration(path_to_new_gen, new_gen_size)
     #calculateRankings(gen_directory)
