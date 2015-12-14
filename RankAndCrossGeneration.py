@@ -18,7 +18,7 @@ def json_load_file(filename):
     return obj
 
 def calculateStdError(list_of_vals, average):
-    stddev = 0.0
+stddev = 0.0
     diffsquared = 0.0
     sum_diffsquared = 0.0
     print '\n--------------------------------------------------\nCalculating the Std Error of the mean: '
@@ -40,7 +40,7 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
     
     def calculateRankings(gen_directory):
         evaluateGenerationPerformance(gen_directory)
-        sorted_orgs = sorted(unpickled_orgs, key=lambda x: (x.performance_And_Double_Crossover_1 + x.performance_1)/2.0,\
+        sorted_orgs = sorted(unpickled_orgs, key=lambda x: (x.performance_1 + x.performance_1)/2.0,\
                              reverse=True)
         ranking = []
         while len(sorted_orgs) >0:

@@ -684,7 +684,7 @@ from BaseAndInstructionSet import *
 #+BEGIN_SRC python 
 
 
-    def decode_binary(self, binary_list):
+def decode_binary(self, binary_list):
         # turn binary list into a string for easy comparison
         binary_string = ""
         for binary_digit in binary_list:
@@ -714,15 +714,15 @@ from BaseAndInstructionSet import *
         elif binary_string == "1010":
             return 10
         elif binary_string == "1011":
-            return 11
+            return 
         elif binary_string == "1100":
-            return 12
+            return 
         elif binary_string == "1101":
-            return 13
+            return 
         elif binary_string == "1110":
-            return  14
+            return  
         elif binary_string == "1111":
-            return  15
+            return  
 #+END_SRC
 **** binary to decimal 
 *Input:* binary_list, an n-bit list
@@ -1074,7 +1074,7 @@ InstructionSet 10 length: 20, # of Crossover_points: 2
 
   def mutate(self):
       #mutation_chance = 20000 #THIS IS THE REAL ONE
-      mutation_chance = 20000
+      mutation_chance = 2000
       for i in range(len(self.genome)):
           rand_int1 = random.randint(1, mutation_chance)
           rand_int2 = random.randint(1, mutation_chance)
@@ -1083,17 +1083,14 @@ InstructionSet 10 length: 20, # of Crossover_points: 2
               if self.genome[i].crossover_point == 0:
                   self.genome[i].set_crossover_point(1)
                   print '0 --> %s' % self.genome[i].crossover_point
-                  return True
               else:
                   self.genome[i].set_crossover_point(0)
                   print '1 --> %s' % self.genome[i].crossover_point
-                  return True
           if rand_int2 == mutation_chance:
               print 'Char mutation at index: %s' % i
               if self.genome[i].char == 0:
                   self.genome[i].set_char(1)
                   print '0 --> %s' % self.genome[i].char
-                  return True
               else:
                   self.genome[i].set_char(0) 
                   print '1 --> %s' % self.genome[i].char
@@ -2288,7 +2285,7 @@ Pretty much the same as [[RankAndCrossGeneration]] except it selects for the num
       orgs = 0
       tested = 0
       while orgs < number_of_orgs:
-          org = Organism.Organism(1, orgs,2100,2,True,300)
+          org = Organism.Organism(1, orgs,560 ,2,True,80, 2000)
           if org.is_viable():
               org.save_to_file(path)
               orgs += 1
@@ -2302,17 +2299,175 @@ Pretty much the same as [[RankAndCrossGeneration]] except it selects for the num
           tested += 1
           #progress(tested_gen(10, "/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/coding_region_300/Double_Crossover_1/Gen1")
 
-  initial_gen( 10, "/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_300/Double_Crossover_1/Gen1")
+  initial_gen( 10, "/home/jake/org/Thesis_Stuff/2015-11-11-preliminary-robo-experiments/Random_No_Development/Gen1")
   gen = 1
   while (gen < 11):
       path1 = "/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_300/Double_Crossover_1/Gen"+str(gen)
       path2 = "/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_300/Double_Crossover_1/Gen"+str(gen+1)
-      thresholdedCrossGeneration("/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_300/Double_Crossover_1", path1, path2)
+      #thresholdedCrossGeneration("/home/jake/org/Thesis_Stuff/Simulation_Data/coding_region_300/Double_Crossover_1", path1, path2)
       gen+=1
     
 #+END_SRC
 
 #+RESULTS:
+#+begin_example
+-------------------------------------//
+connections: 
+new thread connections:
+new thread connections:
+new thread connections:
+pr 3
+br 1
+br 2
+bl 0
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+-------------------------------------//
+-------------------------------------//
+connections: 
+new thread connections:
+new thread connections:
+pl 3
+bl 3
+bl 1
+br 3
+new thread connections:
+new thread connections:
+new thread connections:
+e1 0
+rl 0
+new thread connections:
+new thread connections:
+-------------------------------------//
+-------------------------------------//
+connections: 
+new thread connections:
+bl 2
+pr 3
+pr 4
+br 3
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+-------------------------------------//
+-------------------------------------//
+connections: 
+new thread connections:
+new thread connections:
+new thread connections:
+bl 1
+br 1
+br 2
+pl 1
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+pl 2
+fl 2
+fl 0
+fl 3
+-------------------------------------//
+-------------------------------------//
+connections: 
+new thread connections:
+new thread connections:
+new thread connections:
+bl 2
+br 3
+br 1
+pl 3
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+-------------------------------------//
+-------------------------------------//
+connections: 
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+bl 1
+pl 5
+pl 1
+br 0
+new thread connections:
+new thread connections:
+new thread connections:
+-------------------------------------//
+-------------------------------------//
+connections: 
+new thread connections:
+new thread connections:
+new thread connections:
+bl 0
+br 0
+br 3
+pr 2
+new thread connections:
+new thread connections:
+e3 3
+i4 0
+n4 0
+i5 1
+new thread connections:
+new thread connections:
+-------------------------------------//
+-------------------------------------//
+connections: 
+new thread connections:
+new thread connections:
+pr 5
+br 3
+br 1
+bl 3
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+-------------------------------------//
+-------------------------------------//
+connections: 
+new thread connections:
+bl 2
+br 2
+br 0
+pr 4
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+e5 2
+e5 3
+t5 2
+e3 1
+new thread connections:
+new thread connections:
+-------------------------------------//
+-------------------------------------//
+connections: 
+new thread connections:
+new thread connections:
+new thread connections:
+new thread connections:
+pr 1
+bl 1
+bl 2
+br 1
+new thread connections:
+pr 2
+rl 2
+new thread connections:
+new thread connections:
+-------------------------------------//
+#+end_example
 
  
 * Generate single alternate organism

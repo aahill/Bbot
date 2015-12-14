@@ -60,7 +60,7 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
                         #print  root + '/'+ f
                         print org.filename
                         print "genome length", len(org.genome) 
-                        # This stores the number of active threads per org in org.performance_And_Double_Crossover_1,
+                        # This stores the number of active threads per org in org.performance_1,
                         # which is used to rank the organism later on.
                         thread_count = 0
                         for thread in org.threads:
@@ -68,10 +68,10 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
                             print "thread binary len:", len(thread.binary)
                             if len(thread.connected_pins) > 0:
                                 thread_count += 1
-                        org.performance_And_Double_Crossover_1 = thread_count
+                        org.performance_1 = thread_count
                         print '\nthread count', thread_count
                         print
-                        num_threads_per_org.append(org.performance_And_Double_Crossover_1)
+                        num_threads_per_org.append(org.performance_1)
                 except AttributeError:
                     print 'Error'
                     pass
@@ -100,7 +100,7 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
     def calculateRankings(gen_directory):
         evaluateGenerationPerformance(gen_directory)
         #Sorts orgs from Orgs with most threads to Orgs with least threads
-        sorted_orgs = sorted(unpickled_orgs, key=lambda x: x.performance_And_Double_Crossover_1,\
+        sorted_orgs = sorted(unpickled_orgs, key=lambda x: x.performance_1,\
                              reverse=True)
         ranking = []
         while len(sorted_orgs) >0:
@@ -108,7 +108,7 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
 
         for i in ranking:
             for r in i:
-                print r.performance_And_Double_Crossover_1
+                print r.performance_1
         
         return ranking
    
@@ -240,4 +240,4 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
     gc.collect()
 
 
-#thresholdedCrossGeneration('/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_And_Insane_Mutation_1', '/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_1/Gen11' ,'/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_1/Gen12' )
+#thresholdedCrossGeneration('/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_1', '/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_1/Gen11' ,'/home/jake/Dropbox/BraitenbotCode/Summer2015/2015-07-22- EvolvingThreadNumber/Selection_High_Mutation_Rate/Population_1/Gen12' )
