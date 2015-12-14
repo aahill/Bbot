@@ -18,7 +18,7 @@ def json_load_file(filename):
     return obj
 
 def calculateStdError(list_of_vals, average):
-stddev = 0.0
+    stddev = 0.0
     diffsquared = 0.0
     sum_diffsquared = 0.0
     print '\n--------------------------------------------------\nCalculating the Std Error of the mean: '
@@ -55,8 +55,8 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
                 try:
                     y.append(f)
                     if f.endswith('.pkl') or f.endswith('.txt'):
-                        org = json_load_file(root + '/' + f,'rb')
-                        print  rooty + '/'+ f
+                        org = json_load_file(root + '/' + f)
+                        #print  rooty + '/'+ f
                         #print [i.crossover_point for i in org.genome]
                     elif f.endswith('.csv'):
                         if f == 'quartile_data.csv':
@@ -214,3 +214,9 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
     crossAndSaveGeneration(path_to_new_gen, new_gen_size)
     #calculateRankings(gen_directory)
     writeQuartilesToCsv(global_quartiles, experiment_directory)
+
+
+thresholdedCrossGeneration('/Users/Aaron/projects/bot_prelims/2015-11-11-preliminary-robo-experiments/Development',
+                           '/Users/Aaron/projects/bot_prelims/2015-11-11-preliminary-robo-experiments/Development/Gen1',
+                           '/Users/Aaron/Projects/bot_prelims/2015-11-11-preliminary-robo-experiments/Development/Gen2',
+                           10)
