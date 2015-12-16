@@ -190,8 +190,7 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
        
     def calculateRankings(gen_directory):
         evaluateGenerationPerformance(gen_directory)
-        sorted_orgs = sorted(unpickled_orgs, key=lambda x: (x.performance_1 + x.performance_1)/2.0,\
-                             reverse=False)
+        sorted_orgs = unpickled_orgs
         sorted_orgs = random.shuffle(sorted_orgs)
         ranking = []
         while len(sorted_orgs) >0:
@@ -717,8 +716,7 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
        
     def calculateRankings(gen_directory):
         evaluateGenerationPerformance(gen_directory)
-        sorted_orgs = sorted(unpickled_orgs, key=lambda x: (x.performance_1 + x.performance_1)/2.0,\
-                             reverse=False)
+        sorted_orgs = unpickled_orgs
         sorted_orgs = random.shuffle(sorted_orgs)
         ranking = []
         while len(sorted_orgs) >0:
