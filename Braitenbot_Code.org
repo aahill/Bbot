@@ -71,13 +71,13 @@ Here's what I take away from these results:
 due to being distributed amongst noncoding regions.
 
 * Next steps
-The most obvious next step would be to decrease the size of the noncoding regions
- (by decreasing thread size) and to run these experiments again and compare the results. 
-There experiments would also help decide which parameters to use when running the actual robot.\\
+We've completed preliminary trials using the code contained here, and after a successful experiment consisting of
+"evolving" 3 generations using the code contained here, we are prepared to perform our full experiments next semester.\\
 \vspace
 
-Additionally, before any physical expeirments are run, I would like to complete this document, 
-including better comments and more robust validation tests.\\
+This document contains most of the code used in our experiment, and is an ongoing effort in better commenting and organizing
+our code. It does not yet contain the automated testing suites we have developed and continue to develop, but will soon as
+we figure out how to incorporate it into this document.\\
 
 \vspace
 I also think we need to look/tweak the algorithm that generates "viable" organisms to make sure
@@ -119,7 +119,7 @@ import random
 
 #+NAME: Pin
 #+BEGIN_SRC python 
-  class Pin:
+  class Pin(object):
       # group_id represents the group the pin belongs to
       # number identifies the pin number within the group
       def __init__(self, group_id, number, group):
@@ -657,7 +657,7 @@ from BaseAndInstructionSet import *
 *Input:* None\\
 *Output:* A Decoder object with the attribute index == 1.\\
 #+BEGIN_SRC python :noweb yes :tangle Decoder.py
-  class Decoder:
+  class Decoder(object):
       def __init__(self):
           self.index = 0
 

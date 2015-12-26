@@ -92,8 +92,8 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
         return quartiles
     def calculateRankings(gen_directory):
         evaluateGenerationPerformance(gen_directory)
-        sorted_orgs = sorted(unpickled_orgs, key=lambda x: (x.performance_1 + x.performance_1)/2.0,\
-                             reverse=True)
+        sorted_orgs = unpickled_orgs
+        sorted_orgs = random.shuffle(sorted_orgs)
         ranking = []
         while len(sorted_orgs) >0:
             ranking.append([sorted_orgs.pop(0), sorted_orgs.pop(0)])
