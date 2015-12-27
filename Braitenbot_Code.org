@@ -1173,7 +1173,7 @@ import jsonpickle
 *Output:* a Thread, stores a section of an Organism’s InstructionSet and builds connections from it, whcih are also stored.\\
 #+NAME: Thread
 #+BEGIN_SRC python :noweb yes
-class Thread:
+class Thread(object):
     def __init__(self, thread_decoder):
         self.binary = []
         self.decoded_instructions = []
@@ -1194,7 +1194,7 @@ class Thread:
 
 #+NAME: Organism
 #+BEGIN_SRC python :noweb yes 
-  class Organism:
+  class Organism(object):
         def __init__(self, generation, generational_index,genome_size, num_crossover_points, unrestricted_crossover_point_distribution, thread_length,mutation_rate, parent1=None, parent2=None, genome=None):
             # store perfromance on behavioral task
             self.performance_1 = None

@@ -4,7 +4,7 @@ from PinAndPinGroup import *
 import random
 import os
 import jsonpickle
-class Thread:
+class Thread(object):
     def __init__(self, thread_decoder):
         self.binary = []
         self.decoded_instructions = []
@@ -14,7 +14,7 @@ class Thread:
     # simply calls the decoder to decode the thread's instructions
     def decode(self):
         self.decoded_instructions = self.decoder.generate_coords(self.binary)
-class Organism:
+class Organism(object):
       def __init__(self, generation, generational_index,genome_size, num_crossover_points, unrestricted_crossover_point_distribution, thread_length,mutation_rate, parent1=None, parent2=None, genome=None):
           # store perfromance on behavioral task
           self.performance_1 = None
@@ -411,6 +411,15 @@ def reproduce(org1, org2, path):
     #else: print 'THYRE DIFF'
     return child1
 def generate_viable():
+    generation = 0
+    generational_index = 0
+    genome_size = 2100
+    num_crossover_points= 4
+    unrestricted_crossover_point_distribution = True
+    thread_length = 300
+    parent1 = None
+    parent2 = None
+    genome= None
     # writes a 'progress bar' to the console
     def progress(x):
         out = '\r %s organisms tested' % x  # The output
@@ -419,7 +428,9 @@ def generate_viable():
     genomes_tested = 0
     finished = False
     while not finished:
-        test = Organism(0, 0)
+        #test = Organism(0, 0)
+        test = Organism(generation,generational_index,genome_size,num_crossover_points,
+          thread_length,unrestricted_crossover_point_distribution,thread_length, parent1, parent2, genome)
         if test.is_viable():
             print "-------------------------------------//"
             print "connections: "
@@ -428,6 +439,11 @@ def generate_viable():
                 for connection in thread.connected_pins:
                     print connection.group_id, connection.number
             print "-------------------------------------//"
+            #PRINT THE BINARY GENOME STRING OF THE ORGANISM
+            genome_string = ""
+            for base in test.genome:
+              genome_string += base.char
+            print "genome binary string: " + genome_string
             finished = True
         else:
             del test
