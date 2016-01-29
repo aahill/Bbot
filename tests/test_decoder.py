@@ -1,4 +1,5 @@
-from ..Decoder import *
+from ..Decoder.py import *
+
 from nose.tools import *
 
 
@@ -24,7 +25,7 @@ binary_words =[
 def reset_decoder():
 	test_decoder = Decoder
 
-
+ 
 test_decoder = Decoder()
 
 """

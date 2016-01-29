@@ -58,5 +58,8 @@ def fix_crossover_points(old_directory, new_directory, crossover_prob):
 if __name__ == '__main__':
     #unpickle_and_print('/home/jake/Dropbox/BraitenbotCode/2015-06-23TEST/Gen2')
     #fix_crossover_points('/home/jake/Dropbox/BraitenbotCode/2015-06-23TEST/Gen1/', '/home/jake/Dropbox/BraitenbotCode/2015-06-23TEST/Gen1_3000_corssover_prob', 3000)
-    unpickle_and_print('/home/jake/org/Thesis_Stuff/2015-11-11-preliminary-robo-experiments/Random_Development/Gen1')
+    unpickle_and_print('/home/jake/org/Thesis_Stuff/2015-11-11-preliminary-robo-experiments/Random_Development/Gen3')
+
+    unpickle_and_print('/home/jake/org/Thesis_Stuff/2015-11-11-preliminary-robo-experiments/Random_Development/Gen2')
+
 

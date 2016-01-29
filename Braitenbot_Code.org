@@ -20,10 +20,17 @@ We allow the trimpots to be under developmental control in one population and ge
   - Josh Bongard hypothesized that changes to the developmental pathway allows for small changes (where
 as changes to genes result in big changes)
 ** Possible experiments
+
+
 Compare two models. One model is the one we currently built, the other is the same sans development 
 *** Removing develpment 
 - If a gene is present, it must be expressed.
 
+** Final Fall meeting with John <2015-12-17 Thu> 
+- Start each population with same initial generation to eliminate confounds
+- Record the min and max amount of light in the environemnt.
+  - Make sure we are not hitting a floor/ceiling.
+ 
 * What needs to be done
 ** TODO Tweak is_viable algorithm
 Are we really generating "viable" organisms?
@@ -1184,6 +1191,16 @@ class Thread:
     def decode(self):
         self.decoded_instructions = self.decoder.generate_coords(self.binary)
 #+END_SRC 
+*** Test
+
+#+BEGIN_SRC python
+  <<ThreadAndOrganism_Imports>
+  <<Thread>>
+
+  def test_decode():
+      thread =Thread(Decoder())
+    
+#+END_SRC
 ** Class: Organism
 *Input:* generation, int,  the generation the org belongs to.\\
 \indent generational index, int, tracks the order in which the orgs in a gen were created\\
@@ -1255,6 +1272,22 @@ class Thread:
 
   <<OtherMethods>>
 #+END_SRC
+
+*** Test_Organism
+#+BEGIN_SRC python :noweb yes
+  <<ThreadAndOrganism_Imports>>
+
+  <<Organism>>
+  def setup_org():
+      org = Organism(1, 2, 300, 2, True, 100, 1000)
+
+  def test_org():
+      assert_equal(  org.thread_length, 100)
+      test_org.setup = setup_org
+
+#+END_SRC
+
+#+RESULTS:
 
 *** Class Methods
 #+NAME: ClassMethods
@@ -1353,6 +1386,22 @@ active_threads is empty, threads are checked to make sure there are no connectio
  terminal pin. \\
 #+NAME: build_thread_coordinates
 #+BEGIN_SRC python
+
+"""
+*Input:* Nothing
+*Output:* Nothing
+*Side Effect:* Determines the pins connected as dictated by the coordinates of each thread.
+*Process:* Each Thread is ‘built’ (i.e.  their decoded_instructions are used to accesses PinGroups and Pins (see below))
+ using a round-robin approach. This done by simultaneously building each thread, one index at a
+ time. Threads that are actively being built are stored in the list active_threads. Threads are
+ removed from active_threads if they collided with with a previously built Thread, for trying 
+to accesses out of bounds Pins, for having only one valid pin, etc. Pins are accessed using the
+ xyz coordinates stored in Thread.decoded_instructions, where x corresponds to the PinGroup, y
+ corresponds to a specific Pin in the PinGroup, and z corresponding to another Pin within that
+ same PinGroup-- the origin of the next wire. After each Thread is built, and therefore 
+active_threads is empty, threads are checked to make sure there are no connections without a
+ terminal pin. """
+
     def build_thread_coordinates(self):
         # threads will be temporarily copied into a separate list of running threads, to determine when the process of
         # making their connections is completed
@@ -1367,17 +1416,20 @@ active_threads is empty, threads are checked to make sure there are no connectio
         # some reason (i.e. collision between threads, or coordinates not corresponding to an available pin)
         # the thread will not be runnable and be taken from the running_threads list
         index = 0
-        #tracks which threads have been run, and in turn, when the index should be incremented
-        num_threads_run = 0
-        active_threads = [i for i in running_threads] #A deepcopy that we are free to modify
-        while len(active_threads) > 0:
-            #print '\nThread index: %s' % index
+        #tracks the number of threads that have been run, and in turn, when the index should be incremented
+        thread_counter = 0
+        # A deepcopy of running_threads that we are free to modify
+        # threads are removed from active_thread when they are no longer able to make connections
+        active_threads = [i for i in running_threads] 
+        while len(active_threads) > 0: 
+        # This builds each thread at the current index value
             for running in running_threads:
-                # check the next index in all of running thread when all threads have been run on the previous index
-                if num_threads_run % len(running_threads):#len(running_threads):
+                # if 
+                #if thread_counter % len(running_threads):
+                if thread_counter == len(active_threads):
                     index += 1
                     #print "---------------------------------------------\nNew Index:  %s" % index
-                    num_threads_run = 0
+                    thread_counter = 0
 
                 error_encountered = False
                 # declare variables for finding and storing a selected pin
@@ -1445,7 +1497,7 @@ active_threads is empty, threads are checked to make sure there are no connectio
                                 #running.connected_pins.append(output_pin)
                             if new_connection_origin is not None:
                                 if new_connection_origin in self.connections:
-                                    raise LookupError("Connection failed: pinalready connected!")
+                                    raise LookupError("Connection failed: pin already connected!")
                                 else:
                                     self.connections.append(new_connection_origin)
                                     running.connected_pins.append(new_connection_origin)
@@ -1472,7 +1524,7 @@ active_threads is empty, threads are checked to make sure there are no connectio
                             active_threads.remove(running)
                             if len(running.connected_pins) >  2:
                                     pass
-            num_threads_run += 1
+            thread_counter += 1
 
         for running in self.threads:             
             if len(running.connected_pins) % 2 != 0:# and \
