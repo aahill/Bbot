@@ -1,7 +1,7 @@
 import random
 from BaseAndInstructionSet import *
 
-class Decoder:
+class Decoder(object):
     def __init__(self):
         self.index = 0
 
