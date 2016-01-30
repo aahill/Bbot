@@ -80,7 +80,8 @@ class Decoder(object):
             """
             gets the next value from decList, which is the list containing the decimal translation of the binary string
             If this causes an index error, -1 will be returned to avoid the error from halting the program
-            :return: the next value form decList
+            :return: the next value form decList. Here None values can be taken to represent intronic regions of the gene
+            in question.
             """
             #print decList
             to_return = None
@@ -178,6 +179,7 @@ class Decoder(object):
                     break
                 else:
                      coords.append((x,y,z))
+                     x = z # This sets x to be the origin of the subsequent wire connection (z).
                 #print
                 #print 'Coord z: %s. Final coords: (%s,%s,%s)' % (z,x,y,z)
                # else:

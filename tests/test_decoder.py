@@ -1,4 +1,4 @@
-from ..Decoder.py import *
+from ..Decoder import *
 
 from nose.tools import *
 
