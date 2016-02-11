@@ -442,7 +442,7 @@ def generate_viable():
     genomes_tested = 0
     finished = False
     while not finished:
-        test = Organism(1,1,560, 2, True, 80, 1000)
+        test = Organism(0, 0)
         if test.is_viable():
             print "-------------------------------------//"
             print "connections: "
@@ -456,6 +456,3 @@ def generate_viable():
             del test
             genomes_tested += 1
             progress(genomes_tested)
-
-
-generate_viable()

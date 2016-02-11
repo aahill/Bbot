@@ -54,6 +54,7 @@ class PinGroup(object):
                         pin_list2[x].setAvailability(False)
                         break
         if pin_found is False:
+          
             pass
         assert pin_found is True
     
