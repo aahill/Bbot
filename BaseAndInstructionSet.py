@@ -46,7 +46,7 @@ class InstructionSet:
         co_points = []
         for i in range(len(self.genome)):
             if self.genome[i].crossover_point == 1:
-                co_points.append[i]
+                co_points.append(i)
         self.co_point_location = co_points
 
     def setGenome(self, new_genome):
