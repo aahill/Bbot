@@ -239,45 +239,37 @@ import random
 #+NAME: MotorSensorPinGroup
 #+BEGIN_SRC python :noweb yes 
 
-class MotorSensorPinGroup(PinGroup):
-    def __init__(self):
-        #PinGroup.__init__(self)
-        super(PinGroup, self).__init__()
-        self.pins = None
+  class MotorSensorPinGroup(PinGroup):
+      def __init__(self):
+          #PinGroup.__init__(self)
+          super(PinGroup, self).__init__()
+          self.pins = None
 
-    def get_input(self, pin_index):
-        target_pin = self.pins[pin_index]
-        #print target_pin
-        #self.match_and_remove(target_pin, self.pins)
-        if target_pin.available == False:
-            raise IndexError
-        else:
-            self.call_match_and_remove_pin(target_pin, self.pins)
-        return target_pin
+      def get_input(self, pin_index):
+          target_pin = self.pins[pin_index]
+          #print target_pin
+          self.call_match_and_remove(target_pin, self.pins)
+          return target_pin
 
-    def get_output(self, pin_index):
-        target_pin = self.pins[pin_index]
-        #self.match_and_remove(target_pin, self.pins)
-        if target_pin.available ==False:
-            raise IndexError
-        else:
-            self.call_match_and_remove_pin(target_pin, self.pins)
-        return target_pin
+      def get_output(self, pin_index):
+          target_pin = self.pins[pin_index]
+          self.call_match_and_remove(target_pin, self.pins)
+          return target_pin
 
-    def get_random_input(self):
-        target_pin = random.choice([pin for pin in self.pins if pin.available is True])
-        #self.match_and_remove(target_pin, self.pins)
-        self.call_match_and_remove_pin(target_pin, self.pins)
-        return target_pin
+      def get_random_input(self):
+          target_pin = random.choice([pin for pin in self.pins if pin.available is True])
+          #self.match_and_remove(target_pin, self.pins)
+          self.call_match_and_remove_pin(target_pin, self.pins)
+          return target_pin
 
-    def get_random_output(self):
-        target_pin = random.choice([pin for pin in self.pins if pin.available is True])
-        #self.match_and_remove(target_pin, self.pins)
-        self.call_match_and_remove_pin(target_pin, self.pins)
-        return target_pin
+      def get_random_output(self):
+          target_pin = random.choice([pin for pin in self.pins if pin.available is True])
+          #self.match_and_remove(target_pin, self.pins)
+          self.call_match_and_remove_pin(target_pin, self.pins)
+          return target_pin
 
-    def call_match_and_remove_pin(self, pin, pin_list1, pin_list2=None):
-        super(MotorSensorPinGroup, self).match_and_remove_pin(pin, pin_list1, pin_list2)
+      def call_match_and_remove_pin(self, pin, pin_list1, pin_list2=None):
+          super(MotorSensorPinGroup, self).match_and_remove_pin(pin, pin_list1, pin_list2)
 
 #+END_SRC
 ** Specific PinGroups
@@ -1479,10 +1471,11 @@ active_threads is empty, threads are checked to make sure there are no connectio
                   if not error_encountered:
                       try:
                           # ensure the pin hasn't been 'taken' by another thread already
-                          if accessed_output_pin in self.connections:
-                              #print "pin already taken: %s" % accessed_output_pin.group_id
-                              self.collisions += 1
-                              raise LookupError("Connection failed: pin already connected")
+                          # if accessed_output_pin in self.connections:
+                          for pin in self.connections:
+                              if accessed_output_pin.group_id == pin.group_id and accessed_output_pin.number == pin.number: 
+                                  #print "pin already taken: %s" % accessed_output_pin.group_id
+                                  raise LookupError("Connection failed: pin already connected")
                           ###WARNING: OUTDATED CODE
                           # its possible the accessed pin is unavailable, signifying it was already taken by another thread
                           #if not accessed_pin.available:
@@ -1504,13 +1497,14 @@ active_threads is empty, threads are checked to make sure there are no connectio
                               #running.connected_pins.append(output_pin)
                           if new_connection_origin is not None:
                               if new_connection_origin in self.connections:
-                                  self.collisions += 1
                                   raise LookupError("Connection failed: pin already connected!")
                               else:
                                   self.connections.append(new_connection_origin)
                                   running.connected_pins.append(new_connection_origin)
 
                       except LookupError:
+                          #the pin raised a lookup error due to a collisions; update variable accordingly
+                          self.collisions += 1
                           # if a thread only has two pins, then it cannot create a connection to pins outside of the initial
                           # group, and each pin must be made available
                           if len(running.connected_pins) == 2:
