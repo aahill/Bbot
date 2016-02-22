@@ -235,7 +235,7 @@ import random
 : pin1 avaialability before match_and_remove is called: True
 : Pin1 availability after: True
 
-** Class: MotorSensorPinGroup
+** COMMENT Class: MotorSensorPinGroup
 #+NAME: MotorSensorPinGroup
 #+BEGIN_SRC python :noweb yes 
 
@@ -248,12 +248,12 @@ import random
       def get_input(self, pin_index):
           target_pin = self.pins[pin_index]
           #print target_pin
-          self.call_match_and_remove(target_pin, self.pins)
+          self.call_match_and_remove_pin(target_pin, self.pins)
           return target_pin
 
       def get_output(self, pin_index):
           target_pin = self.pins[pin_index]
-          self.call_match_and_remove(target_pin, self.pins)
+          self.call_match_and_remove_pin(target_pin, self.pins)
           return target_pin
 
       def get_random_input(self):

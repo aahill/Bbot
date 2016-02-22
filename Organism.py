@@ -448,8 +448,9 @@ def generate_viable():
     genomes_tested = 0
     finished = False
     while not finished:
-        test = Organism(0, 0)
-        if test.is_viable():
+        test = Organism(0, 0, 560,
+            800, True, 80, 2000)
+        if len(test.connections) > 2: #test.is_viable():
             print "-------------------------------------//"
             print "connections: "
             for thread in test.threads:
@@ -457,6 +458,10 @@ def generate_viable():
                 for connection in thread.connected_pins:
                     print connection.group_id, connection.number
             print "-------------------------------------//"
+            gen = ""
+            for base in test.genome:
+                gen += str(base.char)
+            print gen
             finished = True
         else:
             del test
