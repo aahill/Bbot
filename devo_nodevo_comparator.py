@@ -8,7 +8,7 @@ from Decoder import *
 
 import AlternateOrganism
 
-def compare(devo_file, non_devo_file):
+def compare(devo_file):
  #   for root, dir, files in os.walk(directory):
  #       for f in files:
  #           print root +'/' + f 
@@ -16,16 +16,15 @@ def compare(devo_file, non_devo_file):
     try:
         devo_org = json_load_file.json_load_file (devo_file)
         
-        org.decoder = Decoder()
-        
+
         print "++++++++++++++++++++devo / no devo comparason+++++++++++++++++++++++++++++++++++++"
         print "++++++++++++++++++++development organism+++++++++++++++++++++++++++++++++++++"
-        print "no. of threads: " + str(len(org.threads))
-        print "length of genome: ", len(org.genome)
-        print "no. collisions: ", org.collisions
-        print "connected_pins: ", [str(pin.number)+pin.group_id for pin in org.connections]
-        assert(len(org.genome) == len(org.instruction_set.genome))
-        for thread in org.threads:
+        print "no. of threads: " + str(len(devo_org.threads))
+        print "length of genome: ", len(devo_org.genome)
+        print "no. collisions: ", devo_org.collisions
+        print "connected_pins: ", [str(pin.number)+pin.group_id for pin in devo_org.connections]
+        assert(len(devo_org.genome) == len(devo_org.instruction_set.genome))
+        for thread in devo_org.threads:
             if len(thread.decoded_instructions) == 0: 
                 print 'empty thread'
             else:
@@ -44,15 +43,15 @@ def compare(devo_file, non_devo_file):
             #break
         print "++++++++++++++++++++non_development organism+++++++++++++++++++++++++++++++++++++"
         genome = devo_org.genome
-        non_devo_org = AlternateOrganism.Organism(non_devo_org.generation, non_devo_org.generational_index, non_devo_org.genome_size,
-            800, True, non_devo_org.thread_length, non_devo_org.mutation_rate, parent1=None, parent2=None,genome=genome)
+        non_devo_org = AlternateOrganism.Organism(devo_org.generation, devo_org.generational_index, devo_org.genome_size,
+            800, True, devo_org.thread_length, devo_org.mutation_rate, parent1=None, parent2=None,genome=genome)
 
-        print "no. of threads: " + str(len(org.threads))
-        print "length of genome: ", len(org.genome)
-        print "no. collisions: ", org.collisions
-        print "connected_pins: ", [str(pin.number)+pin.group_id for pin in org.connections]
-        assert(len(org.genome) == len(org.instruction_set.genome))
-        for thread in org.threads:
+        print "no. of threads: " + str(len(non_devo_org.threads))
+        print "length of genome: ", len(non_devo_org.genome)
+        print "no. collisions: ", non_devo_org.collisions
+        print "connected_pins: ", [str(pin.number)+pin.group_id for pin in non_devo_org.connections]
+        assert(len(non_devo_org.genome) == len(non_devo_org.instruction_set.genome))
+        for thread in non_devo_org.threads:
             if len(thread.decoded_instructions) == 0: 
                 print 'empty thread'
             else:
