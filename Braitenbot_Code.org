@@ -1915,20 +1915,20 @@ This outputs the standard error of the list of vals, which will then be stored i
 along with other statistical info. Useful for result analysis later on.
 #+NAME: calculateStdError
 #+BEGIN_SRC python
-def calculateStdError(list_of_vals, average):
-stddev = 0.0
-    diffsquared = 0.0
-    sum_diffsquared = 0.0
-    print '\n--------------------------------------------------\nCalculating the Std Error of the mean: '
-    for val in list_of_vals:
-        diffsquared = (val- average)**2.0
-        sum_diffsquared += diffsquared 
-        print 'Org mean perf: %s Pop mean: %s Diffsqrd: %s SumDiffsqrd: %s ' % (val, average, diffsquared, sum_diffsquared)
-    stddev = ((sum_diffsquared)/len(list_of_vals))**(1.0/2.0)
-    stderror = stddev / (len(list_of_vals)**(1.0/2.0))
-    print 'Stddv: %s  StdErr: %s\n------------------------------------------------------------\n ' % (stddev, stderror)
-    #print(numpy.sqrt(numpy.var(list_of_vals)))
-    return stderror
+  def calculateStdError(list_of_vals, average):
+      stddev = 0.0
+      diffsquared = 0.0
+      sum_diffsquared = 0.0
+      print '\n--------------------------------------------------\nCalculating the Std Error of the mean: '
+      for val in list_of_vals:
+          diffsquared = (val- average)**2.0
+          sum_diffsquared += diffsquared 
+          print 'Org mean perf: %s Pop mean: %s Diffsqrd: %s SumDiffsqrd: %s ' % (val, average, diffsquared, sum_diffsquared)
+      stddev = ((sum_diffsquared)/len(list_of_vals))**(1.0/2.0)
+      stderror = stddev / (len(list_of_vals)**(1.0/2.0))
+      print 'Stddv: %s  StdErr: %s\n------------------------------------------------------------\n ' % (stddev, stderror)
+      #print(numpy.sqrt(numpy.var(list_of_vals)))
+      return stderror
 #+END_SRC
 *** Method: thresholdedCrossGeneration
 #INPUT: experiment_directory -- direcotry containing all the gens for the given experiment
@@ -1972,7 +1972,7 @@ stddev = 0.0
           org = None
           performance = 0
           for f in files:
-              if f.beginswith("baseline"):
+              if f.startswith("baseline"):
                   baseline_performance = HoboAnalysis.energyAquired(root + '/' + f)
 
       #walks through files belonging to an organism, one org at a time
@@ -1982,11 +1982,12 @@ stddev = 0.0
           #will store the amount of light collected on both trials
           performance_1 = 0
           performance_2 = 0
+          collisions_per_org = []
           y.append(root)
           for f in files:
               try:
                   y.append(f)
-                  if not f.beginswith('baseline') and f.endswith('.pkl') or f.endswith('.txt'):
+                  if not f.startsswith('baseline') and f.endswith('.pkl') or f.endswith('.txt'):
                       org = json_load_file(root + '/' + f,'rb')
                       #print  rooty + '/'+ f
                       #print [i.crossover_point for i in org.genome]
@@ -2009,6 +2010,7 @@ stddev = 0.0
               #append the average of two performances to list
               #for use later in calculating stddev
               mean_performance_per_org.append((org.performance_1 + org.performance_1)/2)
+              collisions_per_org.append(org.collisions)
               unpickled_orgs.append(org)
               # org.save_to_file(f)
           except AttributeError:
@@ -2018,8 +2020,13 @@ stddev = 0.0
       print'\n mean performances for each org in population:', mean_performance_per_org
       #Calculates quartiles: Q1 = mean * .5, Q2 = mean, Q3 = mean * 1.5
       mean_performance_per_pop = sum(mean_performance_per_org)/len(mean_performance_per_org)
+      mean_collisions = sum(collisions_per_org)/len(collisions_per_org)
       #Saves quartile information and stdev of pop mean to a dict
-      quartiles = {'Generation': unpickled_orgs[0].generation, 'mean': mean_performance_per_pop, 'stderr': calculateStdError(mean_performance_per_org, mean_performance_per_pop)}
+      quartiles = {'Generation': unpickled_orgs[0].generation, \
+                   'mean': mean_performance_per_pop, \
+                   'stderr': calculateStdError(mean_performance_per_org, mean_performance_per_pop), \
+                   'mean collisions':mean_collisions, \
+                   'collision stderr': calculateStdError(collisions_per_org, mean_collisions)}
       print '\nquartiles: %s\n' % quartiles  
       global_quartiles = quartiles
       return quartiles
@@ -2160,12 +2167,12 @@ stddev = 0.0
         data_file =  dir + '/' + 'experiment_data.csv' 
         if os.path.isfile(data_file):
             with open(dir + '/' + 'experiment_data.csv' , 'a') as f:
-                fieldnames = ['Generation', 'mean', 'stderr']
+                fieldnames = ['Generation', 'mean', 'stderr', 'mean collisions', 'collision stderr']
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
                 writer.writerow(data_dict)
         else:
             with open(dir + '/' + 'experiment_data.csv' , 'wb') as f:
-                fieldnames = ['Generation', 'mean', 'stderr']
+                fieldnames = ['Generation', 'mean', 'stderr', 'mean collisions', 'collision stderr']
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
 
                 writer.writeheader()
@@ -2185,9 +2192,10 @@ Same as RankAndCrossGeneration, only the orgs are randomly ranked.
 *** Method: thresholdedCrossGeneration
 #INPUT: experiment_directory -- direcotry containing all the gens for the given experiment
      #gen_directory -- directory containing subdirectories of agents in a given generation
-     #  path_to_new_generation -- where you want the direcotry containing new dir
+#  path_to_new_generation -- where you want the direcotry containing new dir
      #  *new_gen_size --(OPTIONAL) upperlimit on number of individuals in new generation
 #OUTPUT: A direcory containing individuals from the next generation
+
 #+NAME: RandomthresholdedCrossGeneration
 #+BEGIN_SRC python :noweb yes 
   def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_gen,*new_gen_size):
@@ -2196,7 +2204,7 @@ Same as RankAndCrossGeneration, only the orgs are randomly ranked.
           new_gen_size = int( new_gen_size[0]) #turns the input (a tuple) into an int
       except IndexError:
           new_gen_size = None #No size input given
-      <<evaluateGenerationPerformance>>
+      <<RandomevaluateGenerationPerformance>>
       <<RandomcalculateRankings>>
       <<crossAndSaveGeneration>>
       <<writeQuartilesToCSV>>
@@ -2226,48 +2234,87 @@ Same as RankAndCrossGeneration, only the orgs are randomly ranked.
    
 #+END_SRC
 
+*** RandomevaluateGenerationPerformance
+#+NAME: RandomevaluateGenerationPerformance
+#+BEGIN_SRC python :noweb yes
+  def evaluateGenerationPerformance(gen_directory):
+      global global_quartiles
+      collisions_per_org = []
+      mean_performance_per_org = [] 
+      mean_performance_per_pop = 0
+      list_of_vals = []
+      y = []
+      baseline_performance = 0
+      #get the performance of the baseline organism
+      for root, dir, files in os.walk(gen_directory):
+          org = None
+          performance = 0
+          for f in files:
+              if f.startswith("baseline"):
+                  baseline_performance = HoboAnalysis.energyAquired(root + '/' + f)
+
+      #walks through files belonging to an organism, one org at a time
+      print "All the org files in this directory:"
+      for root, dir, files in os.walk(gen_directory):
+          org = None
+          #will store the amount of light collected on both trials
+          performance_1 = 0
+          performance_2 = 0
+          y.append(root)
+          for f in files:
+              try:
+                  y.append(f)
+                  if f.endswith('.txt'):
+                      org = json_load_file(root + '/' + f,'rb')
+                      #print  rooty + '/'+ f
+                      #print [i.crossover_point for i in org.genome]
+                  elif f.endswith('.csv'):
+                      if f == 'quartile_data.csv':
+                          pass
+                      else:
+                          if performance_1 == 0:
+                              #rooty denotes the path to subdir, f a file in root. Concatenating
+                              # the two results in the full path to file
+                              #divide performance by the baseline for normalization
+                              performance_1 = HoboAnalysis.energyAcquired(root +'/' + f)/baseline_performance 
+                          else:
+                              performance_2 = HoboAnalysis.energyAcquired(root + '/' + f)/baseline_performance
+              except AttributeError:
+                  pass
+          try:
+              org.performance_1 = performance_1
+              org.performance_2 = performance_1
+              #append the average of two performances to list
+              #for use later in calculating stddev
+              mean_performance_per_org.append((org.performance_1 + org.performance_1)/2)
+              collisions_per_org.append(org.collisions)
+              unpickled_orgs.append(org)
+              # org.save_to_file(f)
+          except AttributeError:
+              pass
+  #for org in unpickled_orgs:
+      #   mean_performance_per_org.append((org.performance_1 + org.performance_1) / 2.0 )"""
+      print'\n mean performances for each org in population:', mean_performance_per_org
+      #Calculates quartiles: Q1 = mean * .5, Q2 = mean, Q3 = mean * 1.5
+      mean_performance_per_pop = 1
+      try:
+          mean_collisions = sum(collisions_per_org)/len(collisions_per_org)
+      except(ZeroDivisionError):
+          mean_collisions = 0
+      #Saves quartile information and stdev of pop mean to a dict
+      quartiles = {'Generation': unpickled_orgs[0].generation,\
+                   'mean': mean_performance_per_pop,\
+                   'stderr': calculateStdError(mean_performance_per_org, mean_performance_per_pop),\
+                   'mean collisions':mean_collisions,\
+                   'collision stderr': calculateStdError(collisions_per_org, mean_collisions)}
+      print '\nquartiles: %s\n' % quartiles  
+      global_quartiles = quartiles
+      return quartiles
+#+END_SRC
 
 * Generating orgs (development and non-development )
+** Generting initial population 
 #+BEGIN_SRC python :results output
-  import Organism
-  import AlternateOrganism
-  import os
-
-  counter = 5
-
-  path = "/home/jake/org/Thesis_Stuff/Robot_Data"
-  while(counter < 10):
-      org = Organism.Organism(1, counter, 560, 2, True, 80, 2000)
-      if org.is_viable():
-          for thread in org.threads:
-              for connection in thread.connected_pins:
-                  if connection.group_id == 'fr' or connection.group_id == 'fl':
-                      org.save_to_file(path+"/Development/Gen1")
-                      org_no_devo =  AlternateOrganism.Organism(1, counter, 560, 2, True, 80, 2000, None, None, org.genome)
-                      org_no_devo.save_to_file(path+"/No_Development/Gen1")
-                
-                      print "DEVO"
-                      print org.filename
-                      for thread in org.threads:
-                          print [i.group_id for i in thread.connected_pins]
-                          print "new thread connections:"
-                          for connection in thread.connected_pins:
-                              print connection.group_id, connection.number
-                              print "-------------------------------------//"
-
-                      print "NO DEVO"
-                      print org_no_devo.filename
-                      for thread in org_no_devo.threads:
-                          print [i.group_id for i in thread.connected_pins]
-                          print "new thread connections:"
-                          for connection in thread.connected_pins:
-                              print connection.group_id, connection.number
-                          print "-------------------------------------//"
-
-                      counter += 1
-
-
-
 #+END_SRC
 
 #+RESULTS:
@@ -2292,4 +2339,17 @@ Same as RankAndCrossGeneration, only the orgs are randomly ranked.
 
 #+RESULTS:
 : forward counter: 14, back counter: 49
+
+** Simultion 
+#+BEGIN_SRC python :noweb yes :results outptut
+  <<RandomRankAndCrossGeneration>>
+
+  path = '/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Collisions'
+
+
+
+
+#+END_SRC
+
+#+RESULTS:
 

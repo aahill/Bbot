@@ -18,7 +18,7 @@ def json_load_file(filename):
     return obj
 
 def calculateStdError(list_of_vals, average):
-stddev = 0.0
+    stddev = 0.0
     diffsquared = 0.0
     sum_diffsquared = 0.0
     print '\n--------------------------------------------------\nCalculating the Std Error of the mean: '
@@ -43,6 +43,15 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
         mean_performance_per_pop = 0
         list_of_vals = []
         y = []
+        baseline_performance = 0
+        #get the performance of the baseline organism
+        for root, dir, files in os.walk(gen_directory):
+            org = None
+            performance = 0
+            for f in files:
+                if f.startswith("baseline"):
+                    baseline_performance = HoboAnalysis.energyAquired(root + '/' + f)
+    
         #walks through files belonging to an organism, one org at a time
         print "All the org files in this directory:"
         for root, dir, files in os.walk(gen_directory):
@@ -50,11 +59,12 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
             #will store the amount of light collected on both trials
             performance_1 = 0
             performance_2 = 0
+            collisions_per_org = []
             y.append(root)
             for f in files:
                 try:
                     y.append(f)
-                    if f.endswith('.pkl') or f.endswith('.txt'):
+                    if not f.startsswith('baseline') and f.endswith('.pkl') or f.endswith('.txt'):
                         org = json_load_file(root + '/' + f,'rb')
                         #print  rooty + '/'+ f
                         #print [i.crossover_point for i in org.genome]
@@ -65,9 +75,10 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
                             if performance_1 == 0:
                                 #rooty denotes the path to subdir, f a file in root. Concatenating
                                 # the two results in the full path to file
-                                performance_1 = HoboAnalysis.energyAcquired(root +'/' + f) 
+                                #divide performance by the baseline for normalization
+                                performance_1 = HoboAnalysis.energyAcquired(root +'/' + f)/baseline_performance 
                             else:
-                                performance_2 = HoboAnalysis.energyAcquired(root + '/' + f)
+                                performance_2 = HoboAnalysis.energyAcquired(root + '/' + f)/baseline_performance
                 except AttributeError:
                     pass
             try:
@@ -76,6 +87,7 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
                 #append the average of two performances to list
                 #for use later in calculating stddev
                 mean_performance_per_org.append((org.performance_1 + org.performance_1)/2)
+                collisions_per_org.append(org.collisions)
                 unpickled_orgs.append(org)
                 # org.save_to_file(f)
             except AttributeError:
@@ -85,8 +97,13 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
         print'\n mean performances for each org in population:', mean_performance_per_org
         #Calculates quartiles: Q1 = mean * .5, Q2 = mean, Q3 = mean * 1.5
         mean_performance_per_pop = sum(mean_performance_per_org)/len(mean_performance_per_org)
+        mean_collisions = sum(collisions_per_org)/len(collisions_per_org)
         #Saves quartile information and stdev of pop mean to a dict
-        quartiles = {'Generation': unpickled_orgs[0].generation, 'mean': mean_performance_per_pop, 'stderr': calculateStdError(mean_performance_per_org, mean_performance_per_pop)}
+        quartiles = {'Generation': unpickled_orgs[0].generation, \
+                     'mean': mean_performance_per_pop, \
+                     'stderr': calculateStdError(mean_performance_per_org, mean_performance_per_pop), \
+                     'mean collisions':mean_collisions, \
+                     'collision stderr': calculateStdError(collisions_per_org, mean_collisions)}
         print '\nquartiles: %s\n' % quartiles  
         global_quartiles = quartiles
         return quartiles
@@ -200,12 +217,12 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
         data_file =  dir + '/' + 'experiment_data.csv' 
         if os.path.isfile(data_file):
             with open(dir + '/' + 'experiment_data.csv' , 'a') as f:
-                fieldnames = ['Generation', 'mean', 'stderr']
+                fieldnames = ['Generation', 'mean', 'stderr', 'mean collisions', 'collision stderr']
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
                 writer.writerow(data_dict)
         else:
             with open(dir + '/' + 'experiment_data.csv' , 'wb') as f:
-                fieldnames = ['Generation', 'mean', 'stderr']
+                fieldnames = ['Generation', 'mean', 'stderr', 'mean collisions', 'collision stderr']
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
     
                 writer.writeheader()

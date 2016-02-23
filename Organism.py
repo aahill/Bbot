@@ -24,7 +24,9 @@ class Organism(object):
           self.generation = generation
           self.generational_index = generational_index
           self.thread_length = thread_length
-          self.genome_size = genome_size 
+          self.genome_size = genome_size
+          #store the number of collisions between threads
+          self.collisions = 0
           self.mutation_rate = mutation_rate
           # store organizational and naming information
           #NOTE: no longer saves a reference to parent org object
@@ -212,6 +214,7 @@ class Organism(object):
                               # ensure the pin hasn't been 'taken' by another thread already
                               if accessed_output_pin in self.connections:
                                   #print "pin already taken: %s" % accessed_output_pin.group_id
+                                  self.collisions += 1
                                   raise LookupError("Connection failed: pin already connected")
                               ###WARNING: OUTDATED CODE
                               # its possible the accessed pin is unavailable, signifying it was already taken by another thread
@@ -234,6 +237,7 @@ class Organism(object):
                                   #running.connected_pins.append(output_pin)
                               if new_connection_origin is not None:
                                   if new_connection_origin in self.connections:
+                                      self.collisions += 1
                                       raise LookupError("Connection failed: pin already connected!")
                                   else:
                                       self.connections.append(new_connection_origin)
