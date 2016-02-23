@@ -212,10 +212,11 @@ class Organism(object):
                       if not error_encountered:
                           try:
                               # ensure the pin hasn't been 'taken' by another thread already
-                              if accessed_output_pin in self.connections:
-                                  #print "pin already taken: %s" % accessed_output_pin.group_id
-                                  self.collisions += 1
-                                  raise LookupError("Connection failed: pin already connected")
+                              # if accessed_output_pin in self.connections:
+                              for pin in self.connections:
+                                  if accessed_output_pin.group_id == pin.group_id and accessed_output_pin.number == pin.number: 
+                                      #print "pin already taken: %s" % accessed_output_pin.group_id
+                                      raise LookupError("Connection failed: pin already connected")
                               ###WARNING: OUTDATED CODE
                               # its possible the accessed pin is unavailable, signifying it was already taken by another thread
                               #if not accessed_pin.available:
@@ -237,13 +238,14 @@ class Organism(object):
                                   #running.connected_pins.append(output_pin)
                               if new_connection_origin is not None:
                                   if new_connection_origin in self.connections:
-                                      self.collisions += 1
                                       raise LookupError("Connection failed: pin already connected!")
                                   else:
                                       self.connections.append(new_connection_origin)
                                       running.connected_pins.append(new_connection_origin)
       
                           except LookupError:
+                              #the pin raised a lookup error due to a collisions; update variable accordingly
+                              self.collisions += 1
                               # if a thread only has two pins, then it cannot create a connection to pins outside of the initial
                               # group, and each pin must be made available
                               if len(running.connected_pins) == 2:

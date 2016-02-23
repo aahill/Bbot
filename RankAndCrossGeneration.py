@@ -26,8 +26,8 @@ def calculateStdError(list_of_vals, average):
         diffsquared = (val- average)**2.0
         sum_diffsquared += diffsquared 
         print 'Org mean perf: %s Pop mean: %s Diffsqrd: %s SumDiffsqrd: %s ' % (val, average, diffsquared, sum_diffsquared)
-    stddev = ((sum_diffsquared)/len(list_of_vals))**(1.0/2.0)
-    stderror = stddev / (len(list_of_vals)**(1.0/2.0))
+    stddev = math.sqrt((sum_diffsquared)/len(list_of_vals))
+    stderror = stddev / math.sqrt(len(list_of_vals))
     print 'Stddv: %s  StdErr: %s\n------------------------------------------------------------\n ' % (stddev, stderror)
     #print(numpy.sqrt(numpy.var(list_of_vals)))
     return stderror
@@ -65,7 +65,7 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
                 try:
                     y.append(f)
                     if not f.startsswith('baseline') and f.endswith('.pkl') or f.endswith('.txt'):
-                        org = json_load_file(root + '/' + f,'rb')
+                        org = json_load_file(root + '/' + f)
                         #print  rooty + '/'+ f
                         #print [i.crossover_point for i in org.genome]
                     elif f.endswith('.csv'):
@@ -96,7 +96,7 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
         #   mean_performance_per_org.append((org.performance_1 + org.performance_1) / 2.0 )"""
         print'\n mean performances for each org in population:', mean_performance_per_org
         #Calculates quartiles: Q1 = mean * .5, Q2 = mean, Q3 = mean * 1.5
-        mean_performance_per_pop = sum(mean_performance_per_org)/len(mean_performance_per_org)
+        mean_performance_per_pop = float(sum(mean_performance_per_org)/len(mean_performance_per_org))
         mean_collisions = sum(collisions_per_org)/len(collisions_per_org)
         #Saves quartile information and stdev of pop mean to a dict
         quartiles = {'Generation': unpickled_orgs[0].generation, \
@@ -217,12 +217,12 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
         data_file =  dir + '/' + 'experiment_data.csv' 
         if os.path.isfile(data_file):
             with open(dir + '/' + 'experiment_data.csv' , 'a') as f:
-                fieldnames = ['Generation', 'mean', 'stderr', 'mean collisions', 'collision stderr']
+                fieldnames = ['Generation', 'mean', 'stderr', 'mean collisions', 'collision stderr', 'collisions min', 'collisions max']
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
                 writer.writerow(data_dict)
         else:
             with open(dir + '/' + 'experiment_data.csv' , 'wb') as f:
-                fieldnames = ['Generation', 'mean', 'stderr', 'mean collisions', 'collision stderr']
+                fieldnames = ['Generation', 'mean', 'stderr', 'mean collisions', 'collision stderr', 'collisions min', 'collisions max']
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
     
                 writer.writeheader()
