@@ -29,11 +29,11 @@ def unpickle_and_print(f):
         org = json_load_file.json_load_file (f)
         org.decoder = Decoder()
         genome = org.genome
-        for x in range(len(genome)):
-            genome[x].char = replicated_genome[x]
+        #for x in range(len(genome)):
+        #    genome[x].char = replicated_genome[x]
 
-        org.__init__(org.generation, org.generational_index, org.genome_size,
-            800, True, org.thread_length, org.mutation_rate, parent1=None, parent2=None,genome=genome)
+        #org.__init__(org.generation, org.generational_index, org.genome_size,
+        #    800, True, org.thread_length, org.mutation_rate, parent1=None, parent2=None,genome=genome)
         #print [i.crossover_point for i in org.genome]
         print "no. of threads: " + str(len(org.threads))
         print "length of genome: ", len(org.genome)
@@ -60,7 +60,8 @@ def unpickle_and_print(f):
     except IOError:
         print 'error'
 
-unpickle_and_print('/Users/Aaron/Desktop/test_org.txt')
+
+unpickle_and_print('/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Collisions/Gen10/10_9_9_5_9_4/10_9_9_5_9_4.txt')
 
 #quickly load and print a single organism
 def run(f):

@@ -1909,20 +1909,20 @@ This outputs the standard error of the list of vals, which will then be stored i
 along with other statistical info. Useful for result analysis later on.
 #+NAME: calculateStdError
 #+BEGIN_SRC python
-def calculateStdError(list_of_vals, average):
-stddev = 0.0
-    diffsquared = 0.0
-    sum_diffsquared = 0.0
-    print '\n--------------------------------------------------\nCalculating the Std Error of the mean: '
-    for val in list_of_vals:
-        diffsquared = (val- average)**2.0
-        sum_diffsquared += diffsquared 
-        print 'Org mean perf: %s Pop mean: %s Diffsqrd: %s SumDiffsqrd: %s ' % (val, average, diffsquared, sum_diffsquared)
-    stddev = ((sum_diffsquared)/len(list_of_vals))**(1.0/2.0)
-    stderror = stddev / (len(list_of_vals)**(1.0/2.0))
-    print 'Stddv: %s  StdErr: %s\n------------------------------------------------------------\n ' % (stddev, stderror)
-    #print(numpy.sqrt(numpy.var(list_of_vals)))
-    return stderror
+  def calculateStdError(list_of_vals, average):
+      stddev = 0.0
+      diffsquared = 0.0
+      sum_diffsquared = 0.0
+      print '\n--------------------------------------------------\nCalculating the Std Error of the mean: '
+      for val in list_of_vals:
+          diffsquared = (val- average)**2.0
+          sum_diffsquared += diffsquared 
+          print 'Org mean perf: %s Pop mean: %s Diffsqrd: %s SumDiffsqrd: %s ' % (val, average, diffsquared, sum_diffsquared)
+      stddev = math.sqrt((sum_diffsquared)/len(list_of_vals))
+      stderror = stddev / math.sqrt(len(list_of_vals))
+      print 'Stddv: %s  StdErr: %s\n------------------------------------------------------------\n ' % (stddev, stderror)
+      #print(numpy.sqrt(numpy.var(list_of_vals)))
+      return stderror
 #+END_SRC
 *** Method: thresholdedCrossGeneration
 #INPUT: experiment_directory -- direcotry containing all the gens for the given experiment
@@ -1966,7 +1966,7 @@ stddev = 0.0
           org = None
           performance = 0
           for f in files:
-              if f.beginswith("baseline"):
+              if f.startswith("baseline"):
                   baseline_performance = HoboAnalysis.energyAquired(root + '/' + f)
 
       #walks through files belonging to an organism, one org at a time
@@ -1976,12 +1976,13 @@ stddev = 0.0
           #will store the amount of light collected on both trials
           performance_1 = 0
           performance_2 = 0
+          collisions_per_org = []
           y.append(root)
           for f in files:
               try:
                   y.append(f)
-                  if not f.beginswith('baseline') and f.endswith('.pkl') or f.endswith('.txt'):
-                      org = json_load_file(root + '/' + f,'rb')
+                  if not f.startsswith('baseline') and f.endswith('.pkl') or f.endswith('.txt'):
+                      org = json_load_file(root + '/' + f)
                       #print  rooty + '/'+ f
                       #print [i.crossover_point for i in org.genome]
                   elif f.endswith('.csv'):
@@ -2003,6 +2004,7 @@ stddev = 0.0
               #append the average of two performances to list
               #for use later in calculating stddev
               mean_performance_per_org.append((org.performance_1 + org.performance_1)/2)
+              collisions_per_org.append(org.collisions)
               unpickled_orgs.append(org)
               # org.save_to_file(f)
           except AttributeError:
@@ -2011,9 +2013,14 @@ stddev = 0.0
       #   mean_performance_per_org.append((org.performance_1 + org.performance_1) / 2.0 )"""
       print'\n mean performances for each org in population:', mean_performance_per_org
       #Calculates quartiles: Q1 = mean * .5, Q2 = mean, Q3 = mean * 1.5
-      mean_performance_per_pop = sum(mean_performance_per_org)/len(mean_performance_per_org)
+      mean_performance_per_pop = float(sum(mean_performance_per_org)/len(mean_performance_per_org))
+      mean_collisions = sum(collisions_per_org)/len(collisions_per_org)
       #Saves quartile information and stdev of pop mean to a dict
-      quartiles = {'Generation': unpickled_orgs[0].generation, 'mean': mean_performance_per_pop, 'stderr': calculateStdError(mean_performance_per_org, mean_performance_per_pop)}
+      quartiles = {'Generation': unpickled_orgs[0].generation, \
+                   'mean': mean_performance_per_pop, \
+                   'stderr': calculateStdError(mean_performance_per_org, mean_performance_per_pop), \
+                   'mean collisions':mean_collisions, \
+                   'collision stderr': calculateStdError(collisions_per_org, mean_collisions)}
       print '\nquartiles: %s\n' % quartiles  
       global_quartiles = quartiles
       return quartiles
@@ -2021,8 +2028,6 @@ stddev = 0.0
 *** SubMethod: calculateRankings
 
 #INPUT: dir containing gen of interest
-#OUTPUT: Sorts organisms into lists that denote how many offspring they
-        #can potentially create
 #+NAME: calculateRankings
 #+BEGIN_SRC python
     def calculateRankings(gen_directory):
@@ -2154,12 +2159,12 @@ stddev = 0.0
         data_file =  dir + '/' + 'experiment_data.csv' 
         if os.path.isfile(data_file):
             with open(dir + '/' + 'experiment_data.csv' , 'a') as f:
-                fieldnames = ['Generation', 'mean', 'stderr']
+                fieldnames = ['Generation', 'mean', 'stderr', 'mean collisions', 'collision stderr', 'collisions min', 'collisions max']
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
                 writer.writerow(data_dict)
         else:
             with open(dir + '/' + 'experiment_data.csv' , 'wb') as f:
-                fieldnames = ['Generation', 'mean', 'stderr']
+                fieldnames = ['Generation', 'mean', 'stderr', 'mean collisions', 'collision stderr', 'collisions min', 'collisions max']
                 writer = csv.DictWriter(f, fieldnames=fieldnames)
 
                 writer.writeheader()
@@ -2179,9 +2184,10 @@ Same as RankAndCrossGeneration, only the orgs are randomly ranked.
 *** Method: thresholdedCrossGeneration
 #INPUT: experiment_directory -- direcotry containing all the gens for the given experiment
      #gen_directory -- directory containing subdirectories of agents in a given generation
-     #  path_to_new_generation -- where you want the direcotry containing new dir
+#  path_to_new_generation -- where you want the direcotry containing new dir
      #  *new_gen_size --(OPTIONAL) upperlimit on number of individuals in new generation
 #OUTPUT: A direcory containing individuals from the next generation
+
 #+NAME: RandomthresholdedCrossGeneration
 #+BEGIN_SRC python :noweb yes 
   def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_gen,*new_gen_size):
@@ -2190,7 +2196,7 @@ Same as RankAndCrossGeneration, only the orgs are randomly ranked.
           new_gen_size = int( new_gen_size[0]) #turns the input (a tuple) into an int
       except IndexError:
           new_gen_size = None #No size input given
-      <<evaluateGenerationPerformance>>
+      <<RandomevaluateGenerationPerformance>>
       <<RandomcalculateRankings>>
       <<crossAndSaveGeneration>>
       <<writeQuartilesToCSV>>
@@ -2209,7 +2215,7 @@ Same as RankAndCrossGeneration, only the orgs are randomly ranked.
     def calculateRankings(gen_directory):
         evaluateGenerationPerformance(gen_directory)
         sorted_orgs = unpickled_orgs
-        sorted_orgs = random.shuffle(sorted_orgs)
+        random.shuffle(sorted_orgs)
         ranking = []
         while len(sorted_orgs) >0:
             ranking.append([sorted_orgs.pop(0), sorted_orgs.pop(0)])
@@ -2220,48 +2226,89 @@ Same as RankAndCrossGeneration, only the orgs are randomly ranked.
    
 #+END_SRC
 
+*** RandomevaluateGenerationPerformance
+#+NAME: RandomevaluateGenerationPerformance
+#+BEGIN_SRC python :noweb yes
+  def evaluateGenerationPerformance(gen_directory):
+      global global_quartiles
+      collisions_per_org = []
+      mean_performance_per_org = [] 
+      mean_performance_per_pop = 0
+      list_of_vals = []
+      y = []
+      baseline_performance = 0
+      #get the performance of the baseline organism
+      for root, dir, files in os.walk(gen_directory):
+          org = None
+          performance = 0
+          for f in files:
+              if f.startswith("baseline"):
+                  baseline_performance = HoboAnalysis.energyAquired(root + '/' + f)
+
+      #walks through files belonging to an organism, one org at a time
+      print "All the org files in this directory:"
+      for root, dir, files in os.walk(gen_directory):
+          org = None
+          #will store the amount of light collected on both trials
+          performance_1 = 0
+          performance_2 = 0
+          y.append(root)
+          for f in files:
+              try:
+                  y.append(f)
+                  if f.endswith('.txt'):
+                      org = json_load_file(root + '/' + f)
+                      #print  rooty + '/'+ f
+                      #print [i.crossover_point for i in org.genome]
+                  elif f.endswith('.csv'):
+                      if f == 'quartile_data.csv':
+                          pass
+                      else:
+                          if performance_1 == 0:
+                              #rooty denotes the path to subdir, f a file in root. Concatenating
+                              # the two results in the full path to file
+                              #divide performance by the baseline for normalization
+                              performance_1 = HoboAnalysis.energyAcquired(root +'/' + f)/baseline_performance 
+                          else:
+                              performance_2 = HoboAnalysis.energyAcquired(root + '/' + f)/baseline_performance
+              except AttributeError:
+                  pass
+          try:
+              org.performance_1 = performance_1
+              org.performance_2 = performance_1
+              #append the average of two performances to list
+              #for use later in calculating stddev
+              mean_performance_per_org.append((org.performance_1 + org.performance_1)/2)
+              collisions_per_org.append(org.collisions)
+              unpickled_orgs.append(org)
+              # org.save_to_file(f)
+          except AttributeError:
+              pass
+  #for org in unpickled_orgs:
+      #   mean_performance_per_org.append((org.performance_1 + org.performance_1) / 2.0 )"""
+      print'\n mean performances for each org in population:', mean_performance_per_org
+      #Calculates quartiles: Q1 = mean * .5, Q2 = mean, Q3 = mean * 1.5
+      mean_performance_per_pop = 1
+      try:
+          mean_collisions = sum(collisions_per_org)/float(len(collisions_per_org))
+      except(ZeroDivisionError):
+          mean_collisions = 0
+      #Saves quartile information and stdev of pop mean to a dict
+      quartiles = {'Generation': unpickled_orgs[0].generation,\
+                   'mean': mean_performance_per_pop,\
+                   'stderr': calculateStdError(mean_performance_per_org, mean_performance_per_pop),\
+                   'mean collisions':mean_collisions,\
+                   'collision stderr': calculateStdError(collisions_per_org, mean_collisions), \
+                   'collisions min':min(collisions_per_org),\
+                   'collisions max': max(collisions_per_org)}
+      print '\nquartiles: %s\n' % quartiles  
+      global_quartiles = quartiles
+      return quartiles
+#+END_SRC
 
 * Generating orgs (development and non-development )
+** Generting initial population 
 #+BEGIN_SRC python :results output
-  import Organism
-  import AlternateOrganism
-  import os
-
-  counter = 5
-
-  path = "/home/jake/org/Thesis_Stuff/Robot_Data"
-  while(counter < 10):
-      org = Organism.Organism(1, counter, 560, 2, True, 80, 2000)
-      if org.is_viable():
-          for thread in org.threads:
-              for connection in thread.connected_pins:
-                  if connection.group_id == 'fr' or connection.group_id == 'fl':
-                      org.save_to_file(path+"/Development/Gen1")
-                      org_no_devo =  AlternateOrganism.Organism(1, counter, 560, 2, True, 80, 2000, None, None, org.genome)
-                      org_no_devo.save_to_file(path+"/No_Development/Gen1")
-                
-                      print "DEVO"
-                      print org.filename
-                      for thread in org.threads:
-                          print [i.group_id for i in thread.connected_pins]
-                          print "new thread connections:"
-                          for connection in thread.connected_pins:
-                              print connection.group_id, connection.number
-                              print "-------------------------------------//"
-
-                      print "NO DEVO"
-                      print org_no_devo.filename
-                      for thread in org_no_devo.threads:
-                          print [i.group_id for i in thread.connected_pins]
-                          print "new thread connections:"
-                          for connection in thread.connected_pins:
-                              print connection.group_id, connection.number
-                          print "-------------------------------------//"
-
-                      counter += 1
-
-
-
 #+END_SRC
 
 #+RESULTS:
@@ -2286,4 +2333,1291 @@ Same as RankAndCrossGeneration, only the orgs are randomly ranked.
 
 #+RESULTS:
 : forward counter: 14, back counter: 49
+
+** Simultion 
+#+BEGIN_SRC python :noweb yes :results output
+  import Organism
+  import RandomRankAndCrossGeneration
+  path = '/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Collisions'
+
+  def gen():
+      count = 0
+      while(count < 10):
+          org = Organism.Organism(1, count, 560, 2, True, 80, 2000)
+          if org.is_viable():
+              org.save_to_file(path+'/Gen1')
+              count += 1
+
+  num1 = 1
+  num2 = 2
+
+  while(num2 < 12):
+      RandomRankAndCrossGeneration.thresholdedCrossGeneration(path, path+'/Gen'+str(num1),path+'/Gen'+str(num2))
+      num1+= 1
+      num2 += 1
+
+
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+All the org files in this directory:
+
+ mean performances for each org in population: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 2.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 3.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 4.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 5.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 6.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 7.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 8.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 9.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 10.0 
+Stddv: 1.0  StdErr: 0.316227766017
+------------------------------------------------------------
+ 
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 2 Pop mean: 1.0 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
+Org mean perf: 3 Pop mean: 1.0 Diffsqrd: 4.0 SumDiffsqrd: 5.0 
+Org mean perf: 2 Pop mean: 1.0 Diffsqrd: 1.0 SumDiffsqrd: 6.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 6.0 
+Org mean perf: 2 Pop mean: 1.0 Diffsqrd: 1.0 SumDiffsqrd: 7.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 7.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 7.0 
+Org mean perf: 0 Pop mean: 1.0 Diffsqrd: 1.0 SumDiffsqrd: 8.0 
+Org mean perf: 1 Pop mean: 1.0 Diffsqrd: 0.0 SumDiffsqrd: 8.0 
+Org mean perf: 2 Pop mean: 1.0 Diffsqrd: 1.0 SumDiffsqrd: 9.0 
+Stddv: 0.948683298051  StdErr: 0.3
+------------------------------------------------------------
+ 
+
+quartiles: {'collisions max': 3, 'Generation': 1, 'mean collisions': 1.0, 'collision stderr': 0.3, 'stderr': 0.31622776601683794, 'collisions min': 0, 'mean': 1}
+
+ranking: [[<Organism.Organism object at 0x7f926eba1410>, <Organism.Organism object at 0x7f926eb73610>], [<Organism.Organism object at 0x7f926e53a110>, <Organism.Organism object at 0x7f926eb8d290>], [<Organism.Organism object at 0x7f926eb8cd90>, <Organism.Organism object at 0x7f926eb735d0>], [<Organism.Organism object at 0x7f926eb6d8d0>, <Organism.Organism object at 0x7f926eba2e90>], [<Organism.Organism object at 0x7f926eb76c10>, <Organism.Organism object at 0x7f926eb7e750>]]
+------------------------------------------------------------
+Crossing Generation:
+
+fours [u'1_1_ _ _ _ ', u'1_8_ _ _ _ ']
+threes [u'1_7_ _ _ _ ', u'1_0_ _ _ _ ']
+twos [u'1_5_ _ _ _ ', u'1_3_ _ _ _ ']
+ones [u'1_9_ _ _ _ ', u'1_6_ _ _ _ ']
+org1 1_8_ _ _ _ , org2 1_1_ _ _ _ 
+crossing org1:1_8_ _ _ _  with org2:1_1_ _ _ _ 
+
+Char mutation at index: 233
+1 --> 0
+Char mutation at index: 347
+0 --> 1
+fours []
+threes [u'1_7_ _ _ _ ', u'1_0_ _ _ _ ', u'1_8_ _ _ _ ', u'1_1_ _ _ _ ']
+twos [u'1_5_ _ _ _ ', u'1_3_ _ _ _ ']
+ones [u'1_9_ _ _ _ ', u'1_6_ _ _ _ ']
+org1 1_1_ _ _ _ , org2 1_0_ _ _ _ 
+crossing org1:1_1_ _ _ _  with org2:1_0_ _ _ _ 
+
+Char mutation at index: 38
+0 --> 1
+Char mutation at index: 108
+0 --> 1
+Char mutation at index: 363
+0 --> 1
+fours []
+threes [u'1_7_ _ _ _ ', u'1_8_ _ _ _ ']
+twos [u'1_5_ _ _ _ ', u'1_3_ _ _ _ ', u'1_1_ _ _ _ ', u'1_0_ _ _ _ ']
+ones [u'1_9_ _ _ _ ', u'1_6_ _ _ _ ']
+org1 1_8_ _ _ _ , org2 1_7_ _ _ _ 
+crossing org1:1_8_ _ _ _  with org2:1_7_ _ _ _ 
+
+fours []
+threes []
+twos [u'1_5_ _ _ _ ', u'1_3_ _ _ _ ', u'1_1_ _ _ _ ', u'1_0_ _ _ _ ', u'1_8_ _ _ _ ', u'1_7_ _ _ _ ']
+ones [u'1_9_ _ _ _ ', u'1_6_ _ _ _ ']
+org1 1_3_ _ _ _ , org2 1_1_ _ _ _ 
+crossing org1:1_3_ _ _ _  with org2:1_1_ _ _ _ 
+
+fours []
+threes []
+twos [u'1_5_ _ _ _ ', u'1_0_ _ _ _ ', u'1_8_ _ _ _ ', u'1_7_ _ _ _ ']
+ones [u'1_9_ _ _ _ ', u'1_6_ _ _ _ ', u'1_3_ _ _ _ ', u'1_1_ _ _ _ ']
+org1 1_5_ _ _ _ , org2 1_7_ _ _ _ 
+crossing org1:1_5_ _ _ _  with org2:1_7_ _ _ _ 
+
+Crossover_point mutation at index: 515
+0 --> 1
+fours []
+threes []
+twos [u'1_0_ _ _ _ ', u'1_8_ _ _ _ ']
+ones [u'1_9_ _ _ _ ', u'1_6_ _ _ _ ', u'1_3_ _ _ _ ', u'1_1_ _ _ _ ', u'1_5_ _ _ _ ', u'1_7_ _ _ _ ']
+org1 1_0_ _ _ _ , org2 1_8_ _ _ _ 
+crossing org1:1_0_ _ _ _  with org2:1_8_ _ _ _ 
+
+fours []
+threes []
+twos []
+ones [u'1_9_ _ _ _ ', u'1_6_ _ _ _ ', u'1_3_ _ _ _ ', u'1_1_ _ _ _ ', u'1_5_ _ _ _ ', u'1_7_ _ _ _ ', u'1_0_ _ _ _ ', u'1_8_ _ _ _ ']
+org1 1_0_ _ _ _ , org2 1_8_ _ _ _ 
+crossing org1:1_0_ _ _ _  with org2:1_8_ _ _ _ 
+
+fours []
+threes []
+twos []
+ones [u'1_9_ _ _ _ ', u'1_6_ _ _ _ ', u'1_3_ _ _ _ ', u'1_1_ _ _ _ ', u'1_5_ _ _ _ ', u'1_7_ _ _ _ ']
+org1 1_5_ _ _ _ , org2 1_9_ _ _ _ 
+crossing org1:1_5_ _ _ _  with org2:1_9_ _ _ _ 
+
+Crossover_point mutation at index: 273
+0 --> 1
+Crossover_point mutation at index: 277
+0 --> 1
+fours []
+threes []
+twos []
+ones [u'1_6_ _ _ _ ', u'1_3_ _ _ _ ', u'1_1_ _ _ _ ', u'1_7_ _ _ _ ']
+org1 1_7_ _ _ _ , org2 1_3_ _ _ _ 
+crossing org1:1_7_ _ _ _  with org2:1_3_ _ _ _ 
+
+fours []
+threes []
+twos []
+ones [u'1_6_ _ _ _ ', u'1_1_ _ _ _ ']
+org1 1_1_ _ _ _ , org2 1_6_ _ _ _ 
+crossing org1:1_1_ _ _ _  with org2:1_6_ _ _ _ 
+
+
+Number of Orgs in new gen: 10
+All the org files in this directory:
+
+ mean performances for each org in population: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 2.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 3.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 4.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 5.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 6.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 7.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 8.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 9.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 10.0 
+Stddv: 1.0  StdErr: 0.316227766017
+------------------------------------------------------------
+ 
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 0 Pop mean: 2.0 Diffsqrd: 4.0 SumDiffsqrd: 4.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 5.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 5.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 5.0 
+Org mean perf: 4 Pop mean: 2.0 Diffsqrd: 4.0 SumDiffsqrd: 9.0 
+Org mean perf: 1 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 10.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 10.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 10.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 10.0 
+Stddv: 1.0  StdErr: 0.316227766017
+------------------------------------------------------------
+ 
+
+quartiles: {'collisions max': 4, 'Generation': 2, 'mean collisions': 2.0, 'collision stderr': 0.31622776601683794, 'stderr': 0.31622776601683794, 'collisions min': 0, 'mean': 1}
+
+ranking: [[<Organism.Organism object at 0x7f926eb7c650>, <Organism.Organism object at 0x7f926eb4b310>], [<Organism.Organism object at 0x7f926e682490>, <Organism.Organism object at 0x7f926e5fd190>], [<Organism.Organism object at 0x7f926eb3ac90>, <Organism.Organism object at 0x7f926e392b10>], [<Organism.Organism object at 0x7f926e605e10>, <Organism.Organism object at 0x7f926e61e7d0>], [<Organism.Organism object at 0x7f926e705f10>, <Organism.Organism object at 0x7f926e613950>]]
+------------------------------------------------------------
+Crossing Generation:
+
+fours [u'2_1_1_0_1_1', u'2_5_1_8_1_0']
+threes [u'2_4_1_7_1_5', u'2_6_1_0_1_8']
+twos [u'2_2_1_7_1_8', u'2_7_1_9_1_5']
+ones [u'2_9_1_1_1_6', u'2_0_1_1_1_8']
+org1 2_5_1_8_1_0, org2 2_1_1_0_1_1
+crossing org1:2_5_1_8_1_0 with org2:2_1_1_0_1_1
+
+Crossover_point mutation at index: 484
+0 --> 1
+fours []
+threes [u'2_4_1_7_1_5', u'2_6_1_0_1_8', u'2_5_1_8_1_0', u'2_1_1_0_1_1']
+twos [u'2_2_1_7_1_8', u'2_7_1_9_1_5']
+ones [u'2_9_1_1_1_6', u'2_0_1_1_1_8']
+org1 2_1_1_0_1_1, org2 2_4_1_7_1_5
+crossing org1:2_1_1_0_1_1 with org2:2_4_1_7_1_5
+
+fours []
+threes [u'2_6_1_0_1_8', u'2_5_1_8_1_0']
+twos [u'2_2_1_7_1_8', u'2_7_1_9_1_5', u'2_1_1_0_1_1', u'2_4_1_7_1_5']
+ones [u'2_9_1_1_1_6', u'2_0_1_1_1_8']
+org1 2_6_1_0_1_8, org2 2_5_1_8_1_0
+crossing org1:2_6_1_0_1_8 with org2:2_5_1_8_1_0
+
+Crossover_point mutation at index: 36
+0 --> 1
+fours []
+threes []
+twos [u'2_2_1_7_1_8', u'2_7_1_9_1_5', u'2_1_1_0_1_1', u'2_4_1_7_1_5', u'2_6_1_0_1_8', u'2_5_1_8_1_0']
+ones [u'2_9_1_1_1_6', u'2_0_1_1_1_8']
+org1 2_6_1_0_1_8, org2 2_2_1_7_1_8
+crossing org1:2_6_1_0_1_8 with org2:2_2_1_7_1_8
+
+fours []
+threes []
+twos [u'2_7_1_9_1_5', u'2_1_1_0_1_1', u'2_4_1_7_1_5', u'2_5_1_8_1_0']
+ones [u'2_9_1_1_1_6', u'2_0_1_1_1_8', u'2_6_1_0_1_8', u'2_2_1_7_1_8']
+org1 2_4_1_7_1_5, org2 2_1_1_0_1_1
+crossing org1:2_4_1_7_1_5 with org2:2_1_1_0_1_1
+
+fours []
+threes []
+twos [u'2_7_1_9_1_5', u'2_5_1_8_1_0']
+ones [u'2_9_1_1_1_6', u'2_0_1_1_1_8', u'2_6_1_0_1_8', u'2_2_1_7_1_8', u'2_4_1_7_1_5', u'2_1_1_0_1_1']
+org1 2_7_1_9_1_5, org2 2_5_1_8_1_0
+crossing org1:2_7_1_9_1_5 with org2:2_5_1_8_1_0
+
+fours []
+threes []
+twos []
+ones [u'2_9_1_1_1_6', u'2_0_1_1_1_8', u'2_6_1_0_1_8', u'2_2_1_7_1_8', u'2_4_1_7_1_5', u'2_1_1_0_1_1', u'2_7_1_9_1_5', u'2_5_1_8_1_0']
+org1 2_9_1_1_1_6, org2 2_1_1_0_1_1
+crossing org1:2_9_1_1_1_6 with org2:2_1_1_0_1_1
+
+fours []
+threes []
+twos []
+ones [u'2_0_1_1_1_8', u'2_6_1_0_1_8', u'2_2_1_7_1_8', u'2_4_1_7_1_5', u'2_7_1_9_1_5', u'2_5_1_8_1_0']
+org1 2_5_1_8_1_0, org2 2_2_1_7_1_8
+crossing org1:2_5_1_8_1_0 with org2:2_2_1_7_1_8
+
+fours []
+threes []
+twos []
+ones [u'2_0_1_1_1_8', u'2_6_1_0_1_8', u'2_4_1_7_1_5', u'2_7_1_9_1_5']
+org1 2_6_1_0_1_8, org2 2_4_1_7_1_5
+crossing org1:2_6_1_0_1_8 with org2:2_4_1_7_1_5
+
+Crossover_point mutation at index: 262
+0 --> 1
+Crossover_point mutation at index: 537
+0 --> 1
+fours []
+threes []
+twos []
+ones [u'2_0_1_1_1_8', u'2_7_1_9_1_5']
+org1 2_0_1_1_1_8, org2 2_7_1_9_1_5
+crossing org1:2_0_1_1_1_8 with org2:2_7_1_9_1_5
+
+Crossover_point mutation at index: 497
+0 --> 1
+
+Number of Orgs in new gen: 10
+All the org files in this directory:
+
+ mean performances for each org in population: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 2.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 3.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 4.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 5.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 6.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 7.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 8.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 9.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 10.0 
+Stddv: 1.0  StdErr: 0.316227766017
+------------------------------------------------------------
+ 
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 1.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 2.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 2.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 2.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 2.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 2.0 
+Org mean perf: 4 Pop mean: 2.0 Diffsqrd: 4.0 SumDiffsqrd: 6.0 
+Stddv: 0.774596669241  StdErr: 0.244948974278
+------------------------------------------------------------
+ 
+
+quartiles: {'collisions max': 4, 'Generation': 3, 'mean collisions': 2.0, 'collision stderr': 0.2449489742783178, 'stderr': 0.31622776601683794, 'collisions min': 2, 'mean': 1}
+
+ranking: [[<Organism.Organism object at 0x7f926eb59e10>, <Organism.Organism object at 0x7f926e51cf90>], [<Organism.Organism object at 0x7f926e395b10>, <Organism.Organism object at 0x7f926e662310>], [<Organism.Organism object at 0x7f926eb4d7d0>, <Organism.Organism object at 0x7f926e38f190>], [<Organism.Organism object at 0x7f926e623950>, <Organism.Organism object at 0x7f926eb74650>], [<Organism.Organism object at 0x7f926e654c90>, <Organism.Organism object at 0x7f926e71c490>]]
+------------------------------------------------------------
+Crossing Generation:
+
+fours [u'3_0_2_5_2_1', u'3_4_2_1_2_4']
+threes [u'3_9_2_7_2_0', u'3_5_2_5_2_7']
+twos [u'3_8_2_6_2_4', u'3_1_2_1_2_4']
+ones [u'3_7_2_5_2_2', u'3_2_2_5_2_6']
+org1 3_0_2_5_2_1, org2 3_4_2_1_2_4
+crossing org1:3_0_2_5_2_1 with org2:3_4_2_1_2_4
+
+Char mutation at index: 517
+1 --> 0
+fours []
+threes [u'3_9_2_7_2_0', u'3_5_2_5_2_7', u'3_0_2_5_2_1', u'3_4_2_1_2_4']
+twos [u'3_8_2_6_2_4', u'3_1_2_1_2_4']
+ones [u'3_7_2_5_2_2', u'3_2_2_5_2_6']
+org1 3_9_2_7_2_0, org2 3_4_2_1_2_4
+crossing org1:3_9_2_7_2_0 with org2:3_4_2_1_2_4
+
+Crossover_point mutation at index: 141
+0 --> 1
+fours []
+threes [u'3_5_2_5_2_7', u'3_0_2_5_2_1']
+twos [u'3_8_2_6_2_4', u'3_1_2_1_2_4', u'3_9_2_7_2_0', u'3_4_2_1_2_4']
+ones [u'3_7_2_5_2_2', u'3_2_2_5_2_6']
+org1 3_5_2_5_2_7, org2 3_0_2_5_2_1
+crossing org1:3_5_2_5_2_7 with org2:3_0_2_5_2_1
+
+fours []
+threes []
+twos [u'3_8_2_6_2_4', u'3_1_2_1_2_4', u'3_9_2_7_2_0', u'3_4_2_1_2_4', u'3_5_2_5_2_7', u'3_0_2_5_2_1']
+ones [u'3_7_2_5_2_2', u'3_2_2_5_2_6']
+org1 3_5_2_5_2_7, org2 3_0_2_5_2_1
+crossing org1:3_5_2_5_2_7 with org2:3_0_2_5_2_1
+
+Crossover_point mutation at index: 158
+0 --> 1
+fours []
+threes []
+twos [u'3_8_2_6_2_4', u'3_1_2_1_2_4', u'3_9_2_7_2_0', u'3_4_2_1_2_4']
+ones [u'3_7_2_5_2_2', u'3_2_2_5_2_6', u'3_5_2_5_2_7', u'3_0_2_5_2_1']
+org1 3_1_2_1_2_4, org2 3_4_2_1_2_4
+crossing org1:3_1_2_1_2_4 with org2:3_4_2_1_2_4
+
+Crossover_point mutation at index: 162
+0 --> 1
+fours []
+threes []
+twos [u'3_8_2_6_2_4', u'3_9_2_7_2_0']
+ones [u'3_7_2_5_2_2', u'3_2_2_5_2_6', u'3_5_2_5_2_7', u'3_0_2_5_2_1', u'3_1_2_1_2_4', u'3_4_2_1_2_4']
+org1 3_8_2_6_2_4, org2 3_9_2_7_2_0
+crossing org1:3_8_2_6_2_4 with org2:3_9_2_7_2_0
+
+fours []
+threes []
+twos []
+ones [u'3_7_2_5_2_2', u'3_2_2_5_2_6', u'3_5_2_5_2_7', u'3_0_2_5_2_1', u'3_1_2_1_2_4', u'3_4_2_1_2_4', u'3_8_2_6_2_4', u'3_9_2_7_2_0']
+org1 3_7_2_5_2_2, org2 3_5_2_5_2_7
+crossing org1:3_7_2_5_2_2 with org2:3_5_2_5_2_7
+
+fours []
+threes []
+twos []
+ones [u'3_2_2_5_2_6', u'3_0_2_5_2_1', u'3_1_2_1_2_4', u'3_4_2_1_2_4', u'3_8_2_6_2_4', u'3_9_2_7_2_0']
+org1 3_9_2_7_2_0, org2 3_0_2_5_2_1
+crossing org1:3_9_2_7_2_0 with org2:3_0_2_5_2_1
+
+fours []
+threes []
+twos []
+ones [u'3_2_2_5_2_6', u'3_1_2_1_2_4', u'3_4_2_1_2_4', u'3_8_2_6_2_4']
+org1 3_8_2_6_2_4, org2 3_4_2_1_2_4
+crossing org1:3_8_2_6_2_4 with org2:3_4_2_1_2_4
+
+Char mutation at index: 16
+0 --> 1
+fours []
+threes []
+twos []
+ones [u'3_2_2_5_2_6', u'3_1_2_1_2_4']
+org1 3_2_2_5_2_6, org2 3_1_2_1_2_4
+crossing org1:3_2_2_5_2_6 with org2:3_1_2_1_2_4
+
+
+Number of Orgs in new gen: 10
+All the org files in this directory:
+
+ mean performances for each org in population: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 2.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 3.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 4.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 5.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 6.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 7.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 8.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 9.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 10.0 
+Stddv: 1.0  StdErr: 0.316227766017
+------------------------------------------------------------
+ 
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 1.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 1.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 1.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 2.0 
+Org mean perf: 4 Pop mean: 2.0 Diffsqrd: 4.0 SumDiffsqrd: 6.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 7.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 8.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 8.0 
+Stddv: 0.894427191  StdErr: 0.282842712475
+------------------------------------------------------------
+ 
+
+quartiles: {'collisions max': 4, 'Generation': 4, 'mean collisions': 2.0, 'collision stderr': 0.282842712474619, 'stderr': 0.31622776601683794, 'collisions min': 2, 'mean': 1}
+
+ranking: [[<Organism.Organism object at 0x7f926e5a0190>, <Organism.Organism object at 0x7f926e563e10>], [<Organism.Organism object at 0x7f926e505490>, <Organism.Organism object at 0x7f926e6dd650>], [<Organism.Organism object at 0x7f926e536c90>, <Organism.Organism object at 0x7f926e6c8b10>], [<Organism.Organism object at 0x7f926e53d310>, <Organism.Organism object at 0x7f926e56f950>], [<Organism.Organism object at 0x7f926e5967d0>, <Organism.Organism object at 0x7f926e6efed0>]]
+------------------------------------------------------------
+Crossing Generation:
+
+fours [u'4_5_3_8_3_9', u'4_9_3_1_3_2']
+threes [u'4_1_3_9_3_4', u'4_3_3_5_3_0']
+twos [u'4_7_3_0_3_9', u'4_8_3_4_3_8']
+ones [u'4_6_3_7_3_5', u'4_4_3_4_3_1']
+org1 4_5_3_8_3_9, org2 4_9_3_1_3_2
+crossing org1:4_5_3_8_3_9 with org2:4_9_3_1_3_2
+
+Char mutation at index: 495
+1 --> 0
+fours []
+threes [u'4_1_3_9_3_4', u'4_3_3_5_3_0', u'4_5_3_8_3_9', u'4_9_3_1_3_2']
+twos [u'4_7_3_0_3_9', u'4_8_3_4_3_8']
+ones [u'4_6_3_7_3_5', u'4_4_3_4_3_1']
+org1 4_5_3_8_3_9, org2 4_9_3_1_3_2
+crossing org1:4_5_3_8_3_9 with org2:4_9_3_1_3_2
+
+fours []
+threes [u'4_1_3_9_3_4', u'4_3_3_5_3_0']
+twos [u'4_7_3_0_3_9', u'4_8_3_4_3_8', u'4_5_3_8_3_9', u'4_9_3_1_3_2']
+ones [u'4_6_3_7_3_5', u'4_4_3_4_3_1']
+org1 4_3_3_5_3_0, org2 4_1_3_9_3_4
+crossing org1:4_3_3_5_3_0 with org2:4_1_3_9_3_4
+
+Char mutation at index: 202
+0 --> 1
+fours []
+threes []
+twos [u'4_7_3_0_3_9', u'4_8_3_4_3_8', u'4_5_3_8_3_9', u'4_9_3_1_3_2', u'4_3_3_5_3_0', u'4_1_3_9_3_4']
+ones [u'4_6_3_7_3_5', u'4_4_3_4_3_1']
+org1 4_5_3_8_3_9, org2 4_3_3_5_3_0
+crossing org1:4_5_3_8_3_9 with org2:4_3_3_5_3_0
+
+Char mutation at index: 52
+1 --> 0
+fours []
+threes []
+twos [u'4_7_3_0_3_9', u'4_8_3_4_3_8', u'4_9_3_1_3_2', u'4_1_3_9_3_4']
+ones [u'4_6_3_7_3_5', u'4_4_3_4_3_1', u'4_5_3_8_3_9', u'4_3_3_5_3_0']
+org1 4_8_3_4_3_8, org2 4_9_3_1_3_2
+crossing org1:4_8_3_4_3_8 with org2:4_9_3_1_3_2
+
+fours []
+threes []
+twos [u'4_7_3_0_3_9', u'4_1_3_9_3_4']
+ones [u'4_6_3_7_3_5', u'4_4_3_4_3_1', u'4_5_3_8_3_9', u'4_3_3_5_3_0', u'4_8_3_4_3_8', u'4_9_3_1_3_2']
+org1 4_1_3_9_3_4, org2 4_7_3_0_3_9
+crossing org1:4_1_3_9_3_4 with org2:4_7_3_0_3_9
+
+fours []
+threes []
+twos []
+ones [u'4_6_3_7_3_5', u'4_4_3_4_3_1', u'4_5_3_8_3_9', u'4_3_3_5_3_0', u'4_8_3_4_3_8', u'4_9_3_1_3_2', u'4_1_3_9_3_4', u'4_7_3_0_3_9']
+org1 4_8_3_4_3_8, org2 4_5_3_8_3_9
+crossing org1:4_8_3_4_3_8 with org2:4_5_3_8_3_9
+
+Char mutation at index: 122
+1 --> 0
+fours []
+threes []
+twos []
+ones [u'4_6_3_7_3_5', u'4_4_3_4_3_1', u'4_3_3_5_3_0', u'4_9_3_1_3_2', u'4_1_3_9_3_4', u'4_7_3_0_3_9']
+org1 4_7_3_0_3_9, org2 4_6_3_7_3_5
+crossing org1:4_7_3_0_3_9 with org2:4_6_3_7_3_5
+
+Char mutation at index: 44
+0 --> 1
+fours []
+threes []
+twos []
+ones [u'4_4_3_4_3_1', u'4_3_3_5_3_0', u'4_9_3_1_3_2', u'4_1_3_9_3_4']
+org1 4_1_3_9_3_4, org2 4_4_3_4_3_1
+crossing org1:4_1_3_9_3_4 with org2:4_4_3_4_3_1
+
+fours []
+threes []
+twos []
+ones [u'4_3_3_5_3_0', u'4_9_3_1_3_2']
+org1 4_3_3_5_3_0, org2 4_9_3_1_3_2
+crossing org1:4_3_3_5_3_0 with org2:4_9_3_1_3_2
+
+Crossover_point mutation at index: 545
+0 --> 1
+
+Number of Orgs in new gen: 10
+All the org files in this directory:
+
+ mean performances for each org in population: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 2.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 3.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 4.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 5.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 6.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 7.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 8.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 9.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 10.0 
+Stddv: 1.0  StdErr: 0.316227766017
+------------------------------------------------------------
+ 
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 1.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 1.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 1.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 2.0 
+Org mean perf: 4 Pop mean: 2.0 Diffsqrd: 4.0 SumDiffsqrd: 6.0 
+Org mean perf: 5 Pop mean: 2.0 Diffsqrd: 9.0 SumDiffsqrd: 15.0 
+Stddv: 1.22474487139  StdErr: 0.387298334621
+------------------------------------------------------------
+ 
+
+quartiles: {'collisions max': 5, 'Generation': 5, 'mean collisions': 2.0, 'collision stderr': 0.38729833462074165, 'stderr': 0.31622776601683794, 'collisions min': 2, 'mean': 1}
+
+ranking: [[<Organism.Organism object at 0x7f926e718c90>, <Organism.Organism object at 0x7f926eb9fe10>], [<Organism.Organism object at 0x7f926eb5e310>, <Organism.Organism object at 0x7f926ebaf7d0>], [<Organism.Organism object at 0x7f926e516490>, <Organism.Organism object at 0x7f926e71a190>], [<Organism.Organism object at 0x7f926eb75950>, <Organism.Organism object at 0x7f926e594f90>], [<Organism.Organism object at 0x7f926e35a650>, <Organism.Organism object at 0x7f926e71fb10>]]
+------------------------------------------------------------
+Crossing Generation:
+
+fours [u'5_9_4_3_4_9', u'5_5_4_7_4_1']
+threes [u'5_3_4_5_4_3', u'5_6_4_8_4_5']
+twos [u'5_1_4_5_4_9', u'5_8_4_4_4_1']
+ones [u'5_0_4_5_4_9', u'5_4_4_8_4_9']
+org1 5_9_4_3_4_9, org2 5_5_4_7_4_1
+crossing org1:5_9_4_3_4_9 with org2:5_5_4_7_4_1
+
+fours []
+threes [u'5_3_4_5_4_3', u'5_6_4_8_4_5', u'5_9_4_3_4_9', u'5_5_4_7_4_1']
+twos [u'5_1_4_5_4_9', u'5_8_4_4_4_1']
+ones [u'5_0_4_5_4_9', u'5_4_4_8_4_9']
+org1 5_9_4_3_4_9, org2 5_3_4_5_4_3
+crossing org1:5_9_4_3_4_9 with org2:5_3_4_5_4_3
+
+fours []
+threes [u'5_6_4_8_4_5', u'5_5_4_7_4_1']
+twos [u'5_1_4_5_4_9', u'5_8_4_4_4_1', u'5_9_4_3_4_9', u'5_3_4_5_4_3']
+ones [u'5_0_4_5_4_9', u'5_4_4_8_4_9']
+org1 5_5_4_7_4_1, org2 5_6_4_8_4_5
+crossing org1:5_5_4_7_4_1 with org2:5_6_4_8_4_5
+
+fours []
+threes []
+twos [u'5_1_4_5_4_9', u'5_8_4_4_4_1', u'5_9_4_3_4_9', u'5_3_4_5_4_3', u'5_5_4_7_4_1', u'5_6_4_8_4_5']
+ones [u'5_0_4_5_4_9', u'5_4_4_8_4_9']
+org1 5_3_4_5_4_3, org2 5_5_4_7_4_1
+crossing org1:5_3_4_5_4_3 with org2:5_5_4_7_4_1
+
+fours []
+threes []
+twos [u'5_1_4_5_4_9', u'5_8_4_4_4_1', u'5_9_4_3_4_9', u'5_6_4_8_4_5']
+ones [u'5_0_4_5_4_9', u'5_4_4_8_4_9', u'5_3_4_5_4_3', u'5_5_4_7_4_1']
+org1 5_6_4_8_4_5, org2 5_8_4_4_4_1
+crossing org1:5_6_4_8_4_5 with org2:5_8_4_4_4_1
+
+fours []
+threes []
+twos [u'5_1_4_5_4_9', u'5_9_4_3_4_9']
+ones [u'5_0_4_5_4_9', u'5_4_4_8_4_9', u'5_3_4_5_4_3', u'5_5_4_7_4_1', u'5_6_4_8_4_5', u'5_8_4_4_4_1']
+org1 5_9_4_3_4_9, org2 5_1_4_5_4_9
+crossing org1:5_9_4_3_4_9 with org2:5_1_4_5_4_9
+
+fours []
+threes []
+twos []
+ones [u'5_0_4_5_4_9', u'5_4_4_8_4_9', u'5_3_4_5_4_3', u'5_5_4_7_4_1', u'5_6_4_8_4_5', u'5_8_4_4_4_1', u'5_9_4_3_4_9', u'5_1_4_5_4_9']
+org1 5_6_4_8_4_5, org2 5_1_4_5_4_9
+crossing org1:5_6_4_8_4_5 with org2:5_1_4_5_4_9
+
+fours []
+threes []
+twos []
+ones [u'5_0_4_5_4_9', u'5_4_4_8_4_9', u'5_3_4_5_4_3', u'5_5_4_7_4_1', u'5_8_4_4_4_1', u'5_9_4_3_4_9']
+org1 5_0_4_5_4_9, org2 5_8_4_4_4_1
+crossing org1:5_0_4_5_4_9 with org2:5_8_4_4_4_1
+
+Crossover_point mutation at index: 183
+0 --> 1
+fours []
+threes []
+twos []
+ones [u'5_4_4_8_4_9', u'5_3_4_5_4_3', u'5_5_4_7_4_1', u'5_9_4_3_4_9']
+org1 5_3_4_5_4_3, org2 5_5_4_7_4_1
+crossing org1:5_3_4_5_4_3 with org2:5_5_4_7_4_1
+
+Crossover_point mutation at index: 477
+0 --> 1
+fours []
+threes []
+twos []
+ones [u'5_4_4_8_4_9', u'5_9_4_3_4_9']
+org1 5_4_4_8_4_9, org2 5_9_4_3_4_9
+crossing org1:5_4_4_8_4_9 with org2:5_9_4_3_4_9
+
+
+Number of Orgs in new gen: 10
+All the org files in this directory:
+
+ mean performances for each org in population: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 2.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 3.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 4.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 5.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 6.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 7.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 8.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 9.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 10.0 
+Stddv: 1.0  StdErr: 0.316227766017
+------------------------------------------------------------
+ 
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 0.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
+Org mean perf: 4 Pop mean: 2.0 Diffsqrd: 4.0 SumDiffsqrd: 5.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 6.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 7.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 7.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 7.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 7.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 8.0 
+Stddv: 0.894427191  StdErr: 0.282842712475
+------------------------------------------------------------
+ 
+
+quartiles: {'collisions max': 4, 'Generation': 6, 'mean collisions': 2.0, 'collision stderr': 0.282842712474619, 'stderr': 0.31622776601683794, 'collisions min': 2, 'mean': 1}
+
+ranking: [[<Organism.Organism object at 0x7f926e6e2190>, <Organism.Organism object at 0x7f926e59c950>], [<Organism.Organism object at 0x7f926e58f7d0>, <Organism.Organism object at 0x7f926e6cd650>], [<Organism.Organism object at 0x7f926eb50310>, <Organism.Organism object at 0x7f926e6abb10>], [<Organism.Organism object at 0x7f926e58be10>, <Organism.Organism object at 0x7f926e6f2490>], [<Organism.Organism object at 0x7f926e4f4f90>, <Organism.Organism object at 0x7f926e6cfc90>]]
+------------------------------------------------------------
+Crossing Generation:
+
+fours [u'6_5_5_9_5_1', u'6_4_5_6_5_8']
+threes [u'6_8_5_3_5_5', u'6_1_5_3_5_9']
+twos [u'6_3_5_3_5_5', u'6_2_5_6_5_5']
+ones [u'6_0_5_5_5_9', u'6_7_5_0_5_8']
+org1 6_4_5_6_5_8, org2 6_5_5_9_5_1
+crossing org1:6_4_5_6_5_8 with org2:6_5_5_9_5_1
+
+Crossover_point mutation at index: 4
+0 --> 1
+Char mutation at index: 489
+0 --> 1
+fours []
+threes [u'6_8_5_3_5_5', u'6_1_5_3_5_9', u'6_4_5_6_5_8', u'6_5_5_9_5_1']
+twos [u'6_3_5_3_5_5', u'6_2_5_6_5_5']
+ones [u'6_0_5_5_5_9', u'6_7_5_0_5_8']
+org1 6_8_5_3_5_5, org2 6_4_5_6_5_8
+crossing org1:6_8_5_3_5_5 with org2:6_4_5_6_5_8
+
+Crossover_point mutation at index: 176
+0 --> 1
+fours []
+threes [u'6_1_5_3_5_9', u'6_5_5_9_5_1']
+twos [u'6_3_5_3_5_5', u'6_2_5_6_5_5', u'6_8_5_3_5_5', u'6_4_5_6_5_8']
+ones [u'6_0_5_5_5_9', u'6_7_5_0_5_8']
+org1 6_1_5_3_5_9, org2 6_5_5_9_5_1
+crossing org1:6_1_5_3_5_9 with org2:6_5_5_9_5_1
+
+fours []
+threes []
+twos [u'6_3_5_3_5_5', u'6_2_5_6_5_5', u'6_8_5_3_5_5', u'6_4_5_6_5_8', u'6_1_5_3_5_9', u'6_5_5_9_5_1']
+ones [u'6_0_5_5_5_9', u'6_7_5_0_5_8']
+org1 6_8_5_3_5_5, org2 6_5_5_9_5_1
+crossing org1:6_8_5_3_5_5 with org2:6_5_5_9_5_1
+
+fours []
+threes []
+twos [u'6_3_5_3_5_5', u'6_2_5_6_5_5', u'6_4_5_6_5_8', u'6_1_5_3_5_9']
+ones [u'6_0_5_5_5_9', u'6_7_5_0_5_8', u'6_8_5_3_5_5', u'6_5_5_9_5_1']
+org1 6_2_5_6_5_5, org2 6_4_5_6_5_8
+crossing org1:6_2_5_6_5_5 with org2:6_4_5_6_5_8
+
+Char mutation at index: 316
+1 --> 0
+fours []
+threes []
+twos [u'6_3_5_3_5_5', u'6_1_5_3_5_9']
+ones [u'6_0_5_5_5_9', u'6_7_5_0_5_8', u'6_8_5_3_5_5', u'6_5_5_9_5_1', u'6_2_5_6_5_5', u'6_4_5_6_5_8']
+org1 6_1_5_3_5_9, org2 6_3_5_3_5_5
+crossing org1:6_1_5_3_5_9 with org2:6_3_5_3_5_5
+
+fours []
+threes []
+twos []
+ones [u'6_0_5_5_5_9', u'6_7_5_0_5_8', u'6_8_5_3_5_5', u'6_5_5_9_5_1', u'6_2_5_6_5_5', u'6_4_5_6_5_8', u'6_1_5_3_5_9', u'6_3_5_3_5_5']
+org1 6_2_5_6_5_5, org2 6_0_5_5_5_9
+crossing org1:6_2_5_6_5_5 with org2:6_0_5_5_5_9
+
+Char mutation at index: 341
+1 --> 0
+fours []
+threes []
+twos []
+ones [u'6_7_5_0_5_8', u'6_8_5_3_5_5', u'6_5_5_9_5_1', u'6_4_5_6_5_8', u'6_1_5_3_5_9', u'6_3_5_3_5_5']
+org1 6_3_5_3_5_5, org2 6_7_5_0_5_8
+crossing org1:6_3_5_3_5_5 with org2:6_7_5_0_5_8
+
+Crossover_point mutation at index: 103
+0 --> 1
+Char mutation at index: 125
+1 --> 0
+fours []
+threes []
+twos []
+ones [u'6_8_5_3_5_5', u'6_5_5_9_5_1', u'6_4_5_6_5_8', u'6_1_5_3_5_9']
+org1 6_1_5_3_5_9, org2 6_5_5_9_5_1
+crossing org1:6_1_5_3_5_9 with org2:6_5_5_9_5_1
+
+Char mutation at index: 485
+0 --> 1
+fours []
+threes []
+twos []
+ones [u'6_8_5_3_5_5', u'6_4_5_6_5_8']
+org1 6_4_5_6_5_8, org2 6_8_5_3_5_5
+crossing org1:6_4_5_6_5_8 with org2:6_8_5_3_5_5
+
+
+Number of Orgs in new gen: 10
+All the org files in this directory:
+
+ mean performances for each org in population: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 2.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 3.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 4.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 5.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 6.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 7.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 8.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 9.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 10.0 
+Stddv: 1.0  StdErr: 0.316227766017
+------------------------------------------------------------
+ 
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 1.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 2.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 3.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 3.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 4.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 4.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 5.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 6.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 7.0 
+Stddv: 0.836660026534  StdErr: 0.264575131106
+------------------------------------------------------------
+ 
+
+quartiles: {'collisions max': 3, 'Generation': 7, 'mean collisions': 2.0, 'collision stderr': 0.264575131106459, 'stderr': 0.31622776601683794, 'collisions min': 2, 'mean': 1}
+
+ranking: [[<Organism.Organism object at 0x7f926e6a8e10>, <Organism.Organism object at 0x7f926eb60310>], [<Organism.Organism object at 0x7f926e48d650>, <Organism.Organism object at 0x7f926e6be7d0>], [<Organism.Organism object at 0x7f926e47dc90>, <Organism.Organism object at 0x7f926e6d1950>], [<Organism.Organism object at 0x7f926e56ced0>, <Organism.Organism object at 0x7f926e492b10>], [<Organism.Organism object at 0x7f926e606490>, <Organism.Organism object at 0x7f926e468190>]]
+------------------------------------------------------------
+Crossing Generation:
+
+fours [u'7_9_6_8_6_4', u'7_6_6_2_6_0']
+threes [u'7_8_6_5_6_1', u'7_7_6_3_6_7']
+twos [u'7_2_6_1_6_5', u'7_4_6_2_6_4']
+ones [u'7_3_6_8_6_5', u'7_5_6_1_6_3']
+org1 7_6_6_2_6_0, org2 7_9_6_8_6_4
+crossing org1:7_6_6_2_6_0 with org2:7_9_6_8_6_4
+
+fours []
+threes [u'7_8_6_5_6_1', u'7_7_6_3_6_7', u'7_6_6_2_6_0', u'7_9_6_8_6_4']
+twos [u'7_2_6_1_6_5', u'7_4_6_2_6_4']
+ones [u'7_3_6_8_6_5', u'7_5_6_1_6_3']
+org1 7_8_6_5_6_1, org2 7_7_6_3_6_7
+crossing org1:7_8_6_5_6_1 with org2:7_7_6_3_6_7
+
+Crossover_point mutation at index: 164
+0 --> 1
+fours []
+threes [u'7_6_6_2_6_0', u'7_9_6_8_6_4']
+twos [u'7_2_6_1_6_5', u'7_4_6_2_6_4', u'7_8_6_5_6_1', u'7_7_6_3_6_7']
+ones [u'7_3_6_8_6_5', u'7_5_6_1_6_3']
+org1 7_9_6_8_6_4, org2 7_6_6_2_6_0
+crossing org1:7_9_6_8_6_4 with org2:7_6_6_2_6_0
+
+Crossover_point mutation at index: 374
+0 --> 1
+Crossover_point mutation at index: 417
+0 --> 1
+fours []
+threes []
+twos [u'7_2_6_1_6_5', u'7_4_6_2_6_4', u'7_8_6_5_6_1', u'7_7_6_3_6_7', u'7_9_6_8_6_4', u'7_6_6_2_6_0']
+ones [u'7_3_6_8_6_5', u'7_5_6_1_6_3']
+org1 7_2_6_1_6_5, org2 7_9_6_8_6_4
+crossing org1:7_2_6_1_6_5 with org2:7_9_6_8_6_4
+
+Crossover_point mutation at index: 336
+0 --> 1
+fours []
+threes []
+twos [u'7_4_6_2_6_4', u'7_8_6_5_6_1', u'7_7_6_3_6_7', u'7_6_6_2_6_0']
+ones [u'7_3_6_8_6_5', u'7_5_6_1_6_3', u'7_2_6_1_6_5', u'7_9_6_8_6_4']
+org1 7_7_6_3_6_7, org2 7_6_6_2_6_0
+crossing org1:7_7_6_3_6_7 with org2:7_6_6_2_6_0
+
+Char mutation at index: 184
+0 --> 1
+fours []
+threes []
+twos [u'7_4_6_2_6_4', u'7_8_6_5_6_1']
+ones [u'7_3_6_8_6_5', u'7_5_6_1_6_3', u'7_2_6_1_6_5', u'7_9_6_8_6_4', u'7_7_6_3_6_7', u'7_6_6_2_6_0']
+org1 7_4_6_2_6_4, org2 7_8_6_5_6_1
+crossing org1:7_4_6_2_6_4 with org2:7_8_6_5_6_1
+
+fours []
+threes []
+twos []
+ones [u'7_3_6_8_6_5', u'7_5_6_1_6_3', u'7_2_6_1_6_5', u'7_9_6_8_6_4', u'7_7_6_3_6_7', u'7_6_6_2_6_0', u'7_4_6_2_6_4', u'7_8_6_5_6_1']
+org1 7_3_6_8_6_5, org2 7_9_6_8_6_4
+crossing org1:7_3_6_8_6_5 with org2:7_9_6_8_6_4
+
+fours []
+threes []
+twos []
+ones [u'7_5_6_1_6_3', u'7_2_6_1_6_5', u'7_7_6_3_6_7', u'7_6_6_2_6_0', u'7_4_6_2_6_4', u'7_8_6_5_6_1']
+org1 7_6_6_2_6_0, org2 7_2_6_1_6_5
+crossing org1:7_6_6_2_6_0 with org2:7_2_6_1_6_5
+
+fours []
+threes []
+twos []
+ones [u'7_5_6_1_6_3', u'7_7_6_3_6_7', u'7_4_6_2_6_4', u'7_8_6_5_6_1']
+org1 7_4_6_2_6_4, org2 7_7_6_3_6_7
+crossing org1:7_4_6_2_6_4 with org2:7_7_6_3_6_7
+
+fours []
+threes []
+twos []
+ones [u'7_5_6_1_6_3', u'7_8_6_5_6_1']
+org1 7_8_6_5_6_1, org2 7_5_6_1_6_3
+crossing org1:7_8_6_5_6_1 with org2:7_5_6_1_6_3
+
+Char mutation at index: 546
+1 --> 0
+
+Number of Orgs in new gen: 10
+All the org files in this directory:
+
+ mean performances for each org in population: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 2.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 3.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 4.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 5.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 6.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 7.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 8.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 9.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 10.0 
+Stddv: 1.0  StdErr: 0.316227766017
+------------------------------------------------------------
+ 
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 2.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 2.0 
+Org mean perf: 1 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 3.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 4.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 4.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 5.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 6.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 6.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 7.0 
+Stddv: 0.836660026534  StdErr: 0.264575131106
+------------------------------------------------------------
+ 
+
+quartiles: {'collisions max': 3, 'Generation': 8, 'mean collisions': 2.0, 'collision stderr': 0.264575131106459, 'stderr': 0.31622776601683794, 'collisions min': 1, 'mean': 1}
+
+ranking: [[<Organism.Organism object at 0x7f926e26df90>, <Organism.Organism object at 0x7f926eba1190>], [<Organism.Organism object at 0x7f926eb93650>, <Organism.Organism object at 0x7f926e5e8310>], [<Organism.Organism object at 0x7f926eb657d0>, <Organism.Organism object at 0x7f926e61a950>], [<Organism.Organism object at 0x7f926eba6c90>, <Organism.Organism object at 0x7f926e70c490>], [<Organism.Organism object at 0x7f926eb34e10>, <Organism.Organism object at 0x7f926eb76b10>]]
+------------------------------------------------------------
+Crossing Generation:
+
+fours [u'8_6_7_9_7_3', u'8_9_7_8_7_5']
+threes [u'8_4_7_6_7_7', u'8_0_7_9_7_6']
+twos [u'8_5_7_4_7_8', u'8_3_7_2_7_9']
+ones [u'8_2_7_6_7_9', u'8_1_7_7_7_8']
+org1 8_6_7_9_7_3, org2 8_9_7_8_7_5
+crossing org1:8_6_7_9_7_3 with org2:8_9_7_8_7_5
+
+Crossover_point mutation at index: 249
+0 --> 1
+fours []
+threes [u'8_4_7_6_7_7', u'8_0_7_9_7_6', u'8_6_7_9_7_3', u'8_9_7_8_7_5']
+twos [u'8_5_7_4_7_8', u'8_3_7_2_7_9']
+ones [u'8_2_7_6_7_9', u'8_1_7_7_7_8']
+org1 8_4_7_6_7_7, org2 8_6_7_9_7_3
+crossing org1:8_4_7_6_7_7 with org2:8_6_7_9_7_3
+
+Char mutation at index: 326
+0 --> 1
+fours []
+threes [u'8_0_7_9_7_6', u'8_9_7_8_7_5']
+twos [u'8_5_7_4_7_8', u'8_3_7_2_7_9', u'8_4_7_6_7_7', u'8_6_7_9_7_3']
+ones [u'8_2_7_6_7_9', u'8_1_7_7_7_8']
+org1 8_0_7_9_7_6, org2 8_9_7_8_7_5
+crossing org1:8_0_7_9_7_6 with org2:8_9_7_8_7_5
+
+Crossover_point mutation at index: 255
+0 --> 1
+Char mutation at index: 281
+0 --> 1
+fours []
+threes []
+twos [u'8_5_7_4_7_8', u'8_3_7_2_7_9', u'8_4_7_6_7_7', u'8_6_7_9_7_3', u'8_0_7_9_7_6', u'8_9_7_8_7_5']
+ones [u'8_2_7_6_7_9', u'8_1_7_7_7_8']
+org1 8_3_7_2_7_9, org2 8_6_7_9_7_3
+crossing org1:8_3_7_2_7_9 with org2:8_6_7_9_7_3
+
+fours []
+threes []
+twos [u'8_5_7_4_7_8', u'8_4_7_6_7_7', u'8_0_7_9_7_6', u'8_9_7_8_7_5']
+ones [u'8_2_7_6_7_9', u'8_1_7_7_7_8', u'8_3_7_2_7_9', u'8_6_7_9_7_3']
+org1 8_9_7_8_7_5, org2 8_5_7_4_7_8
+crossing org1:8_9_7_8_7_5 with org2:8_5_7_4_7_8
+
+fours []
+threes []
+twos [u'8_4_7_6_7_7', u'8_0_7_9_7_6']
+ones [u'8_2_7_6_7_9', u'8_1_7_7_7_8', u'8_3_7_2_7_9', u'8_6_7_9_7_3', u'8_9_7_8_7_5', u'8_5_7_4_7_8']
+org1 8_0_7_9_7_6, org2 8_4_7_6_7_7
+crossing org1:8_0_7_9_7_6 with org2:8_4_7_6_7_7
+
+fours []
+threes []
+twos []
+ones [u'8_2_7_6_7_9', u'8_1_7_7_7_8', u'8_3_7_2_7_9', u'8_6_7_9_7_3', u'8_9_7_8_7_5', u'8_5_7_4_7_8', u'8_0_7_9_7_6', u'8_4_7_6_7_7']
+org1 8_0_7_9_7_6, org2 8_2_7_6_7_9
+crossing org1:8_0_7_9_7_6 with org2:8_2_7_6_7_9
+
+fours []
+threes []
+twos []
+ones [u'8_1_7_7_7_8', u'8_3_7_2_7_9', u'8_6_7_9_7_3', u'8_9_7_8_7_5', u'8_5_7_4_7_8', u'8_4_7_6_7_7']
+org1 8_6_7_9_7_3, org2 8_1_7_7_7_8
+crossing org1:8_6_7_9_7_3 with org2:8_1_7_7_7_8
+
+Char mutation at index: 543
+1 --> 0
+fours []
+threes []
+twos []
+ones [u'8_3_7_2_7_9', u'8_9_7_8_7_5', u'8_5_7_4_7_8', u'8_4_7_6_7_7']
+org1 8_3_7_2_7_9, org2 8_5_7_4_7_8
+crossing org1:8_3_7_2_7_9 with org2:8_5_7_4_7_8
+
+fours []
+threes []
+twos []
+ones [u'8_9_7_8_7_5', u'8_4_7_6_7_7']
+org1 8_9_7_8_7_5, org2 8_4_7_6_7_7
+crossing org1:8_9_7_8_7_5 with org2:8_4_7_6_7_7
+
+Crossover_point mutation at index: 379
+0 --> 1
+
+Number of Orgs in new gen: 10
+All the org files in this directory:
+
+ mean performances for each org in population: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 2.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 3.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 4.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 5.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 6.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 7.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 8.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 9.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 10.0 
+Stddv: 1.0  StdErr: 0.316227766017
+------------------------------------------------------------
+ 
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
+Org mean perf: 4 Pop mean: 2.0 Diffsqrd: 4.0 SumDiffsqrd: 5.0 
+Org mean perf: 1 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 6.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 7.0 
+Org mean perf: 1 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 8.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 9.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 10.0 
+Org mean perf: 4 Pop mean: 2.0 Diffsqrd: 4.0 SumDiffsqrd: 14.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 14.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 14.0 
+Stddv: 1.18321595662  StdErr: 0.374165738677
+------------------------------------------------------------
+ 
+
+quartiles: {'collisions max': 4, 'Generation': 9, 'mean collisions': 2.0, 'collision stderr': 0.3741657386773941, 'stderr': 0.31622776601683794, 'collisions min': 1, 'mean': 1}
+
+ranking: [[<Organism.Organism object at 0x7f926eb38950>, <Organism.Organism object at 0x7f926e4eb490>], [<Organism.Organism object at 0x7f926e2a5190>, <Organism.Organism object at 0x7f926e61ef90>], [<Organism.Organism object at 0x7f926e431650>, <Organism.Organism object at 0x7f926e7217d0>], [<Organism.Organism object at 0x7f926eb5e310>, <Organism.Organism object at 0x7f926e2bfb10>], [<Organism.Organism object at 0x7f926e2a4c90>, <Organism.Organism object at 0x7f926e2afe10>]]
+------------------------------------------------------------
+Crossing Generation:
+
+fours [u'9_5_8_0_8_4', u'9_0_8_9_8_6']
+threes [u'9_7_8_1_8_6', u'9_2_8_9_8_0']
+twos [u'9_8_8_5_8_3', u'9_4_8_5_8_9']
+ones [u'9_1_8_6_8_4', u'9_9_8_9_8_4']
+org1 9_5_8_0_8_4, org2 9_0_8_9_8_6
+crossing org1:9_5_8_0_8_4 with org2:9_0_8_9_8_6
+
+fours []
+threes [u'9_7_8_1_8_6', u'9_2_8_9_8_0', u'9_5_8_0_8_4', u'9_0_8_9_8_6']
+twos [u'9_8_8_5_8_3', u'9_4_8_5_8_9']
+ones [u'9_1_8_6_8_4', u'9_9_8_9_8_4']
+org1 9_2_8_9_8_0, org2 9_7_8_1_8_6
+crossing org1:9_2_8_9_8_0 with org2:9_7_8_1_8_6
+
+Crossover_point mutation at index: 406
+0 --> 1
+fours []
+threes [u'9_5_8_0_8_4', u'9_0_8_9_8_6']
+twos [u'9_8_8_5_8_3', u'9_4_8_5_8_9', u'9_2_8_9_8_0', u'9_7_8_1_8_6']
+ones [u'9_1_8_6_8_4', u'9_9_8_9_8_4']
+org1 9_0_8_9_8_6, org2 9_5_8_0_8_4
+crossing org1:9_0_8_9_8_6 with org2:9_5_8_0_8_4
+
+Crossover_point mutation at index: 155
+0 --> 1
+fours []
+threes []
+twos [u'9_8_8_5_8_3', u'9_4_8_5_8_9', u'9_2_8_9_8_0', u'9_7_8_1_8_6', u'9_0_8_9_8_6', u'9_5_8_0_8_4']
+ones [u'9_1_8_6_8_4', u'9_9_8_9_8_4']
+org1 9_4_8_5_8_9, org2 9_2_8_9_8_0
+crossing org1:9_4_8_5_8_9 with org2:9_2_8_9_8_0
+
+Char mutation at index: 212
+0 --> 1
+Crossover_point mutation at index: 439
+0 --> 1
+fours []
+threes []
+twos [u'9_8_8_5_8_3', u'9_7_8_1_8_6', u'9_0_8_9_8_6', u'9_5_8_0_8_4']
+ones [u'9_1_8_6_8_4', u'9_9_8_9_8_4', u'9_4_8_5_8_9', u'9_2_8_9_8_0']
+org1 9_7_8_1_8_6, org2 9_5_8_0_8_4
+crossing org1:9_7_8_1_8_6 with org2:9_5_8_0_8_4
+
+Char mutation at index: 333
+0 --> 1
+fours []
+threes []
+twos [u'9_8_8_5_8_3', u'9_0_8_9_8_6']
+ones [u'9_1_8_6_8_4', u'9_9_8_9_8_4', u'9_4_8_5_8_9', u'9_2_8_9_8_0', u'9_7_8_1_8_6', u'9_5_8_0_8_4']
+org1 9_8_8_5_8_3, org2 9_0_8_9_8_6
+crossing org1:9_8_8_5_8_3 with org2:9_0_8_9_8_6
+
+Crossover_point mutation at index: 351
+0 --> 1
+fours []
+threes []
+twos []
+ones [u'9_1_8_6_8_4', u'9_9_8_9_8_4', u'9_4_8_5_8_9', u'9_2_8_9_8_0', u'9_7_8_1_8_6', u'9_5_8_0_8_4', u'9_8_8_5_8_3', u'9_0_8_9_8_6']
+org1 9_0_8_9_8_6, org2 9_4_8_5_8_9
+crossing org1:9_0_8_9_8_6 with org2:9_4_8_5_8_9
+
+fours []
+threes []
+twos []
+ones [u'9_1_8_6_8_4', u'9_9_8_9_8_4', u'9_2_8_9_8_0', u'9_7_8_1_8_6', u'9_5_8_0_8_4', u'9_8_8_5_8_3']
+org1 9_5_8_0_8_4, org2 9_1_8_6_8_4
+crossing org1:9_5_8_0_8_4 with org2:9_1_8_6_8_4
+
+fours []
+threes []
+twos []
+ones [u'9_9_8_9_8_4', u'9_2_8_9_8_0', u'9_7_8_1_8_6', u'9_8_8_5_8_3']
+org1 9_8_8_5_8_3, org2 9_7_8_1_8_6
+crossing org1:9_8_8_5_8_3 with org2:9_7_8_1_8_6
+
+Crossover_point mutation at index: 35
+0 --> 1
+fours []
+threes []
+twos []
+ones [u'9_9_8_9_8_4', u'9_2_8_9_8_0']
+org1 9_9_8_9_8_4, org2 9_2_8_9_8_0
+crossing org1:9_9_8_9_8_4 with org2:9_2_8_9_8_0
+
+Crossover_point mutation at index: 10
+0 --> 1
+Char mutation at index: 559
+0 --> 1
+
+Number of Orgs in new gen: 10
+All the org files in this directory:
+
+ mean performances for each org in population: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 1.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 2.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 3.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 4.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 5.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 6.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 7.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 8.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 9.0 
+Org mean perf: 0 Pop mean: 1 Diffsqrd: 1.0 SumDiffsqrd: 10.0 
+Stddv: 1.0  StdErr: 0.316227766017
+------------------------------------------------------------
+ 
+
+--------------------------------------------------
+Calculating the Std Error of the mean: 
+Org mean perf: 4 Pop mean: 2.0 Diffsqrd: 4.0 SumDiffsqrd: 4.0 
+Org mean perf: 1 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 5.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 5.0 
+Org mean perf: 2 Pop mean: 2.0 Diffsqrd: 0.0 SumDiffsqrd: 5.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 6.0 
+Org mean perf: 4 Pop mean: 2.0 Diffsqrd: 4.0 SumDiffsqrd: 10.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 11.0 
+Org mean perf: 4 Pop mean: 2.0 Diffsqrd: 4.0 SumDiffsqrd: 15.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 16.0 
+Org mean perf: 3 Pop mean: 2.0 Diffsqrd: 1.0 SumDiffsqrd: 17.0 
+Stddv: 1.30384048104  StdErr: 0.412310562562
+------------------------------------------------------------
+ 
+
+quartiles: {'collisions max': 4, 'Generation': 10, 'mean collisions': 2.0, 'collision stderr': 0.412310562561766, 'stderr': 0.31622776601683794, 'collisions min': 1, 'mean': 1}
+
+ranking: [[<Organism.Organism object at 0x7f926e34a950>, <Organism.Organism object at 0x7f926e34bc90>], [<Organism.Organism object at 0x7f926e351b10>, <Organism.Organism object at 0x7f926e609490>], [<Organism.Organism object at 0x7f926e34e310>, <Organism.Organism object at 0x7f926e6f4e10>], [<Organism.Organism object at 0x7f926e343190>, <Organism.Organism object at 0x7f926e7127d0>], [<Organism.Organism object at 0x7f926eb33650>, <Organism.Organism object at 0x7f926e504ed0>]]
+------------------------------------------------------------
+Crossing Generation:
+
+fours [u'10_9_9_2_9_9', u'10_1_9_2_9_7']
+threes [u'10_0_9_0_9_5', u'10_7_9_5_9_1']
+twos [u'10_3_9_2_9_4', u'10_4_9_5_9_7']
+ones [u'10_5_9_0_9_8', u'10_6_9_4_9_0']
+org1 10_9_9_2_9_9, org2 10_1_9_2_9_7
+crossing org1:10_9_9_2_9_9 with org2:10_1_9_2_9_7
+
+fours []
+threes [u'10_0_9_0_9_5', u'10_7_9_5_9_1', u'10_9_9_2_9_9', u'10_1_9_2_9_7']
+twos [u'10_3_9_2_9_4', u'10_4_9_5_9_7']
+ones [u'10_5_9_0_9_8', u'10_6_9_4_9_0']
+org1 10_7_9_5_9_1, org2 10_1_9_2_9_7
+crossing org1:10_7_9_5_9_1 with org2:10_1_9_2_9_7
+
+fours []
+threes [u'10_0_9_0_9_5', u'10_9_9_2_9_9']
+twos [u'10_3_9_2_9_4', u'10_4_9_5_9_7', u'10_7_9_5_9_1', u'10_1_9_2_9_7']
+ones [u'10_5_9_0_9_8', u'10_6_9_4_9_0']
+org1 10_0_9_0_9_5, org2 10_9_9_2_9_9
+crossing org1:10_0_9_0_9_5 with org2:10_9_9_2_9_9
+
+fours []
+threes []
+twos [u'10_3_9_2_9_4', u'10_4_9_5_9_7', u'10_7_9_5_9_1', u'10_1_9_2_9_7', u'10_0_9_0_9_5', u'10_9_9_2_9_9']
+ones [u'10_5_9_0_9_8', u'10_6_9_4_9_0']
+org1 10_1_9_2_9_7, org2 10_9_9_2_9_9
+crossing org1:10_1_9_2_9_7 with org2:10_9_9_2_9_9
+
+fours []
+threes []
+twos [u'10_3_9_2_9_4', u'10_4_9_5_9_7', u'10_7_9_5_9_1', u'10_0_9_0_9_5']
+ones [u'10_5_9_0_9_8', u'10_6_9_4_9_0', u'10_1_9_2_9_7', u'10_9_9_2_9_9']
+org1 10_7_9_5_9_1, org2 10_3_9_2_9_4
+crossing org1:10_7_9_5_9_1 with org2:10_3_9_2_9_4
+
+Crossover_point mutation at index: 515
+1 --> 0
+fours []
+threes []
+twos [u'10_4_9_5_9_7', u'10_0_9_0_9_5']
+ones [u'10_5_9_0_9_8', u'10_6_9_4_9_0', u'10_1_9_2_9_7', u'10_9_9_2_9_9', u'10_7_9_5_9_1', u'10_3_9_2_9_4']
+org1 10_0_9_0_9_5, org2 10_4_9_5_9_7
+crossing org1:10_0_9_0_9_5 with org2:10_4_9_5_9_7
+
+fours []
+threes []
+twos []
+ones [u'10_5_9_0_9_8', u'10_6_9_4_9_0', u'10_1_9_2_9_7', u'10_9_9_2_9_9', u'10_7_9_5_9_1', u'10_3_9_2_9_4', u'10_0_9_0_9_5', u'10_4_9_5_9_7']
+org1 10_7_9_5_9_1, org2 10_6_9_4_9_0
+crossing org1:10_7_9_5_9_1 with org2:10_6_9_4_9_0
+
+Crossover_point mutation at index: 353
+0 --> 1
+fours []
+threes []
+twos []
+ones [u'10_5_9_0_9_8', u'10_1_9_2_9_7', u'10_9_9_2_9_9', u'10_3_9_2_9_4', u'10_0_9_0_9_5', u'10_4_9_5_9_7']
+org1 10_4_9_5_9_7, org2 10_0_9_0_9_5
+crossing org1:10_4_9_5_9_7 with org2:10_0_9_0_9_5
+
+fours []
+threes []
+twos []
+ones [u'10_5_9_0_9_8', u'10_1_9_2_9_7', u'10_9_9_2_9_9', u'10_3_9_2_9_4']
+org1 10_5_9_0_9_8, org2 10_1_9_2_9_7
+crossing org1:10_5_9_0_9_8 with org2:10_1_9_2_9_7
+
+Char mutation at index: 222
+1 --> 0
+Char mutation at index: 400
+0 --> 1
+fours []
+threes []
+twos []
+ones [u'10_9_9_2_9_9', u'10_3_9_2_9_4']
+org1 10_9_9_2_9_9, org2 10_3_9_2_9_4
+crossing org1:10_9_9_2_9_9 with org2:10_3_9_2_9_4
+
+
+Number of Orgs in new gen: 10
+#+end_example
 
