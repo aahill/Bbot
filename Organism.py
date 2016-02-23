@@ -214,7 +214,7 @@ class Organism(object):
                               # ensure the pin hasn't been 'taken' by another thread already
                               # if accessed_output_pin in self.connections:
                               for pin in self.connections:
-                                  if accessed_output_pin.group_id == pin.group_id and accessed_output_pin.number == pin.number: 
+                                  if accessed_output_pin.group_id == pin.group_id and accessed_output_pin.number == pin.number:
                                       #print "pin already taken: %s" % accessed_output_pin.group_id
                                       raise LookupError("Connection failed: pin already connected")
                               ###WARNING: OUTDATED CODE
@@ -450,8 +450,9 @@ def generate_viable():
     while not finished:
         test = Organism(0, 0, 560,
             800, True, 80, 2000)
-        if len(test.connections) > 2: #test.is_viable():
+        if test.collisions > 1 and test.is_viable():
             print "-------------------------------------//"
+            print "collisions: ", test.collisions
             print "connections: "
             for thread in test.threads:
                 print "new thread connections:"
@@ -467,3 +468,4 @@ def generate_viable():
             del test
             genomes_tested += 1
             progress(genomes_tested)
+generate_viable()

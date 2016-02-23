@@ -73,20 +73,12 @@ class MotorSensorPinGroup(PinGroup):
     def get_input(self, pin_index):
         target_pin = self.pins[pin_index]
         #print target_pin
-        #self.match_and_remove(target_pin, self.pins)
-        if target_pin.available == False:
-            raise IndexError
-        else:
-            self.call_match_and_remove_pin(target_pin, self.pins)
+        self.call_match_and_remove(target_pin, self.pins)
         return target_pin
 
     def get_output(self, pin_index):
         target_pin = self.pins[pin_index]
-        #self.match_and_remove(target_pin, self.pins)
-        if target_pin.available ==False:
-            raise IndexError
-        else:
-            self.call_match_and_remove_pin(target_pin, self.pins)
+        self.call_match_and_remove(target_pin, self.pins)
         return target_pin
 
     def get_random_input(self):

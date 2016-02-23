@@ -216,7 +216,7 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
     writeQuartilesToCsv(global_quartiles, experiment_directory)
 
 
-thresholdedCrossGeneration('/Users/Aaron/projects/bot_prelims/2015-11-11-preliminary-robo-experiments/Development',
-                           '/Users/Aaron/projects/bot_prelims/2015-11-11-preliminary-robo-experiments/Development/Gen2',
-                           '/Users/Aaron/Projects/bot_prelims/2015-11-11-preliminary-robo-experiments/Development/Gen3',
+thresholdedCrossGeneration('/Users/Aaron/Desktop/bots',
+                           '/Users/Aaron/Desktop/bots/Gen2',
+                           '/Users/Aaron/Desktop/bots/Gen3',
                            10)

@@ -1,5 +1,5 @@
 # Need these to test match_and_remove_pins
-class Pin(object):
+class Pin:
     # group_id represents the group the pin belongs to
     # number identifies the pin number within the group
     def __init__(self, group_id, number, group):
@@ -38,7 +38,7 @@ class PinGroup(object):
                 pin_found = True
                 # NOTE: instead of deleting the pin from the list, the pin's available variable will be set to false.
                 # this allows for the ability to determine if a pin is 'taken' by another thread
-                pin_list1[x].setAvailability(False)
+                pin_list1[x].setAvailability(True)
                 break
     
         if not pin_found and pin_list2 is not None:
@@ -49,10 +49,9 @@ class PinGroup(object):
                         pin_found = True
                         # NOTE: instead of deleting the pin from the list, the pin's available variable will be set to false.
                         # this allows for the ability to determine if a pin is 'taken' by another thread
-                        pin_list2[x].setAvailability(False)
+                        pin_list2[x].setAvailability(True)
                         break
         if pin_found is False:
-          
             pass
         assert pin_found is True
     

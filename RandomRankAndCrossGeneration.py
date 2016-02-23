@@ -43,6 +43,15 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
         mean_performance_per_pop = 0
         list_of_vals = []
         y = []
+        baseline_performance = 0
+        #get the performance of the baseline organism
+        for root, dir, files in os.walk(gen_directory):
+            org = None
+            performance = 0
+            for f in files:
+                if f.beginswith("baseline"):
+                    baseline_performance = HoboAnalysis.energyAquired(root + '/' + f)
+    
         #walks through files belonging to an organism, one org at a time
         print "All the org files in this directory:"
         for root, dir, files in os.walk(gen_directory):
@@ -54,7 +63,7 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
             for f in files:
                 try:
                     y.append(f)
-                    if f.endswith('.pkl') or f.endswith('.txt'):
+                    if not f.beginswith('baseline') and f.endswith('.pkl') or f.endswith('.txt'):
                         org = json_load_file(root + '/' + f,'rb')
                         #print  rooty + '/'+ f
                         #print [i.crossover_point for i in org.genome]
@@ -65,9 +74,10 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
                             if performance_1 == 0:
                                 #rooty denotes the path to subdir, f a file in root. Concatenating
                                 # the two results in the full path to file
-                                performance_1 = HoboAnalysis.energyAcquired(root +'/' + f) 
+                                #divide performance by the baseline for normalization
+                                performance_1 = HoboAnalysis.energyAcquired(root +'/' + f)/baseline_performance 
                             else:
-                                performance_2 = HoboAnalysis.energyAcquired(root + '/' + f)
+                                performance_2 = HoboAnalysis.energyAcquired(root + '/' + f)/baseline_performance
                 except AttributeError:
                     pass
             try:
