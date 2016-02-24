@@ -1370,17 +1370,11 @@ active_threads is empty, threads are checked to make sure there are no connectio
       # the thread will not be runnable and be taken from the running_threads list
       index = 0
       #tracks which threads have been run, and in turn, when the index should be incremented
-      num_threads_run = 0
       active_threads = [i for i in running_threads] #A deepcopy that we are free to modify
       while len(active_threads) > 0:
           #print '\nThread index: %s' % index
           for running in running_threads:
               # check the next index in all of running thread when all threads have been run on the previous index
-              if num_threads_run % len(running_threads):#len(running_threads):
-                  index += 1
-                  #print "---------------------------------------------\nNew Index:  %s" % index
-                  num_threads_run = 0
-
               error_encountered = False
               # declare variables for finding and storing a selected pin
               if running in active_threads:
@@ -1393,8 +1387,11 @@ active_threads is empty, threads are checked to make sure there are no connectio
                       #print "Coords: %s  Group : %s  Pin: %s" % (pin_coordinates, accessed_output_pin.group_id,accessed_output_pin.number)
                       # Jake addition 2015-06-09 this hopefully chooses another pin to be the origin 
                       # ofrthe next connection (same pin group as terminus of previous connection)
-                  # print pin_coordinates,
-
+                      # print pin_coordinates,
+                      if len(pin_coordinates) == 3: #and (len(running.decoded_instructions) % 2) != 0:
+                          new_connection_origin = accessed_pin_group.get_output(pin_coordinates[2])
+                      else:
+                          new_connection_origin = None
                   # an index error means that the thread's coordinates could not connect to an actual pin
                   except IndexError:
                       try:
@@ -1427,7 +1424,10 @@ active_threads is empty, threads are checked to make sure there are no connectio
                           for pin in self.connections:
                               if accessed_output_pin.group_id == pin.group_id and accessed_output_pin.number == pin.number:
                               #print "pin already taken: %s" % accessed_output_pin.group_id
-                                  raise LookupError("Connection failed: pin already connected")
+                                  #because this is the non-developmental code, we do not want to raise the LookupError,
+                                  #which would perform the code for collision-correction 
+                                  #raise LookupError("Connection failed: pin already connected")
+                                  pass
                           ###WARNING: OUTDATED CODE
                           # its possible the accessed pin is unavailable, signifying it was already taken by another thread
                           #if not accessed_pin.available:
@@ -1437,9 +1437,9 @@ active_threads is empty, threads are checked to make sure there are no connectio
                               running.connected_pins.append(accessed_output_pin)
 
                           #print 'connected pins:',[i.group_id for i in running.connected_pins]
-                          if len(pin_coordinates) == 3: #and (len(running.decoded_instructions) % 2) != 0:
-                              new_connection_origin = accessed_pin_group.get_output(pin_coordinates[2])
-                          else:
+                          ##if len(pin_coordinates) == 3: #and (len(running.decoded_instructions) % 2) != 0:
+                          ##    new_connection_origin = accessed_pin_group.get_output(pin_coordinates[2])
+                          ##else:
                               new_connection_origin = None
                               # ensure the pin hasn't been 'taken' by another thread already
                               # connect to a random input pin in the same group
@@ -1448,11 +1448,8 @@ active_threads is empty, threads are checked to make sure there are no connectio
                               #self.connections.append(output_pin)
                               #running.connected_pins.append(output_pin)
                           if new_connection_origin is not None:
-                              if new_connection_origin in self.connections:
-                                  raise LookupError("Connection failed: pinalready connected!")
-                              else:
-                                  self.connections.append(new_connection_origin)
-                                  running.connected_pins.append(new_connection_origin)
+                              self.connections.append(new_connection_origin)
+                              running.connected_pins.append(new_connection_origin)
 
                       except LookupError:
                           #a lookupError signifies a collision; update the counter respectively
@@ -1478,7 +1475,7 @@ active_threads is empty, threads are checked to make sure there are no connectio
                           active_threads.remove(running)
                           if len(running.connected_pins) >  2:
                                   pass
-          num_threads_run += 1
+          index += 1
 
       for running in self.threads:             
           if len(running.connected_pins) % 2 != 0:# and \

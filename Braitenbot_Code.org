@@ -910,7 +910,7 @@ class Base:
 #+NAME: InstructionSet
 #+BEGIN_SRC python :noweb yes
   class InstructionSet:
-      def __init__(self, size, crossover_point_number,unrestricted_distribution, gene_length, mutation_rate ):t
+      def __init__(self, size, crossover_point_number,unrestricted_distribution, gene_length, mutation_rate ):
           self.genome = []
           self.mutation_chance = mutation_rate
           self.co_point_location =[] ## Keeps track of indecies of copoints
@@ -1438,6 +1438,11 @@ active_threads is empty, threads are checked to make sure there are no connectio
                       pin_coordinates = running.decoded_instructions[index]
                       accessed_pin_group = self.pinGroups[pin_coordinates[0]]
                       accessed_output_pin = accessed_pin_group.get_input(pin_coordinates[1])
+                      #if the pin coordinates specifiy one, get a connection origin
+                      if len(pin_coordinates) == 3: #and (len(running.decoded_instructions) % 2) != 0:
+                          new_connection_origin = accessed_pin_group.get_output(pin_coordinates[2])
+                      else:
+                          new_connection_origin = None
                       #print "Coords: %s  Group : %s  Pin: %s" % (pin_coordinates, accessed_output_pin.group_id,accessed_output_pin.number)
                       # Jake addition 2015-06-09 this hopefully chooses another pin to be the origin 
                       # ofrthe next connection (same pin group as terminus of previous connection)
@@ -1480,14 +1485,14 @@ active_threads is empty, threads are checked to make sure there are no connectio
                           # its possible the accessed pin is unavailable, signifying it was already taken by another thread
                           #if not accessed_pin.available:
                           #    raise LookupError("Connection failed: pin already connected")
-                          else:
-                              self.connections.append(accessed_output_pin)
-                              running.connected_pins.append(accessed_output_pin)
+                          #else:
+                          #self.connections.append(accessed_output_pin)
+                          # running.connected_pins.append(accessed_output_pin)
 
                           #print 'connected pins:',[i.group_id for i in running.connected_pins]
-                          if len(pin_coordinates) == 3: #and (len(running.decoded_instructions) % 2) != 0:
-                              new_connection_origin = accessed_pin_group.get_output(pin_coordinates[2])
-                          else:
+                          ##if len(pin_coordinates) == 3: #and (len(running.decoded_instructions) % 2) != 0:
+                          ##    new_connection_origin = accessed_pin_group.get_output(pin_coordinates[2])
+                          ##else:
                               new_connection_origin = None
                               # ensure the pin hasn't been 'taken' by another thread already
                               # connect to a random input pin in the same group
@@ -1735,29 +1740,29 @@ from the successive locus in recessive parent’s InstructionSet. This switch wi
 Generates a viable organism 
 #+NAME: generate_viable
 #+BEGIN_SRC python
-def generate_viable():
-    # writes a 'progress bar' to the console
-    def progress(x):
-        out = '\r %s organisms tested' % x  # The output
-        print out,
+  def generate_viable():
+      # writes a 'progress bar' to the console
+      def progress(x):
+          out = '\r %s organisms tested' % x  # The output
+          print out,
 
-    genomes_tested = 0
-    finished = False
-    while not finished:
-        test = Organism(0, 0)
-        if test.is_viable():
-            print "-------------------------------------//"
-            print "connections: "
-            for thread in test.threads:
-                print "new thread connections:"
-                for connection in thread.connected_pins:
-                    print connection.group_id, connection.number
-            print "-------------------------------------//"
-            finished = True
-        else:
-            del test
-            genomes_tested += 1
-            progress(genomes_tested)
+      genomes_tested = 0
+      finished = False
+      while not finished:
+          test = Organism(0, 0,560,2,True,80,2000)
+          if test.is_viable():
+              print "-------------------------------------//"
+              print "connections: "
+              for thread in test.threads:
+                  print "new thread connections:"
+                  for connection in thread.connected_pins:
+                      print connection.group_id, connection.number
+              print "-------------------------------------//"
+              finished = True
+          else:
+              del test
+              genomes_tested += 1
+              progress(genomes_tested)
 #+END_SRC
 * TODO HoboSensor Analysis
 #+NAME: HoboAnalysis

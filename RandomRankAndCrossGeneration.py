@@ -98,11 +98,7 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
         #Calculates quartiles: Q1 = mean * .5, Q2 = mean, Q3 = mean * 1.5
         mean_performance_per_pop = 1
         try:
-<<<<<<< HEAD
             mean_collisions = sum(collisions_per_org)/float(len(collisions_per_org))
-=======
-            mean_collisions = sum(collisions_per_org)/len(collisions_per_org)
->>>>>>> 8614742791ec99c11c613a84459c797a89a96567
         except(ZeroDivisionError):
             mean_collisions = 0
         #Saves quartile information and stdev of pop mean to a dict

@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 from BaseAndInstructionSet import *
 from Decoder import Decoder
-from PinAndPinGroup import *
+from AlternatePinAndPinGroup import *
 import random
 import os
 import jsonpickle
-class Thread(object):
+class Thread:
     def __init__(self, thread_decoder):
         self.binary = []
         self.decoded_instructions = []
@@ -15,18 +14,18 @@ class Thread(object):
     # simply calls the decoder to decode the thread's instructions
     def decode(self):
         self.decoded_instructions = self.decoder.generate_coords(self.binary)
-class Organism(object):
-      def __init__(self, generation, generational_index,genome_size, num_crossover_points, unrestricted_crossover_point_distribution, thread_length,mutation_rate, parent1=None, parent2=None, genome=None):
+class Organism:
+      def __init__(self, generation, generational_index,genome_size, num_crossover_points, unrestricted_crossover_point_distribution, thread_length, mutation_rate, parent1=None, parent2=None, genome=None):
           # store perfromance on behavioral task
-          self.performance_1 = None
-          self.performance_2 = None
+          self.performance_3 = None
+          self.performance_3 = None
+          #store number of thread collisions
+          self.collisions = 0
           self.reproduction_possibilities = None
           self.generation = generation
           self.generational_index = generational_index
           self.thread_length = thread_length
-          self.genome_size = genome_size
-          #store the number of collisions between threads
-          self.collisions = 0
+          self.genome_size = genome_size 
           self.mutation_rate = mutation_rate
           # store organizational and naming information
           #NOTE: no longer saves a reference to parent org object
@@ -122,22 +121,6 @@ class Organism(object):
               thread.decode()
               #print thread.decoded_instructions
       
-      
-      """
-      *Input:* Nothing
-      *Output:* Nothing
-      *Side Effect:* Determines the pins connected as dictated by the coordinates of each thread.
-      *Process:* Each Thread is built (i.e.  their decoded_instructions are used to accesses PinGroups and Pins (see below))
-       using a round-robin approach. This done by simultaneously building each thread, one index at a
-       time. Threads that are actively being built are stored in the list active_threads. Threads are
-       removed from active_threads if they collided with with a previously built Thread, for trying 
-      to accesses out of bounds Pins, for having only one valid pin, etc. Pins are accessed using the
-       xyz coordinates stored in Thread.decoded_instructions, where x corresponds to the PinGroup, y
-       corresponds to a specific Pin in the PinGroup, and z corresponding to another Pin within that
-       same PinGroup-- the origin of the next wire. After each Thread is built, and therefore 
-      active_threads is empty, threads are checked to make sure there are no connections without a
-       terminal pin. """
-      
       def build_thread_coordinates(self):
           # threads will be temporarily copied into a separate list of running threads, to determine when the process of
           # making their connections is completed
@@ -152,24 +135,12 @@ class Organism(object):
           # some reason (i.e. collision between threads, or coordinates not corresponding to an available pin)
           # the thread will not be runnable and be taken from the running_threads list
           index = 0
-          #tracks the number of threads that have been run, and in turn, when the index should be incremented
-          #thread_counter = 0
-          # A deepcopy of running_threads that we are free to modify
-          # threads are removed from active_thread when they are no longer able to make connections
-          active_threads = [i for i in running_threads] 
-          while len(active_threads) > 0: 
-          # This builds each thread at the current index value
+          #tracks which threads have been run, and in turn, when the index should be incremented
+          active_threads = [i for i in running_threads] #A deepcopy that we are free to modify
+          while len(active_threads) > 0:
+              #print '\nThread index: %s' % index
               for running in running_threads:
-      
-      
-                  # if 
-                  #if thread_counter % len(running_threads):
-                  # if thread_counter == len(active_threads):
-                      #index += 1
-                      #print "---------------------------------------------\nNew Index:  %s" % index
-                      #thread_counter = 0
-      
-      
+                  # check the next index in all of running thread when all threads have been run on the previous index
                   error_encountered = False
                   # declare variables for finding and storing a selected pin
                   if running in active_threads:
@@ -179,16 +150,14 @@ class Organism(object):
                           pin_coordinates = running.decoded_instructions[index]
                           accessed_pin_group = self.pinGroups[pin_coordinates[0]]
                           accessed_output_pin = accessed_pin_group.get_input(pin_coordinates[1])
-                          #if the pin coordinates specifiy one, get a connection origin
+                          #print "Coords: %s  Group : %s  Pin: %s" % (pin_coordinates, accessed_output_pin.group_id,accessed_output_pin.number)
+                          # Jake addition 2015-06-09 this hopefully chooses another pin to be the origin 
+                          # ofrthe next connection (same pin group as terminus of previous connection)
+                          # print pin_coordinates,
                           if len(pin_coordinates) == 3: #and (len(running.decoded_instructions) % 2) != 0:
                               new_connection_origin = accessed_pin_group.get_output(pin_coordinates[2])
                           else:
                               new_connection_origin = None
-                          #print "Coords: %s  Group : %s  Pin: %s" % (pin_coordinates, accessed_output_pin.group_id,accessed_output_pin.number)
-                          # Jake addition 2015-06-09 this hopefully chooses another pin to be the origin 
-                          # ofrthe next connection (same pin group as terminus of previous connection)
-                      # print pin_coordinates,
-      
                       # an index error means that the thread's coordinates could not connect to an actual pin
                       except IndexError:
                           try:
@@ -217,18 +186,21 @@ class Organism(object):
                       if not error_encountered:
                           try:
                               # ensure the pin hasn't been 'taken' by another thread already
-                              # if accessed_output_pin in self.connections:
+                              #if accessed_output_pin in self.connections:
                               for pin in self.connections:
-                                  if accessed_output_pin.group_id == pin.group_id and accessed_output_pin.number == pin.number: 
-                                      #print "pin already taken: %s" % accessed_output_pin.group_id
-                                      raise LookupError("Connection failed: pin already connected")
+                                  if accessed_output_pin.group_id == pin.group_id and accessed_output_pin.number == pin.number:
+                                  #print "pin already taken: %s" % accessed_output_pin.group_id
+                                      #because this is the non-developmental code, we do not want to raise the LookupError,
+                                      #which would perform the code for collision-correction 
+                                      #raise LookupError("Connection failed: pin already connected")
+                                      pass
                               ###WARNING: OUTDATED CODE
                               # its possible the accessed pin is unavailable, signifying it was already taken by another thread
                               #if not accessed_pin.available:
                               #    raise LookupError("Connection failed: pin already connected")
-                              #else:
-                              #self.connections.append(accessed_output_pin)
-                              # running.connected_pins.append(accessed_output_pin)
+                              else:
+                                  self.connections.append(accessed_output_pin)
+                                  running.connected_pins.append(accessed_output_pin)
       
                               #print 'connected pins:',[i.group_id for i in running.connected_pins]
                               ##if len(pin_coordinates) == 3: #and (len(running.decoded_instructions) % 2) != 0:
@@ -242,14 +214,11 @@ class Organism(object):
                                   #self.connections.append(output_pin)
                                   #running.connected_pins.append(output_pin)
                               if new_connection_origin is not None:
-                                  if new_connection_origin in self.connections:
-                                      raise LookupError("Connection failed: pin already connected!")
-                                  else:
-                                      self.connections.append(new_connection_origin)
-                                      running.connected_pins.append(new_connection_origin)
+                                  self.connections.append(new_connection_origin)
+                                  running.connected_pins.append(new_connection_origin)
       
                           except LookupError:
-                              #the pin raised a lookup error due to a collisions; update variable accordingly
+                              #a lookupError signifies a collision; update the counter respectively
                               self.collisions += 1
                               # if a thread only has two pins, then it cannot create a connection to pins outside of the initial
                               # group, and each pin must be made available
@@ -272,8 +241,8 @@ class Organism(object):
                               active_threads.remove(running)
                               if len(running.connected_pins) >  2:
                                       pass
-              #thread_counter += 1
-              index+=1 # Starts loop again at next index for all threads
+              index += 1
+      
           for running in self.threads:             
               if len(running.connected_pins) % 2 != 0:# and \
                       #len(running.connected_pins) >= 1:
@@ -408,9 +377,6 @@ def reproduce(org1, org2, path):
                 rec_stuff.append('HERE')
                 dom_genome_copy = True
             index +=1
-    #for i in range (0, len(dom_stuff)- 1):
-        #print '%s  %s' %  (dom_stuff[i], rec_stuff[i])
-    #print dom_stuff
 
 
     # This takes care of  of saving the Org.
@@ -431,7 +397,7 @@ def reproduce(org1, org2, path):
         child_instruction_set = InstructionSet(dom.genome_size, 2,True,dom.thread_length, dom.mutation_rate)
         child_instruction_set.setGenome(child1_genome)
         child_instruction_set.mutate()
-        child1 = Organism(dom.generation + 1, 0,dom.genome_size,2,True,dom.thread_length, dom.mutation_rate, dom, rec, child_instruction_set.genome)
+        child1 = Organism(dom.generation + 1, 0,dom.genome_size,2,True,dom.thread_length,dom.mutation_rate, dom, rec, child_instruction_set.genome)
         #print [i.char for i in child1.genome]
    # print 'child %s threads:' % child1.filename
    # for thread in child1.threads:
@@ -453,7 +419,7 @@ def generate_viable():
     genomes_tested = 0
     finished = False
     while not finished:
-        test = Organism(0, 0,560,2,True,80,2000)
+        test = Organism(0, 0)
         if test.is_viable():
             print "-------------------------------------//"
             print "connections: "
