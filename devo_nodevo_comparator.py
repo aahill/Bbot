@@ -14,7 +14,8 @@ def compare(devo_file):
  #           print root +'/' + f 
  #           if f.endswith('.txt'):
     try:
-        devo_org = json_load_file.json_load_file (devo_file)
+        #devo_org = json_load_file.json_load_file (devo_file)
+        devo_org = devo_file
         
 
         print "++++++++++++++++++++devo / no devo comparason+++++++++++++++++++++++++++++++++++++"
@@ -60,7 +61,8 @@ def compare(devo_file):
                     print connection.group_id, connection.number
             print "-------------------------------------//"
     except IOError:
-        print 'error'
+        print 'IO error'
 
 
-compare('/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Collisions/Gen10/10_9_9_5_9_4/10_9_9_5_9_4.txt')
+#compare('/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Collisions/Gen10/10_9_9_5_9_4/10_9_9_5_9_4.txt')
+compare("/Users/Aaron/Projects/ShakingJakeyBakey/Braitenbot_Data/Simulation_Data/Random_Selection_Collisions/Gen10/10_1_9_6_9_3/10_1_9_6_9_3.txt")
