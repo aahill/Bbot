@@ -260,12 +260,12 @@ NOTE: This function no longer catches collions! This is how we are getting rid o
       def get_input(self, pin_index):
           target_pin = self.pins[pin_index]
           #print target_pin
-          self.call_match_and_remove(target_pin, self.pins)
+          self.call_match_and_remove_pin(target_pin, self.pins)
           return target_pin
 
       def get_output(self, pin_index):
           target_pin = self.pins[pin_index]
-          self.call_match_and_remove(target_pin, self.pins)
+          self.call_match_and_remove_pin(target_pin, self.pins)
           return target_pin
 
       def get_random_input(self):
@@ -922,8 +922,9 @@ class Base:
 #+NAME: InstructionSet
 #+BEGIN_SRC python :noweb yes
   class InstructionSet:
-      def __init__(self, size, crossover_point_number,unrestricted_distribution, gene_length ):
+      def __init__(self, size, crossover_point_number,unrestricted_distribution, gene_length, mutation_rate ):
           self.genome = []
+          self.mutation_chance = mutation_rate
           x = size  # a place holder, the length of the genome
           counter = 0 
           for num in range(0, x ):
@@ -1066,7 +1067,7 @@ InstructionSet 10 length: 20, # of Crossover_points: 2
 
   def mutate(self):
       #mutation_chance = 20000 #THIS IS THE REAL ONE
-      mutation_chance = 2000
+      mutation_chance = self.mutation_chance
       for i in range(len(self.genome)):
           rand_int1 = random.randint(1, mutation_chance)
           rand_int2 = random.randint(1, mutation_chance)
