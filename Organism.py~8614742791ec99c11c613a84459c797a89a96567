@@ -18,15 +18,8 @@ class Thread(object):
 class Organism(object):
       def __init__(self, generation, generational_index,genome_size, num_crossover_points, unrestricted_crossover_point_distribution, thread_length,mutation_rate, parent1=None, parent2=None, genome=None):
           # store perfromance on behavioral task
-<<<<<<< HEAD:Organism.py
           self.performance_1 = None
           self.performance_2 = None
-=======
-          self.performance_3 = None
-          self.performance_3 = None
-          #store number of thread collisions
-          self.collisions = 0
->>>>>>> 8614742791ec99c11c613a84459c797a89a96567:AlternateOrganism.py
           self.reproduction_possibilities = None
           self.generation = generation
           self.generational_index = generational_index
@@ -219,17 +212,10 @@ class Organism(object):
                       if not error_encountered:
                           try:
                               # ensure the pin hasn't been 'taken' by another thread already
-<<<<<<< HEAD:Organism.py
                               # if accessed_output_pin in self.connections:
                               for pin in self.connections:
                                   if accessed_output_pin.group_id == pin.group_id and accessed_output_pin.number == pin.number: 
                                       #print "pin already taken: %s" % accessed_output_pin.group_id
-=======
-                              #if accessed_output_pin in self.connections:
-                              for pin in self.connections:
-                                  if accessed_output_pin.group_id == pin.group_id and accessed_output_pin.number == pin.number:
-                                  #print "pin already taken: %s" % accessed_output_pin.group_id
->>>>>>> 8614742791ec99c11c613a84459c797a89a96567:AlternateOrganism.py
                                       raise LookupError("Connection failed: pin already connected")
                               ###WARNING: OUTDATED CODE
                               # its possible the accessed pin is unavailable, signifying it was already taken by another thread
@@ -258,11 +244,7 @@ class Organism(object):
                                       running.connected_pins.append(new_connection_origin)
       
                           except LookupError:
-<<<<<<< HEAD:Organism.py
                               #the pin raised a lookup error due to a collisions; update variable accordingly
-=======
-                              #a lookupError signifies a collision; update the counter respectively
->>>>>>> 8614742791ec99c11c613a84459c797a89a96567:AlternateOrganism.py
                               self.collisions += 1
                               # if a thread only has two pins, then it cannot create a connection to pins outside of the initial
                               # group, and each pin must be made available
@@ -466,7 +448,7 @@ def generate_viable():
     genomes_tested = 0
     finished = False
     while not finished:
-        test = Organism(1,0,560,2,True,80,2000)
+        test = Organism(0, 0)
         if test.is_viable():
             print "-------------------------------------//"
             print "connections: "
@@ -480,7 +462,3 @@ def generate_viable():
             del test
             genomes_tested += 1
             progress(genomes_tested)
-    return test
-#non_devo_org = AlternateOrganism.Organism(devo_org.generation, devo_org.generational_index, devo_org.genome_size,
-#            800, True, devo_org.thread_length, devo_org.mutation_rate, parent1=None, parent2=None,genome=genome)
-generate_viable()
