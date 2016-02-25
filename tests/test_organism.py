@@ -193,7 +193,7 @@ def test_organism_connections():
 	for x in range(3):
 		assert(len(test_org.threads[x].connected_pins) == 0)
 
-	assert(len(test_org.threads[3].connected_pins) == 4)
+	assert(len(test_org.threads[3].connected_pins) == 4), "got " + str(([pin.group_id+str(pin.number) for pin in test_org.threads[3].connected_pins])) + "instead of something else"
 
 	for x in range(4,len(test_org.threads)):
 		assert(len(test_org.threads[x].connected_pins) == 0)

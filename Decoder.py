@@ -1,51 +1,51 @@
 import random
 from BaseAndInstructionSet import *
 
-class Decoder:
+class Decoder(object):
     def __init__(self):
         self.index = 0
 
     
     
     def decode_binary(self, binary_list):
-            # turn binary list into a string for easy comparison
-            binary_string = ""
-            for binary_digit in binary_list:
-                binary_string += str(binary_digit)
+        # turn binary list into a string for easy comparison
+        binary_string = ""
+        for binary_digit in binary_list:
+            binary_string += str(binary_digit)
     
-            # determines what number each 4bit binary string represents
-            if binary_string == "0000":
-                return 0
-            elif binary_string == "0001":
-                return 1
-            elif binary_string == "0010":
-                return 2
-            elif binary_string == "0011":
-                return 3
-            elif binary_string == "0100":
-                return 4
-            elif binary_string == "0101":
-                return 5
-            elif binary_string == "0110":
-                return 6
-            elif binary_string == "0111":
-                return 7
-            elif binary_string == "1000":
-                return 8
-            elif binary_string == "1001":
-                return 9
-            elif binary_string == "1010":
-                return 10
-            elif binary_string == "1011":
-                return 
-            elif binary_string == "1100":
-                return 
-            elif binary_string == "1101":
-                return 
-            elif binary_string == "1110":
-                return  
-            elif binary_string == "1111":
-                return  
+        # determines what number each 4bit binary string represents
+        if binary_string == "0000":
+            return 0
+        elif binary_string == "0001":
+            return 1
+        elif binary_string == "0010":
+            return 2
+        elif binary_string == "0011":
+            return 3
+        elif binary_string == "0100":
+            return 4
+        elif binary_string == "0101":
+            return 5
+        elif binary_string == "0110":
+            return 6
+        elif binary_string == "0111":
+            return 7
+        elif binary_string == "1000":
+            return 8
+        elif binary_string == "1001":
+            return 9
+        elif binary_string == "1010":
+            return 10
+        elif binary_string == "1011":
+            return 
+        elif binary_string == "1100":
+            return  
+        elif binary_string == "1101":
+            return  
+        elif binary_string == "1110":
+            return  
+        elif binary_string == "1111":
+            return  
 
     def binary_to_decimal(self, binary_list):
         dec_list = []
@@ -80,7 +80,8 @@ class Decoder:
             """
             gets the next value from decList, which is the list containing the decimal translation of the binary string
             If this causes an index error, -1 will be returned to avoid the error from halting the program
-            :return: the next value form decList
+            :return: the next value form decList. Here None values can be taken to represent intronic regions of the gene
+            in question.
             """
             #print decList
             to_return = None
@@ -178,6 +179,7 @@ class Decoder:
                     break
                 else:
                      coords.append((x,y,z))
+                     x = z # This sets x to be the origin of the subsequent wire connection (z).
                 #print
                 #print 'Coord z: %s. Final coords: (%s,%s,%s)' % (z,x,y,z)
                # else:

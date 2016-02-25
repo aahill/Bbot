@@ -64,7 +64,7 @@ class Organism(object):
           self.groupFr = GroupFr()
           # organize pin groups into a single list
           self.pinGroups = [self.group1, self.group2, self.group3, self.group4, self.group5, self.group6, self.groupPl,
-                            self.groupRl, self.groupRr, self.groupPr, self.groupBl, self.groupBr, self.groupFl, self.groupFr]
+                            self.groupRl, self.groupRr, self.groupPr, self.groupFl, self.groupFr, self.groupBl, self.groupBr, ]
           # threads will eventually be created and appended to the thread list
           self.threads = []
           # store the pins currently connected in the organism (in no specific order)
@@ -218,10 +218,14 @@ class Organism(object):
                           try:
                               # ensure the pin hasn't been 'taken' by another thread already
                               # if accessed_output_pin in self.connections:
-                              for pin in self.connections:
-                                  if accessed_output_pin.group_id == pin.group_id and accessed_output_pin.number == pin.number: 
+                              if accessed_output_pin in self.connections:
+                              #for pin in self.connections:
+                                 # if accessed_output_pin.group_id == pin.group_id and accessed_output_pin.number == pin.number:
                                       #print "pin already taken: %s" % accessed_output_pin.group_id
-                                      raise LookupError("Connection failed: pin already connected")
+                                  raise LookupError("Connection failed: pin already connected")
+                              else:
+                                  self.connections.append(accessed_output_pin)
+                                  running.connected_pins.append(accessed_output_pin)
                               ###WARNING: OUTDATED CODE
                               # its possible the accessed pin is unavailable, signifying it was already taken by another thread
                               #if not accessed_pin.available:
@@ -234,7 +238,7 @@ class Organism(object):
                               ##if len(pin_coordinates) == 3: #and (len(running.decoded_instructions) % 2) != 0:
                               ##    new_connection_origin = accessed_pin_group.get_output(pin_coordinates[2])
                               ##else:
-                                  new_connection_origin = None
+                                  ##new_connection_origin = None
                                   # ensure the pin hasn't been 'taken' by another thread already
                                   # connect to a random input pin in the same group
                                   # input pins are used since the previous pin was an output
@@ -467,3 +471,4 @@ def generate_viable():
             del test
             genomes_tested += 1
             progress(genomes_tested)
+#generate_viable()

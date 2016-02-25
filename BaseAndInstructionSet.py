@@ -20,7 +20,8 @@ class InstructionSet:
     def __init__(self, size, crossover_point_number,unrestricted_distribution, gene_length, mutation_rate ):
         self.genome = []
         self.mutation_chance = mutation_rate
-        x = size  # a place holder, the length of the genome
+        self.co_point_location =[] ## Keeps track of indecies of copoints
+        x = size  # a plac holder, the length of the genome
         counter = 0 
         for num in range(0, x ):
             self.genome.append(Base())
@@ -39,21 +40,28 @@ class InstructionSet:
                 counter +=1
             print potential_locations
         assert counter == crossover_point_number 
-        """for s in self.genome:
-            counter += s.crossover_point
-        if counter < 1:
-            random.choice(self.genome).set_crossover_point(1)"""
+
+    # determines the indices at which the copoints for a genome are located
+    def setCOPointLocation(self):
+        co_points = []
+        for i in range(len(self.genome)):
+            if self.genome[i].crossover_point == 1:
+                co_points.append(i)
+        self.co_point_location = co_points
 
     def setGenome(self, new_genome):
         self.genome = new_genome
+        self.setCOPointLocation()
+
+    # Counts the number of crossover points
 
     
     def mutate(self):
         #mutation_chance = 20000 #THIS IS THE REAL ONE
         mutation_chance = self.mutation_chance
         for i in range(len(self.genome)):
-            rand_int1 = random.randint(1, mutation_chance)
-            rand_int2 = random.randint(1, mutation_chance)
+            rand_int1 = random.randint(0, mutation_chance)
+            rand_int2 = random.randint(0, mutation_chance)
             if rand_int1 == mutation_chance:
                 print 'Crossover_point mutation at index: %s' % i
                 if self.genome[i].crossover_point == 0:
