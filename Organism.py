@@ -89,7 +89,7 @@ class Organism(object):
           try:
               filename = (str(self.generation) + "_" +
                           str(self.generational_index) + "_" +
-                          str(self.parent1_generation) + "_" +
+                          str(sela.parent1_generation) + "_" +
                           str(self.parent1_generational_index) + "_" +
                           str(self.parent2_generation) + "_" +
                           str(self.parent2_generational_index))
@@ -453,16 +453,23 @@ def generate_viable():
     while not finished:
         test = Organism(0, 0,560,2,True,80,2000)
         if test.collisions > 0 and test.is_viable():
-            print "-------------------------------------//"
-            print "connections: "
+            good_org = True
             for thread in test.threads:
-                print "new thread connections:"
-                for connection in thread.connected_pins:
-                    print connection.group_id, connection.number
-            print "-------------------------------------//"
-            finished = True
-        else:
-            del test
-            genomes_tested += 1
-            progress(genomes_tested)
+                for triple in thread.decoded_instructions:
+                    if triple[-1] == triple[-2]:
+                        del test
+                        genomes_tested += 1
+                        progress(genomes_tested)
+                        good_org = False
+                        break
+            if good_org:
+                print "-------------------------------------//"
+                print "connections: "
+                for thread in test.threads:
+                    print "new thread connections:"
+                    for connection in thread.connected_pins:
+                        print connection.group_id, connection.number
+                print "-------------------------------------//"
+                finished = True
+
     return test
