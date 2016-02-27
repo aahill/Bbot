@@ -638,249 +638,6 @@ class GroupFr(MotorSensorPinGroup):
 
 #+RESULTS: MotorSensorGroups
 
-* Decoder Code
-#+BEGIN_SRC python :noweb yes :tangle Decoder.py
-<<Decoder_Imports>>
-
-<<Decoder>>
-
-#+END_SRC
-** Imports
-#+NAME: Decoder_Imports
-#+BEGIN_SRC python 
-import random
-from BaseAndInstructionSet import *
-#+END_SRC
-** Class: Decoder
-*Input:* None\\
-*Output:* A Decoder object with the attribute index == 1.\\
-#+BEGIN_SRC python :noweb yes :tangle Decoder.py
-  class Decoder:
-      def __init__(self):
-          self.index = 0
-
-      <<decode_binary>>
-
-      <<binary_to_decimal>>
-
-      <<generate_coords>>
-
-
-
-#+END_SRC
-*** Methods
-**** decode binary 
-*Input:* binary_list, a 4-bit list
-*Output:* The corresponding decimal digits for numbers 0-9 only.
-#+NAME: decode_binary
-#+BEGIN_SRC python 
-
-
-def decode_binary(self, binary_list):
-        # turn binary list into a string for easy comparison
-        binary_string = ""
-        for binary_digit in binary_list:
-            binary_string += str(binary_digit)
-
-        # determines what number each 4bit binary string represents
-        if binary_string == "0000":
-            return 0
-        elif binary_string == "0001":
-            return 1
-        elif binary_string == "0010":
-            return 2
-        elif binary_string == "0011":
-            return 3
-        elif binary_string == "0100":
-            return 4
-        elif binary_string == "0101":
-            return 5
-        elif binary_string == "0110":
-            return 6
-        elif binary_string == "0111":
-            return 7
-        elif binary_string == "1000":
-            return 8
-        elif binary_string == "1001":
-            return 9
-        elif binary_string == "1010":
-            return 10
-        elif binary_string == "1011":
-            return 
-        elif binary_string == "1100":
-            return 
-        elif binary_string == "1101":
-            return 
-        elif binary_string == "1110":
-            return  
-        elif binary_string == "1111":
-            return  
-#+END_SRC
-**** binary to decimal 
-*Input:* binary_list, an n-bit list
-*Output:* A list containing the corresponding decimal digits between 0-9 only.
-*Process:* Appends decimal digits to a list calculated by inputting every 4 digits of binary-list into decode_binary.
-#+NAME: binary_to_decimal
-#+BEGIN_SRC python
-    def binary_to_decimal(self, binary_list):
-        dec_list = []
-        # step through the array in 4s as long as there are enough digits (4) to form a number.
-        # this is checked through the expression (len - 4) - (5 % 4)
-        #print
-        for x in range(0, len(binary_list)-3, 4):
-            # generate the list of binary to be decoded
-            temp = [binary_list[y] for y in range(x, x+4)]
-            dec_list.append(self.decode_binary(temp))
-        #    print temp, dec_list 
-        #print
-        #print 'Hypothetical # of decimal digits: %s/4 = %s. Actual #: %s'% (len(binary_list), len(binary_list)/4, len(dec_list))
-        #print
-        return dec_list
-        #print
-
-#+END_SRC
-**** generate coords
-
-*Input:* binaryList, an n-bit list
-*Output:* A list of 2- and 3-tuples in the form x,y and x,y,z respectively where the first tuple in the list is a 2-tuple, and the rest are 3-tuples. A given tuples values are dependent upon the values contained within the preceding tuple, in a process outlined more in depth below.
-*Side Effect:* decList, a list of decimal and none values used by other methods.
-
-#+NAME: generate_coords
-#+BEGIN_SRC python :noweb yes
-    def generate_coords(self, binaryList):
-        """
-        method for getting the next non-NONE value from decList
-        return: either the value of decList at index self.index, unless an error is found; in which case
-        return -1
-        """
-        coords = []
-        #this value is the height of the matrix created by the pin-group
-        #HEIGHT_OF_PINGROUP = 21  -- Not sure why 21 was chosen
-        HEIGHT_OF_PINGROUP = 30
-        #print binaryList
-
-        <<get_next_val>>
-
-#+END_SRC
-***** Submethod: get next val
-
-*Input:* decList, A list of decimal and None values.    
-*Output:* Returns the next non-None value in decList, or -1 if an IndexError is raised.
-#+NAME: get_next_val
-#+BEGIN_SRC python 
-        def get_next_val():
-            """
-            gets the next value from decList, which is the list containing the decimal translation of the binary string
-            If this causes an index error, -1 will be returned to avoid the error from halting the program
-            :return: the next value form decList
-            """
-            #print decList
-            to_return = None
-            try:
-                while to_return is None:
-                    to_return = decList[self.index]
-                    self.index += 1
-            except IndexError:
-                self.index = -1
-                return -1
-            #print "index: %s  Next decimal digit: %s" % (self.index, to_return) 
-            return to_return
-            #print
-
-
-        # the input decList must have at least one digit for the creation of the initial pin coordinate,
-        # and 3 more for the creation of a terminal pin.
-        # If this condition is met, generate initial x,y coord from first value in the array
-        decList = self.binary_to_decimal(binaryList)
-        #print "Direction key: 0: y+=Distance,1:x+=distance, y+=distance, 2:x+=distance, 3:x=distance, y-=distance\n"+\
-        #"4:y-=distance, 5:x-=distance, y-=distance, 6: x-=distance, 7: x-=distance, y-=distance"
-        #print decList
-        if len(decList) < 3:
-            return []
-        else:
-            x = get_next_val()
-            # the inital pin coordinate will range from zero to the length of the matrix created by the pin group
-            #y = random.randint(0,HEIGHT_OF_PINGROUP)
-            y = get_next_val() #Jake addition: no reason we need to selcet randomly. We 
-                                # generate perfectly good nonrandom numbers
-            #print 'Original (x,y): (%s,%s)' % (x,y)
-
-            # append first xy coordinate in the form of a 2-tuple
-           # z = get_next_val() # jake addition: this decides which pin will be the origin
-                                # of the subsequent connection
-            coords.append((x,y))
-
-            # do the following for every digit after the first (since it was used to generate
-            # a starting position)
-            # also check for the minimum required digits for the thread instruction process
-            while self.index < len(decList):# and (len(decList) - self.index) >= 4:
-                # generate the x coordinate's direction, and end pin
-                # this number will be 1 through 8, corresponding to the different
-                # cardinal directions
-                pos1 = get_next_val()
-                pos2 = get_next_val()
-                pos3 = get_next_val()
-                """ try:
-                    pos4 = get_next_val() #Jake addition: this decides the origin
-                except(IndexError):
-                    pass"""
-                # the pos1 and pos2 values are used for direction and cannot be negative. Similarly, pos3 is used for
-                # distance, and must be greater than 0
-                if pos1 < 0 or pos2 < 0 or pos3 <= 0:
-                    #print 'Break! a decimal <= 0 was generated'
-                    #print 'possible culprits: pos1:%s,pos2:%s,pos3:%s' % (pos1,pos2,pos3)
-                    break
-
-                direction = (pos1 + pos2) % 8
-                distance = pos3
-                if direction == 0:
-                    y += distance
-                elif direction == 1:
-                    y += distance
-                    x += distance
-                elif direction == 2:
-                    x += distance
-                elif direction == 3:
-                    x += distance
-                    y -= distance
-                elif direction == 4:
-                    y -= distance
-                elif direction == 5:
-                    y -= distance
-                    x -= distance
-                elif direction == 6:
-                    x -= distance
-                elif direction == 7:
-                    y += distance
-                    x -= distance
-                if x < 0 or y < 0:
-                    #print 'Break! x or y < 0'
-                    #print '(%s,%s)' % (x,y)
-                    break
-                #print'Direction: (next_val + next_val ) mod 8 --> (%s + %s) mod 8 = %s' % (pos1, pos2, direction)
-                #print 'Distance: next_val ---> %s' % distance
-                #print 'Direction: %s, Distance: %s --->(%s,%s)' % (direction, distance ,x,y)
-               # if self.index in [5 +i*3 for i in range(len(decList))]:
-               #Jake addition: adds third coordiante, z :which determines origin
-               #of the subsequent wire connection in a thread.
-                z = get_next_val()
-                if z < 0:
-                    #print 'Break! z < 0'
-                    #print'z = %s' % z
-                    break
-                else:
-                     coords.append((x,y,z))
-                #print
-                #print 'Coord z: %s. Final coords: (%s,%s,%s)' % (z,x,y,z)
-               # else:
-                #    coords.append((x, y))
-
-        #print 'Resultant Coords:', coords
-        self.index = 0
-        return coords    
-
-
-#+END_SRC
 * Base And InstrutionSet Code
 #+BEGIN_SRC python :noweb yes :tangle BaseAndInstructionSet.py
 <<BaseAndInstructionSet_Imports>>
@@ -1372,7 +1129,6 @@ active_threads is empty, threads are checked to make sure there are no connectio
       #tracks which threads have been run, and in turn, when the index should be incremented
       active_threads = [i for i in running_threads] #A deepcopy that we are free to modify
       while len(active_threads) > 0:
-          #print '\nThread index: %s' % index
           for running in running_threads:
               # check the next index in all of running thread when all threads have been run on the previous index
               error_encountered = False
@@ -1384,7 +1140,6 @@ active_threads is empty, threads are checked to make sure there are no connectio
                       pin_coordinates = running.decoded_instructions[index]
                       accessed_pin_group = self.pinGroups[pin_coordinates[0]]
                       accessed_output_pin = accessed_pin_group.get_input(pin_coordinates[1])
-                      #print "Coords: %s  Group : %s  Pin: %s" % (pin_coordinates, accessed_output_pin.group_id,accessed_output_pin.number)
                       # Jake addition 2015-06-09 this hopefully chooses another pin to be the origin 
                       # ofrthe next connection (same pin group as terminus of previous connection)
                       # print pin_coordinates,
@@ -1394,12 +1149,6 @@ active_threads is empty, threads are checked to make sure there are no connectio
                           new_connection_origin = None
                   # an index error means that the thread's coordinates could not connect to an actual pin
                   except IndexError:
-                      try:
-                          #print "Out of Bounds coordinate: %s. Thread deactivated" %  str(running.decoded_instructions[index])
-                          pass
-                      except IndexError:
-                          pass
-                      #print 'Bad index: %s' % index
                       error_encountered = True
                       # if a thread only has one pin, then it cannot create a connection, and the pin must be made available
                       if len(running.connected_pins) == 1:
@@ -1418,29 +1167,17 @@ active_threads is empty, threads are checked to make sure there are no connectio
 
               # it is possible that the pin exists but has been taken
                   if not error_encountered:
-                      try:
+                      #try:
                           # ensure the pin hasn't been 'taken' by another thread already
                           #if accessed_output_pin in self.connections:
-                          for pin in self.connections:
-                              if accessed_output_pin.group_id == pin.group_id and accessed_output_pin.number == pin.number:
-                              #print "pin already taken: %s" % accessed_output_pin.group_id
-                                  #because this is the non-developmental code, we do not want to raise the LookupError,
-                                  #which would perform the code for collision-correction 
-                                  #raise LookupError("Connection failed: pin already connected")
-                                  pass
-                          ###WARNING: OUTDATED CODE
-                          # its possible the accessed pin is unavailable, signifying it was already taken by another thread
-                          #if not accessed_pin.available:
-                          #    raise LookupError("Connection failed: pin already connected")
-                          else:
-                              self.connections.append(accessed_output_pin)
-                              running.connected_pins.append(accessed_output_pin)
+                          self.connections.append(accessed_output_pin)
+                          running.connected_pins.append(accessed_output_pin)
 
                           #print 'connected pins:',[i.group_id for i in running.connected_pins]
                           ##if len(pin_coordinates) == 3: #and (len(running.decoded_instructions) % 2) != 0:
                           ##    new_connection_origin = accessed_pin_group.get_output(pin_coordinates[2])
                           ##else:
-                              new_connection_origin = None
+                              #new_connection_origin = None
                               # ensure the pin hasn't been 'taken' by another thread already
                               # connect to a random input pin in the same group
                               # input pins are used since the previous pin was an output
@@ -1451,30 +1188,34 @@ active_threads is empty, threads are checked to make sure there are no connectio
                               self.connections.append(new_connection_origin)
                               running.connected_pins.append(new_connection_origin)
 
-                      except LookupError:
-                          #a lookupError signifies a collision; update the counter respectively
-                          self.collisions += 1
-                          # if a thread only has two pins, then it cannot create a connection to pins outside of the initial
-                          # group, and each pin must be made available
-                          if len(running.connected_pins) == 2:
-                              error_encountered = True
-                              for x in range(len(running.connected_pins)):
-                                  # set the pin's availability to 'true'
-                                  running.connected_pins[x].available = True
-                                  # remove the pin from the thread's & organism's group of connected pins
-                                  #self.connections.remove(running.connected_pins[x])
-                                  for n in range(len(self.connections)):
-                                      if (self.connections[n].group_id == running.connected_pins[x].group_id and
-                                          self.connections[n].number == running.connected_pins[x].number):
-                                          del self.connections[n]
-                                          break
-
-                              # wipe the running thread's connected pins since it only contains two pins,
-                              # which is not a complete connection
-                              running.connected_pins = []
-                          active_threads.remove(running)
-                          if len(running.connected_pins) >  2:
-                                  pass
+                     #except LookupError:
+                     #     # Non develomental code schema shouldn't be here
+                     #     assert False
+                     #     #a lookupError signifies a collision; update the counter respectively
+                     #     self.collisions += 1
+                     #     # if a thread only has two pins, then it cannot create a connection to pins outside of the initial
+                     #     # group, and each pin must be made available
+                     #     if len(running.connected_pins) == 2:
+                     #         error_encountered = True
+                     #         for x in range(len(running.connected_pins)):
+                     #             # set the pin's availability to 'true'
+                     #             running.connected_pins[x].available = True
+                     #             # remove the pin from the thread's & organism's group of connected pins
+                     #             #self.connections.remove(running.connected_pins[x])
+                     #             for n in range(len(self.connections)):
+                     #                 if (self.connections[n].group_id == running.connected_pins[x].group_id and
+                     #                     self.connections[n].number == running.connected_pins[x].number):
+                     #                     del self.connections[n]
+                     #                     break
+                     #
+                     #         # wipe the running thread's connected pins since it only contains two pins,
+                     #         # which is not a complete connection
+                     #         running.connected_pins = []
+                     #     active_threads.remove(running)
+                     #     if len(running.connected_pins) >  2:
+                     #             pass
+          if running in active_threads and index >= len(running.decoded_instructions):
+              active_threads.remove(running)
           index += 1
 
       for running in self.threads:             
