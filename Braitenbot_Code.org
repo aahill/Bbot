@@ -1163,7 +1163,7 @@ For each Base in InstructionSet, there is 2/20000 of the Base being mutated.
 #+BEGIN_SRC python 
 from BaseAndInstructionSet import *
 from Decoder import Decoder
-from PinAndPinGroup import *
+#from PinAndPinGroup import *
 import random
 import os
 import jsonpickle
@@ -1205,7 +1205,13 @@ class Thread(object):
 #+NAME: Organism
 #+BEGIN_SRC python :noweb yes 
   class Organism(object):
-        def __init__(self, generation, generational_index,genome_size, num_crossover_points, unrestricted_crossover_point_distribution, thread_length,mutation_rate, parent1=None, parent2=None, genome=None):
+        def __init__(self, generation, generational_index,genome_size, num_crossover_points, unrestricted_crossover_point_distribution, thread_length,mutation_rate, parent1=None, parent2=None, genome=None, alt_mode=False):
+            #conditionally import the correct pin groups
+            self.alt_mode = alt_mode 
+            if self.alt_mode:
+                  from AlternatePinAndPinGroup import *
+            else:
+                  from PinAndPinGroup import *
             # store perfromance on behavioral task
             self.performance_1 = None
             self.performance_2 = None
@@ -1365,7 +1371,7 @@ class Thread(object):
             #print thread.decoded_instructions
 
 #+END_SRC 
-**** build thread coordinates
+**** COMMENT build thread coordinates
 *Input:* Nothing\\
 *Output:* Nothing\\
 *Side Effect:* Determines the pins connected as dictated by the coordinates of each thread.\\
@@ -1475,9 +1481,9 @@ active_threads is empty, threads are checked to make sure there are no connectio
               # it is possible that the pin exists but has been taken
                   if not error_encountered:
                       try:
-                          # ensure the pin hasn't been 'taken' by another thread already
+                          # ensure the pin hasn't been 'taken' by another thread already (if not generating an alternate organism)
                           # if accessed_output_pin in self.connections:
-                          if accessed_output_pin in self.connections:
+                          if not self.alt_mode and accessed_output_pin in self.connections:
                           #for pin in self.connections:
                              # if accessed_output_pin.group_id == pin.group_id and accessed_output_pin.number == pin.number:
                                   #print "pin already taken: %s" % accessed_output_pin.group_id
@@ -1505,7 +1511,7 @@ active_threads is empty, threads are checked to make sure there are no connectio
                               #self.connections.append(output_pin)
                               #running.connected_pins.append(output_pin)
                           if new_connection_origin is not None:
-                              if new_connection_origin in self.connections:
+                              if not self.alt_mode and new_connection_origin in self.connections:
                                   raise LookupError("Connection failed: pin already connected!")
                               else:
                                   self.connections.append(new_connection_origin)
