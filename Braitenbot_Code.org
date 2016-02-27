@@ -1421,7 +1421,7 @@ active_threads is empty, threads are checked to make sure there are no connectio
       # A deepcopy of running_threads that we are free to modify
       # threads are removed from active_thread when they are no longer able to make connections
       active_threads = [i for i in running_threads] 
-      while index < self.thread_length and len(active_threads) > 0: 
+      while len(active_threads) > 0: 
       # This builds each thread at the current index value
           for running in running_threads:
 
@@ -1629,6 +1629,41 @@ the set of all connected pins in a given thread.\\
           return False
 
 
+
+
+#+END_SRC
+**** is viable 2
+#+NAME: is_viable_2
+#+BEGIN_SRC python :noweb yes
+def generate_viable():
+    # writes a 'progress bar' to the console
+    def progress(x):
+        out = '\r %s organisms tested' % x  # The output
+        print out,
+
+    genomes_tested = 0
+    finished = False
+    while not finished:
+        test = Organism(0, 0,560,2,True,80,2000)
+        if test.collisions > 0 and test.is_viable():
+            good_org = True
+            for thread in test.threads:
+                for triple in thread.decoded_instructions:
+                    if triple[-1] == triple[-2]:
+                        good_org = False
+                        break
+            if good_org:
+                print "-------------------------------------//"
+                print "connections: "
+                for thread in test.threads:
+                    print "new thread connections:"
+                    for connection in thread.connected_pins:
+                        print connection.group_id, connection.number
+                print "-------------------------------------//"
+                finished = True
+                return test
+        genomes_tested += 1
+        progress(genomes_tested)
 
 
 #+END_SRC
