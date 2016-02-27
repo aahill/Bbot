@@ -240,6 +240,7 @@ class Organism(object):
                                   #error_encountered = True
                                   if not self.alt_mode and new_connection_origin in self.connections:
                                       self.collision_events.append("collision getting pin at: " + str(pin_coordinates[0])+","+str(pin_coordinates[2]))
+                                      #set the new_connection_origin back to available
                                       raise LookupError("Connection failed: pin already connected!")
                                   else:
                                       self.connections.append(new_connection_origin)

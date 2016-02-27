@@ -31,5 +31,5 @@ def get_pin(x,y,input_or_output):
 
 
 
-get_pin(6,3,'output')
-get_pin(6,3,'input')
+get_pin(7,3,'output')
+get_pin(7,3,'input')
