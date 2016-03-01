@@ -72,7 +72,7 @@ class Organism(object):
           # organize pin groups into a single list
 #          self.pinGroups = [self.group1, self.group2, self.group3, self.group4, self.group5, self.group6, self.groupPl,
 #                            self.groupRl, self.groupRr, self.groupPr, self.groupBl, self.groupBr, self.groupFl, self.groupFr]
-          self.pinGroups = [ self.groupBl, self.group1, self.group2, self.group3, self.groupBr, self.group4, self.group5, self.group6, self.groupFl, self.groupPl,
+          self.pinGroups = [ self.groupBl, self.group1, self.group2, self.group3, self.groupFl, self.group4, self.group5, self.group6, self.groupBr, self.groupPl,
                            self.groupRl, self.groupRr, self.groupFr, self.groupPr, ]
           # threads will eventually be created and appended to the thread list
           self.threads = []
