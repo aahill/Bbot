@@ -255,10 +255,12 @@ class Organism(object):
                   to_remove.available = True
                   running.connected_pins.remove(to_remove)
                   connections_copy = [n for n in self.connections] #deepcopy that we can manipulate with impunity
-                  for n in self.connections:
-                      if (n.group_id == to_remove.group_id and n.number == to_remove.number):
-                          connections_copy.remove(n)
-                  self.connections = connections_copy
+                  #for n in self.connections:
+                  #    if (n.group_id == to_remove.group_id and n.number == to_remove.number):
+                  #        connections_copy.remove(n)
+                  #self.connections = connections_copy
+                  self.connections.remove(to_remove)
+                  #self.connection = [pin for pin in self.connections if pin.group_id != to_remove.group_id and pin.number != to_remove.number]
       
       def is_viable(self):
           connected_pins = []
@@ -419,8 +421,10 @@ def generate_viable():
     finished = False
     while not finished:
         test = Organism(0, 0,560,2,True,80,2000)
+        genome = test.genome        
+        no_devo = Organism(0, 0,560,2,True,80,2000, parent1=None, parent2=None, genome=genome, alt_mode=True)
         #if test.collisions > 0 and test.is_viable():
-        if test.collisions > 0 and len(test.connections) > 3:
+        if len(test.connections) != len(no_devo.connections):
             good_org = True
             for thread in test.threads:
                 for triple in thread.decoded_instructions:
@@ -439,4 +443,5 @@ def generate_viable():
                 return test
         genomes_tested += 1
         progress(genomes_tested)
+    return test
 
