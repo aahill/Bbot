@@ -79,3 +79,4 @@ g = generate_viable()
 compare(g)
 #compare('/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Collisions/Gen10/10_9_9_5_9_4/10_9_9_5_9_4.txt')
 #compare("/Users/Aaron/Projects/ShakingJakeyBakey/Braitenbot_Data/Simulation_Data/Random_Selection_Collisions/Gen10/10_1_9_6_9_3/10_1_9_6_9_3.txt")
+
