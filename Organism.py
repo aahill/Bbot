@@ -70,8 +70,10 @@ class Organism(object):
           self.groupFl = GroupFl()
           self.groupFr = GroupFr()
           # organize pin groups into a single list
-          self.pinGroups = [self.group1, self.group2, self.group3, self.group4, self.group5, self.group6, self.groupPl,
-                            self.groupRl, self.groupRr, self.groupPr, self.groupBl, self.groupBr, self.groupFl, self.groupFr]
+#          self.pinGroups = [self.group1, self.group2, self.group3, self.group4, self.group5, self.group6, self.groupPl,
+#                            self.groupRl, self.groupRr, self.groupPr, self.groupBl, self.groupBr, self.groupFl, self.groupFr]
+          self.pinGroups = [ self.groupBl, self.group1, self.group2, self.group3, self.groupBr, self.group4, self.group5, self.group6, self.groupFl, self.groupPl,
+                           self.groupRl, self.groupRr, self.groupFr, self.groupPr, ]
           # threads will eventually be created and appended to the thread list
           self.threads = []
           # store the pins currently connected in the organism (in no specific order)
@@ -422,9 +424,9 @@ def generate_viable():
     while not finished:
         test = Organism(0, 0,560,2,True,80,2000)
         genome = test.genome        
-        no_devo = Organism(0, 0,560,2,True,80,2000, parent1=None, parent2=None, genome=genome, alt_mode=True)
+        #no_devo = Organism(0, 0,560,2,True,80,2000, parent1=None, parent2=None, genome=genome, alt_mode=True)
         #if test.collisions > 0 and test.is_viable():
-        if len(test.connections) != len(no_devo.connections):
+        if test.collisions > 0 and test.is_viable():
             good_org = True
             for thread in test.threads:
                 for triple in thread.decoded_instructions:
