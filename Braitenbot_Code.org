@@ -1215,7 +1215,7 @@ class Thread(object):
             # store perfromance on behavioral task
             self.performance_1 = None
             self.performance_2 = None
-            self.collision_events
+            self.collision_events = []
             self.reproduction_possibilities = None
             self.generation = generation
             self.generational_index = generational_index
@@ -1259,8 +1259,6 @@ class Thread(object):
             self.groupFl = GroupFl()
             self.groupFr = GroupFr()
             # organize pin groups into a single list
-            #self.pinGroups = [self.group1, self.group2, self.group3, self.group4, self.group5, self.group6, self.groupPl,
-            #                  self.groupRl, self.groupRr, self.groupPr, self.groupBl, self.groupBr, self.groupFl, self.groupFr]
             self.pinGroups = [ self.groupBl, self.group1, self.group2, self.group3, self.groupFl, self.group4, self.group5, 
                 self.group6, self.groupBr, self.groupPl, self.groupRl, self.groupRr, self.groupFr, self.groupPr, ]
             # threads will eventually be created and appended to the thread list
@@ -1365,7 +1363,7 @@ class Thread(object):
 *Input:* Nothing\\
 *Output:* Nothing\\
 *Side Effect:* The binary instructions for each Thread in self.threads (see above) is decoded into corresponding coordinate instructions (see Decoder).\\
-#+NAME: generate_thread_instructions_old
+#+NAME: generate_thread_instructions
 #+BEGIN_SRC python
     def generate_thread_instructions(self):
         for thread in self.threads:
@@ -1373,310 +1371,136 @@ class Thread(object):
             thread.decode()
             #print thread.decoded_instructions
 
-#+END_SRC 
-**** new generate thread instructions
-#+NAME: generate_thread_instructions
-#+BEGIN_SRC python
-  def build_thread_coordinates_2(self):
-      # threads will be temporarily copied into a separate list of running threads, to determine when the process of
-      # making their connections is completed
-      running_threads = []
-      for thread in self.threads:
-          # we only want to use the the threads that connect at least two pins.
-          # this is represented by the number of instructions in said thread
-          if len(thread.decoded_instructions) >= 2:
-              running_threads.append(thread)
-
-  # using a round-robin approach attempt to pair a thread's coordinate to a pin. when the thread fails for
-  # some reason (i.e. collision between threads, or coordinates not corresponding to an available pin)
-  # the thread will not be runnable and be taken from the running_threads list
-      index = 0
-      # A deepcopy of running_threads that we are free to modify
-      # threads are removed from active_thread when they are no longer able to make connections
-      active_threads = [i for i in running_threads]
-      while len(active_threads) > 0:
-          # This builds each thread at the current index value
-          for running in running_threads:
-
-              error_encountered = False
-              # declare variables for finding and storing a selected pin
-              accessed_output_pin = None
-              new_connection_origin = None
-              if running in active_threads:
-                  try:
-                      # get the specific pin coordinates from the instruction and translate it to make it a valid pin
-                      pin_coordinates = running.decoded_instructions[index]
-                      accessed_pin_group = self.pinGroups[pin_coordinates[0]]
-                      accessed_output_pin = accessed_pin_group.get_input(
-                          pin_coordinates[1])
-                      #if the pin coordinates specifiy one, get a connection origin
-                  except IndexError:
-                      error_encountered = True
-                      active_threads.remove(running)
-
-                  if not error_encountered and len(pin_coordinates) == 3:
-                      try:
-                          new_connection_origin = accessed_pin_group.get_output(
-                              pin_coordinates[2])
-                      except IndexError:
-                          active_threads.remove(running)
-                  # even if an index error is not encounter, it is possible that the pin exists but has been taken
-                  try:
-                      # ensure the pin hasn't been 'taken' by another thread already (if not generating an alternate organism)
-                      # using the 'in' keyword works, but consider iterating through the list manually and comparing the pin's id and number
-                      if accessed_output_pin != None:
-                          if accessed_output_pin in self.connections:
-                              self.collisions += 1
-                              self.collision_events.append(
-                                  "collision getting pin at: " + str(
-                                      pin_coordinates[0]) + "," + str(
-                                          pin_coordinates[1]))
-                              if not self.alt_mode:
-                                  raise LookupError(
-                                      "Connection failed: pin already connected")
-                          self.connections.append(accessed_output_pin)
-                          running.connected_pins.append(accessed_output_pin)
-                  except LookupError:
-                      if running in active_threads:
-                          active_threads.remove(running)
-
-                  try:
-                      if new_connection_origin != None:
-                          #track the collision regardless of mode, but only handle it (via raise lookupError ) if not in alt mode
-                          if new_connection_origin in self.connection:
-                              self.collisions += 1
-                              self.collision_events.append(
-                                  "collision getting pin at: " + str(
-                                      pin_coordinates[0]) + "," + str(
-                                          pin_coordinates[2]))
-                              #set the new_connection_origin back to available
-                          if not self.alt_mode:
-                              raise LookupError(
-                                  "Connection failed: pin already connected!")
-
-                          self.connections.append(new_connection_origin)
-                          running.connected_pins.append(new_connection_origin)
-                  except LookupError:
-                      if self.alt_mode:
-                          assert False
-                      # if a thread only has two pins, then it cannot create a connection to pins outside of the initial
-                      # group, and each pin must be made available
-                      # if len(running.connected_pins) == 2:
-                      #     error_encountered = True
-                      #     for x in range(len(running.connected_pins)):
-                      #         # set the pin's availability to 'true'
-                      #         running.connected_pins[x].available = True
-                      #         # remove the pin from the thread's & organism's group of connected pins
-                      #         #self.connections.remove(running.connected_pins[x])
-                      #         for n in range(len(self.connections)):
-                      #             if (self.connections[n].group_id == running.connected_pins[x].group_id and
-                      #                 self.connections[n].number == running.connected_pins[x].number):
-                      #                 del self.connections[n]
-                      #                 break
-                      #
-                      #     # wipe the running thread's connected pins since it only contains two pins,
-                      #     # which is not a complete connection
-                      #     running.connected_pins = []
-                      if running in active_threads:
-                          active_threads.remove(running)
-
-          index += 1  # Starts loop again at next index for all threads
-
-      for running in self.threads:
-          if len(running.connected_pins) % 2 != 0:  # and len(running.connected_pins) >= 1:
-              to_remove = running.connected_pins[-1]
-              to_remove.available = True
-              running.connected_pins.remove(to_remove)
-              connections_copy = [n for n in self.connections]  #deepcopy that we can manipulate with impunity
-              #for n in self.connections:
-              #    if (n.group_id == to_remove.group_id and n.number == to_remove.number):
-              #        connections_copy.remove(n)
-              #self.connections = connections_copy
-              self.connections.remove(to_remove)
-              #self.connection = [pin for pin in self.connections if pin.group_id != to_remove.group_id and pin.number != to_remove.number]
 #+END_SRC
-**** COMMENT build thread coordinates
-*Input:* Nothing\\
-*Output:* Nothing\\
-*Side Effect:* Determines the pins connected as dictated by the coordinates of each thread.\\
-*Process:* Each Thread is ‘built’ (i.e.  their decoded_instructions are used to accesses PinGroups and Pins (see below))
- using a round-robin approach. This done by simultaneously building each thread, one index at a
- time. Threads that are actively being built are stored in the list active_threads. Threads are
- removed from active_threads if they collided with with a previously built Thread, for trying 
-to accesses out of bounds Pins, for having only one valid pin, etc. Pins are accessed using the
- xyz coordinates stored in Thread.decoded_instructions, where x corresponds to the PinGroup, y
- corresponds to a specific Pin in the PinGroup, and z corresponding to another Pin within that
- same PinGroup-- the origin of the next wire. After each Thread is built, and therefore 
-active_threads is empty, threads are checked to make sure there are no connections without a
- terminal pin. \\
+**** build_thread_coordinates       		
+      *Input:* Nothing		
+      *Output:* Nothing		
+      *Side Effect:* Determines the pins connected as dictated by the coordinates of each thread.		
+      *Process:* Each Thread is built (i.e.  their decoded_instructions are used to accesses PinGroups and Pins (see below))		
+       using a round-robin approach. This done by simultaneously building each thread, one index at a		
+       time. Threads that are actively being built are stored in the list active_threads. Threads are		
+       removed from active_threads if they collided with with a previously built Thread, for trying 		
+      to accesses out of bounds Pins, for having only one valid pin, etc. Pins are accessed using the		
+       xyz coordinates stored in Thread.decoded_instructions, where x corresponds to the PinGroup, y		
+       corresponds to a specific Pin in the PinGroup, and z corresponding to another Pin within that		
+       same PinGroup-- the origin of the next wire. After each Thread is built, and therefore 		
+      active_threads is empty, threads are checked to make sure there are no connections without a		
+       terminal pin.
+      
 #+NAME: build_thread_coordinates
 #+BEGIN_SRC python
-
-  """
-  ,*Input:* Nothing
-  ,*Output:* Nothing
-  ,*Side Effect:* Determines the pins connected as dictated by the coordinates of each thread.
-  ,*Process:* Each Thread is built (i.e.  their decoded_instructions are used to accesses PinGroups and Pins (see below))
-   using a round-robin approach. This done by simultaneously building each thread, one index at a
-   time. Threads that are actively being built are stored in the list active_threads. Threads are
-   removed from active_threads if they collided with with a previously built Thread, for trying 
-  to accesses out of bounds Pins, for having only one valid pin, etc. Pins are accessed using the
-   xyz coordinates stored in Thread.decoded_instructions, where x corresponds to the PinGroup, y
-   corresponds to a specific Pin in the PinGroup, and z corresponding to another Pin within that
-   same PinGroup-- the origin of the next wire. After each Thread is built, and therefore 
-  active_threads is empty, threads are checked to make sure there are no connections without a
-   terminal pin. """
-
-  def build_thread_coordinates(self):
-      # threads will be temporarily copied into a separate list of running threads, to determine when the process of
-      # making their connections is completed
-      running_threads = []
-      for thread in self.threads:
+      def build_thread_coordinates(self):
+          # threads will be temporarily copied into a separate list of running threads, to determine when the process of
+          # making their connections is completed
+          running_threads = []
+          for thread in self.threads:
           # we only want to use the the threads that connect at least two pins.
-          # this is represented by the number of instructions in said thread
-          if len(thread.decoded_instructions) >= 2:
-              running_threads.append(thread)
-
+              # this is represented by the number of instructions in said thread
+              if len(thread.decoded_instructions) >= 2:
+                  running_threads.append(thread)
+      
       # using a round-robin approach attempt to pair a thread's coordinate to a pin. when the thread fails for
       # some reason (i.e. collision between threads, or coordinates not corresponding to an available pin)
       # the thread will not be runnable and be taken from the running_threads list
-      index = 0
-      # A deepcopy of running_threads that we are free to modify
-      # threads are removed from active_thread when they are no longer able to make connections
-      active_threads = [i for i in running_threads] 
-      while len(active_threads) > 0: 
-      # This builds each thread at the current index value
-          for running in running_threads:
-
-              error_encountered = False
-              # declare variables for finding and storing a selected pin
-              accessed_output_pin = None
-              new_connection_origin = None
-              if running in active_threads:
-                  try:
-                      # get the specific pin coordinates from the instruction and translate it to make it a valid pin
-                      pin_coordinates = running.decoded_instructions[index]
-                      accessed_pin_group = self.pinGroups[pin_coordinates[0]]
-                      accessed_output_pin = accessed_pin_group.get_input(pin_coordinates[1])
-                      #if the pin coordinates specifiy one, get a connection origin
-                      if len(pin_coordinates) == 3: #and (len(running.decoded_instructions) % 2) != 0:
-                          new_connection_origin = accessed_pin_group.get_output(pin_coordinates[2])
-                      else:
-                          new_connection_origin = None
-                      # Jake addition 2015-06-09 this hopefully chooses another pin to be the origin 
-                      # of rthe next connection (same pin group as terminus of previous connection)
-
-                  # an index error means that the thread's coordinates could not connect to an actual pin
-                  # essentially is an 'out of bounds' error
-                  except IndexError:
-                      #change the pins to be available once more
-                      if accessed_output_pin is not None:
-                          accessed_output_pin.available = True
-                      if new_connection_origin is not None:
-                          new_connection_origin.available = True
-                      error_encountered = True
-                      ## if a thread only has one pin, then it cannot create a connection, and the pin must be made available
-                      #if len(running.connected_pins) == 1:
-                      #    to_remove = running.connected_pins[0]
-                      #    # set the pin's availability to 'true'
-                      #    to_remove.available = True
-                      #    # remove the pin from the thread's & organism's group of connected pins
-                      #    for x in range(len(self.connections)):
-                      #        if (self.connections[x].group_id == to_remove.group_id and
-                      #                    self.connections[x].number == to_remove.number):
-                      #            del self.connections[x]
-                      #            break
-                      #    # wipe the running thread's connected pins since it only contains one pin, which cannot connect to anything
-                      #    running.connected_pins = []
-
-                      #if a thread has an uneven amount of pins, then the last output pin should be deleted
-                      if len(running.connected_pins) %2 != 0:
-                          to_remove = running.connected_pins[-1]
-                          to_remove.available = True
-                          #remove the pin from the thread's list of connected pins
-                          del running.connected_pins[-1]
-                          #remove the pin from the organism's conneted pins list
-                          for x in range(len(self.connections)):
-                              if (self.connections[x].group_id == to_remove.group_id and
-                                          self.connections[x].number == to_remove.number):
-                                  del self.connections[x]
-                                  break
-                      active_threads.remove(running)
-
-              # even if an index error is not encounter, it is possible that the pin exists but has been taken
-                  if not error_encountered:
-                      #ensure the pins in the alt organism are always available
-                      if self.alt_mode:
-                          assert accessed_output_pin.available == True
-                          assert new_connection_origin.available == True
+          index = 0
+          # A deepcopy of running_threads that we are free to modify
+          # threads are removed from active_thread when they are no longer able to make connections
+          active_threads = [i for i in running_threads]
+          while len(active_threads) > 0:
+              # This builds each thread at the current index value
+              for running in running_threads:
+      
+                  error_encountered = False
+                  # declare variables for finding and storing a selected pin
+                  accessed_output_pin = None
+                  new_connection_origin = None
+                  if running in active_threads:
+                      try:
+                          # get the specific pin coordinates from the instruction and translate it to make it a valid pin
+                          pin_coordinates = running.decoded_instructions[index]
+                          accessed_pin_group = self.pinGroups[pin_coordinates[0]]
+                          accessed_output_pin = accessed_pin_group.get_input(
+                              pin_coordinates[1])
+                          #if the pin coordinates specifiy one, get a connection origin
+                      except IndexError:
+                          error_encountered = True
+                          active_threads.remove(running)
+      
+                      if not error_encountered and len(pin_coordinates) == 3:
+                          try:
+                              new_connection_origin = accessed_pin_group.get_output(
+                                  pin_coordinates[2])
+                          except IndexError:
+                              active_threads.remove(running)
+                      # even if an index error is not encounter, it is possible that the pin exists but has been taken
                       try:
                           # ensure the pin hasn't been 'taken' by another thread already (if not generating an alternate organism)
                           # using the 'in' keyword works, but consider iterating through the list manually and comparing the pin's id and number
-                          if not self.alt_mode and accessed_output_pin in self.connections:
-                              #a 'taken' pin should be listed as unavailable
-                              assert accessed_output_pin.available == False
-                              self.collision_events.append("collision getting pin at: " + str(accessed_pin_group)+","+str(pin_coordinates[1]))
-                              raise LookupError("Connection failed: pin already connected")
-                          else:
+                          if accessed_output_pin != None:
+                              if accessed_output_pin in self.connections:
+                                  self.collisions += 1
+                                  self.collision_events.append(
+                                      "collision getting pin at: " + str(
+                                          pin_coordinates[0]) + "," + str(
+                                              pin_coordinates[1]))
+                                  if not self.alt_mode:
+                                      raise LookupError(
+                                          "Connection failed: pin already connected")
                               self.connections.append(accessed_output_pin)
                               running.connected_pins.append(accessed_output_pin)
-
-                          if new_connection_origin is not None:
-                              if not self.alt_mode and new_connection_origin in self.connections:
-                                  self.collision_events.append("collision getting pin at: " + str(accessed_pin_group)+","+str(pin_coordinates[2]))
-                                  raise LookupError("Connection failed: pin already connected!")
-                              else:
-                                  self.connections.append(new_connection_origin)
-                                  running.connected_pins.append(new_connection_origin)
-
+                      except LookupError:
+                          if running in active_threads:
+                              active_threads.remove(running)
+      
+                      try:
+                          if new_connection_origin != None:
+                              #track the collision regardless of mode, but only handle it (via raise lookupError ) if not in alt mode
+                              if new_connection_origin in self.connection:
+                                  self.collisions += 1
+                                  self.collision_events.append(
+                                      "collision getting pin at: " + str(
+                                          pin_coordinates[0]) + "," + str(
+                                              pin_coordinates[2]))
+                                  #set the new_connection_origin back to available
+                              if not self.alt_mode:
+                                  raise LookupError(
+                                      "Connection failed: pin already connected!")
+      
+                              self.connections.append(new_connection_origin)
+                              running.connected_pins.append(new_connection_origin)
                       except LookupError:
                           if self.alt_mode:
                               assert False
-                          #the pin raised a lookup error due to a collisions; update variable accordingly
-                          self.collisions += 1
                           # if a thread only has two pins, then it cannot create a connection to pins outside of the initial
                           # group, and each pin must be made available
-                         # if len(running.connected_pins) == 2:
-                         #     error_encountered = True
-                         #     for x in range(len(running.connected_pins)):
-                         #         # set the pin's availability to 'true'
-                         #         running.connected_pins[x].available = True
-                         #         # remove the pin from the thread's & organism's group of connected pins
-                         #         #self.connections.remove(running.connected_pins[x])
-                         #         for n in range(len(self.connections)):
-                         #             if (self.connections[n].group_id == running.connected_pins[x].group_id and
-                         #                 self.connections[n].number == running.connected_pins[x].number):
-                         #                 del self.connections[n]
-                         #                 break
-                         #
-                         #     # wipe the running thread's connected pins since it only contains two pins,
-                         #     # which is not a complete connection
-                         #     running.connected_pins = []
-                          if len(running.connected_pins) % 2 != 0:# and len(running.connected_pins) >= 1:
-                              to_remove =  running.connected_pins[-1]
-                              to_remove.available = True
-                              running.connected_pins.remove(to_remove)
-                              connections_copy = [n for n in self.connections] #deepcopy that we can manipulate with impunity
-                              for n in self.connections:
-                                  if (n.group_id == to_remove.group_id and n.number == to_remove.number):
-                                      connections_copy.remove(n)
-                                      self.connections = connections_copy
-
-                          active_threads.remove(running)
-
-          index+=1 # Starts loop again at next index for all threads
-
-     # for running in self.threads:             
-     #     if len(running.connected_pins) % 2 != 0:# and len(running.connected_pins) >= 1:
-     #         to_remove =  running.connected_pins[-1]
-     #         to_remove.available = True
-     #         running.connected_pins.remove(to_remove)
-     #         connections_copy = [n for n in self.connections] #deepcopy that we can manipulate with impunity
-     #         for n in self.connections:
-     #             if (n.group_id == to_remove.group_id and n.number == to_remove.number):
-     #                 connections_copy.remove(n)
-     #         self.connections = connections_copy
-
+                          # if len(running.connected_pins) == 2:
+                          #     error_encountered = True
+                          #     for x in range(len(running.connected_pins)):
+                          #         # set the pin's availability to 'true'
+                          #         running.connected_pins[x].available = True
+                          #         # remove the pin from the thread's & organism's group of connected pins
+                          #         #self.connections.remove(running.connected_pins[x])
+                          #         for n in range(len(self.connections)):
+                          #             if (self.connections[n].group_id == running.connected_pins[x].group_id and
+                          #                 self.connections[n].number == running.connected_pins[x].number):
+                          #                 del self.connections[n]
+                          #                 break
+                          #
+                          #     # wipe the running thread's connected pins since it only contains two pins,
+                          #     # which is not a complete connection
+                          #     running.connected_pins = []
+                          if running in active_threads:
+                              active_threads.remove(running)
+      
+              index += 1  # Starts loop again at next index for all threads
+      
+          for running in self.threads:
+              if len(running.connected_pins) % 2 != 0:  # and len(running.connected_pins) >= 1:
+                  to_remove = running.connected_pins[-1]
+                  to_remove.available = True
+                  running.connected_pins.remove(to_remove)
+                  self.connections.remove(to_remove)
+    
 #+END_SRC
 **** is viable
 *Input:* Nothing\\
