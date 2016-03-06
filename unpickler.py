@@ -54,6 +54,10 @@ def fix_crossover_points(old_directory, new_directory, crossover_prob):
                     shutil.rmtree(new_directory)
 
 
+<<<<<<< HEAD
+unpickle_and_print('/Users/Aaron/Projects/ShakingJakeyBakey/Braitenbot_Data/Robot_Data/Non_Development/Gen2')
+
+=======
 path = '/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen2'
 
 path2 = '/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen2'
@@ -64,3 +68,4 @@ print "-------------------------------------------------------------------------
 print"-----------------------------------DEVO STARTS HERE------------------------------------------------"
 print "----------------------------------------------------------------------------------------------------"
 unpickle_and_print(path2)
+>>>>>>> 88fa4129504ddc9e22e127ee715680c5803163b8
