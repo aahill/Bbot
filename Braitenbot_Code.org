@@ -1146,7 +1146,7 @@ For each Base in InstructionSet, there is 2/20000 of the Base being mutated.
  Thus in 100 calls to  mutate there should be  (1 - (19998/20000)^2000)*100 ~ 18.1277434734 mutations.
   The actual number of mutations: 16
 #+end_example
-
+ 
 * Thread And Organism Code
 #+BEGIN_SRC python :noweb yes :tangle Organism.py
 # -*- coding: utf-8 -*-
@@ -1333,11 +1333,12 @@ class Thread(object):
 *Output:* a new directory named after the Organism, containing a pickled instantiation of the Organism. \\
 #+NAME: save_to_file
 #+BEGIN_SRC python 
-    def save_to_file(self, path):
-        dir = os.mkdir(path+"/"+self.filename)
-        with open(path+"/"+self.filename+"/"+self.filename+".txt", 'wb') as output:
-            data = jsonpickle.encode(self)
-            output.write(data)
+  def save_to_file(self, path):
+      if not os.path.exists(path+"/"+self.filename):
+          dir = os.mkdir(path+"/"+self.filename)
+      with open(path+"/"+self.filename+"/"+self.filename+".txt", 'wb') as output:
+          data = jsonpickle.encode(self)
+          output.write(data)
 #+END_SRC
 **** create threads
 #+NAME: create_threads
@@ -1960,6 +1961,8 @@ along with other statistical info. Useful for result analysis later on.
       mean_performance_per_org = [] 
       mean_performance_per_pop = 0
       list_of_vals = []
+      collisions_per_org = []
+      num_wires_per_org = []
       y = []
       baseline_performance = 0
       #get the performance of the baseline organism
@@ -1967,8 +1970,8 @@ along with other statistical info. Useful for result analysis later on.
           org = None
           performance = 0
           for f in files:
-              if f.startswith("baseline"):
-                  baseline_performance = HoboAnalysis.energyAquired(root + '/' + f)
+              if "baseline" in f:
+                  baseline_performance = HoboAnalysis.energyAcquired(root + '/' + f, 2)
 
       #walks through files belonging to an organism, one org at a time
       print "All the org files in this directory:"
@@ -1977,12 +1980,11 @@ along with other statistical info. Useful for result analysis later on.
           #will store the amount of light collected on both trials
           performance_1 = 0
           performance_2 = 0
-          collisions_per_org = []
           y.append(root)
           for f in files:
               try:
                   y.append(f)
-                  if not f.startsswith('baseline') and f.endswith('.pkl') or f.endswith('.txt'):
+                  if f.endswith('.txt'):
                       org = json_load_file(root + '/' + f)
                       #print  rooty + '/'+ f
                       #print [i.crossover_point for i in org.genome]
@@ -1994,19 +1996,23 @@ along with other statistical info. Useful for result analysis later on.
                               #rooty denotes the path to subdir, f a file in root. Concatenating
                               # the two results in the full path to file
                               #divide performance by the baseline for normalization
-                              performance_1 = HoboAnalysis.energyAcquired(root +'/' + f)/baseline_performance 
-                          else:
-                              performance_2 = HoboAnalysis.energyAcquired(root + '/' + f)/baseline_performance
+                              performance_1 = HoboAnalysis.energyAcquired(root +'/' + f, 2)
+                              # This stores the normalized fitness
+                              performance_2 = HoboAnalysis.energyAcquired(root + '/' + f, 2)/baseline_performance
               except AttributeError:
                   pass
           try:
               org.performance_1 = performance_1
-              org.performance_2 = performance_1
+              org.performance_2 = performance_2
+              #Connections attributes stores all pins connected
+              #Dividing by 2 will give us the number of wires
+              num_wires_per_org.append(len(org.connections)/2)
               #append the average of two performances to list
               #for use later in calculating stddev
-              mean_performance_per_org.append((org.performance_1 + org.performance_1)/2)
+              mean_performance_per_org.append(org.performance_2)
               collisions_per_org.append(org.collisions)
               unpickled_orgs.append(org)
+              org.save_to_file(gen_directory)
               # org.save_to_file(f)
           except AttributeError:
               pass
@@ -2014,14 +2020,19 @@ along with other statistical info. Useful for result analysis later on.
       #   mean_performance_per_org.append((org.performance_1 + org.performance_1) / 2.0 )"""
       print'\n mean performances for each org in population:', mean_performance_per_org
       #Calculates quartiles: Q1 = mean * .5, Q2 = mean, Q3 = mean * 1.5
-      mean_performance_per_pop = float(sum(mean_performance_per_org)/len(mean_performance_per_org))
-      mean_collisions = sum(collisions_per_org)/len(collisions_per_org)
+      mean_performance_per_pop = sum(mean_performance_per_org)/float(len(mean_performance_per_org))
+      mean_collisions = sum(collisions_per_org)/float(len(collisions_per_org))
+      mean_wires =sum(num_wires_per_org)/float(len(num_wires_per_org))
       #Saves quartile information and stdev of pop mean to a dict
       quartiles = {'Generation': unpickled_orgs[0].generation, \
                    'mean': mean_performance_per_pop, \
                    'stderr': calculateStdError(mean_performance_per_org, mean_performance_per_pop), \
                    'mean collisions':mean_collisions, \
-                   'collision stderr': calculateStdError(collisions_per_org, mean_collisions)}
+                   'collision stderr': calculateStdError(collisions_per_org, mean_collisions), \
+                   'collisions min': min(collisions_per_org), \
+                   'collisions max': max(collisions_per_org), \
+                   'mean wires': mean_wires, \
+                   'mean wires stderr': calculateStdError(num_wires_per_org, mean_wires)}
       print '\nquartiles: %s\n' % quartiles  
       global_quartiles = quartiles
       return quartiles
@@ -2155,21 +2166,23 @@ along with other statistical info. Useful for result analysis later on.
 *** SubMethod: wrtieQuartilesToCsv
 #+NAME: writeQuartilesToCSV
 #+BEGIN_SRC python
-    def writeQuartilesToCsv(data_dict, dir):
-        #os.mkdir(dir)
-        data_file =  dir + '/' + 'experiment_data.csv' 
-        if os.path.isfile(data_file):
-            with open(dir + '/' + 'experiment_data.csv' , 'a') as f:
-                fieldnames = ['Generation', 'mean', 'stderr', 'mean collisions', 'collision stderr', 'collisions min', 'collisions max']
-                writer = csv.DictWriter(f, fieldnames=fieldnames)
-                writer.writerow(data_dict)
-        else:
-            with open(dir + '/' + 'experiment_data.csv' , 'wb') as f:
-                fieldnames = ['Generation', 'mean', 'stderr', 'mean collisions', 'collision stderr', 'collisions min', 'collisions max']
-                writer = csv.DictWriter(f, fieldnames=fieldnames)
+  def writeQuartilesToCsv(data_dict, dir):
+  #os.mkdir(dir)
+      data_file =  dir + '/' + 'experiment_data.csv' 
+      if os.path.isfile(data_file):
+          with open(dir + '/' + 'experiment_data.csv' , 'a') as f:
+              fieldnames = ['Generation', 'mean', 'stderr', 'mean collisions', 'collision stderr', 'collisions min', \
+                            'collisions max', 'mean wires', 'mean wires stderr' ]
+              writer = csv.DictWriter(f, fieldnames=fieldnames)
+              writer.writerow(data_dict)
+      else:
+          with open(dir + '/' + 'experiment_data.csv' , 'wb') as f:
+              fieldnames = ['Generation', 'mean', 'stderr', 'mean collisions', 'collision stderr', 'collisions min', \
+                            'collisions max', 'mean wires', 'mean wires stderr']
+              writer = csv.DictWriter(f, fieldnames=fieldnames)
 
-                writer.writeheader()
-                writer.writerow(data_dict)
+              writer.writeheader()
+              writer.writerow(data_dict)
 #+END_SRC
  
 ** RandomRankAndCrossGeneration
