@@ -79,7 +79,7 @@ def compare(devo_file):
 #    compare(g)
 #    print (str(x) +" completed")#, end="\r")
 #g = Organism(0, 0,560,2,True,80,2000)
-path = '/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1'
+path = '/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen2'
 for root, dirs, files in os.walk(path):
     for f in files:
         if f.endswith('.txt'):
