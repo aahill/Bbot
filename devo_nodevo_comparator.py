@@ -14,8 +14,11 @@ def compare(devo_file):
  #           print root +'/' + f 
  #           if f.endswith('.txt'):
     try:
-        #devo_org = json_load_file.json_load_file (devo_file)
-        devo_org = devo_file
+        devo_org = json_load_file.json_load_file (devo_file)
+        genome = devo_org.genome
+        #devo_org = devo_file
+        devo_org = Organism(devo_org.generation, devo_org.generational_index, devo_org.genome_size,
+            800, True, devo_org.thread_length, devo_org.mutation_rate, parent1=None, parent2=None,genome=genome,alt_mode=False)
 
         print "++++++++++++++++++++devo / no devo comparason+++++++++++++++++++++++++++++++++++++"
         print "++++++++++++++++++++development organism+++++++++++++++++++++++++++++++++++++"
@@ -75,8 +78,7 @@ def compare(devo_file):
 #    compare(g)
 #    print (str(x) +" completed")#, end="\r")
 #g = Organism(0, 0,560,2,True,80,2000)
-g = generate_viable()
-compare(g)
+#g = generate_viable()
+#compare(g)
 #compare('/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Collisions/Gen10/10_9_9_5_9_4/10_9_9_5_9_4.txt')
-#compare("/Users/Aaron/Projects/ShakingJakeyBakey/Braitenbot_Data/Simulation_Data/Random_Selection_Collisions/Gen10/10_1_9_6_9_3/10_1_9_6_9_3.txt")
-
+compare("/Users/Aaron/Projects/ShakingJakeyBakey/Braitenbot_Data/Robot_Data/Development/Gen1/1_9_ _ _ _ /1_9_ _ _ _ .txt")
