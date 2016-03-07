@@ -17,7 +17,7 @@ def compare(directory):
 			        devo_org = json_load_file.json_load_file (root+'/'+f)
 			        genome = devo_org.genome
 			        new_devo_org = Organism(devo_org.generation, devo_org.generational_index, devo_org.genome_size,
-			            800, True, devo_org.thread_length, devo_org.mutation_rate, parent1=None, parent2=None,genome=genome,alt_mode=True)
+			            800, True, devo_org.thread_length, devo_org.mutation_rate, parent1=None, parent2=None,genome=genome,alt_mode=False)
 
 			        print "++++++++++++++++++++comparing pickled threads to threads produced from current code+++++++++++++++++++++++++++++++++++++"
 			        print "++++++++++++++++++++pickled organism+++++++++++++++++++++++++++++++++++++"
@@ -81,4 +81,4 @@ def compare(directory):
 #compare(g)
 #compare('/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Collisions/Gen10/10_9_9_5_9_4/10_9_9_5_9_4.txt')
 #compare("/Users/Aaron/Projects/ShakingJakeyBakey/Braitenbot_Data/Robot_Data/Non_Development/Gen2/2_2_1_1_1_0/2_2_1_1_1_0.txt")
-compare("/Users/Aaron/Projects/ShakingJakeyBakey/Braitenbot_Data/Robot_Data/Non_Development/Gen1")
+compare("/Users/Aaron/Projects/Braitenbot_Data/Robot_Data/Development/Gen4/")

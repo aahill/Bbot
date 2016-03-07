@@ -54,13 +54,13 @@ def fix_crossover_points(old_directory, new_directory, crossover_prob):
                     shutil.rmtree(new_directory)
 
 
-unpickle_and_print('/Users/Aaron/Projects/ShakingJakeyBakey/Braitenbot_Data/Robot_Data/Non_Development/Gen2')
+#unpickle_and_print('/Users/Aaron/Projects/ShakingJakeyBakey/Braitenbot_Data/Robot_Data/Non_Development/Gen2')
 
-path = '/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1'
+#path = '/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1'
+path = '/Users/Aaron/Projects/Braitenbot_Data/Robot_Data/Development/Gen4'
 
-
-path2 = '/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1'
-
+#path2 = '/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1'
+path2 = '/Users/Aaron/Projects/Braitenbot_Data/Robot_Data/Non_Development/Gen4'
 print "--------------------- NO DEVO------------------------------"
 unpickle_and_print(path)
 print "----------------------------------------------------------------------------------------------------"
