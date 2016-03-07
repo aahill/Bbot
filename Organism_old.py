@@ -26,7 +26,7 @@ class Organism(object):
           # store perfromance on behavioral task
           self.performance_1 = None
           self.performance_2 = None
-          self.collision_events = []
+          self.collision_events
           self.reproduction_possibilities = None
           self.generation = generation
           self.generational_index = generational_index
@@ -103,8 +103,7 @@ class Organism(object):
           return filename
       
       def save_to_file(self, path):
-          if not os.path.exists(path+"/"+self.filename):
-              dir = os.mkdir(path+"/"+self.filename)
+          dir = os.mkdir(path+"/"+self.filename)
           with open(path+"/"+self.filename+"/"+self.filename+".txt", 'wb') as output:
               data = jsonpickle.encode(self)
               output.write(data)
@@ -196,16 +195,16 @@ class Organism(object):
                       try:
                           if new_connection_origin != None:
                               #track the collision regardless of mode, but only handle it (via raise lookupError ) if not in alt mode
-                              if new_connection_origin in self.connections:
+                              if new_connection_origin in self.connection:
                                   self.collisions += 1
                                   self.collision_events.append(
                                       "collision getting pin at: " + str(
                                           pin_coordinates[0]) + "," + str(
                                               pin_coordinates[2]))
                                   #set the new_connection_origin back to available
-                                  if not self.alt_mode:
-                                      raise LookupError(
-                                          "Connection failed: pin already connected!")
+                              if not self.alt_mode:
+                                  raise LookupError(
+                                      "Connection failed: pin already connected!")
       
                               self.connections.append(new_connection_origin)
                               running.connected_pins.append(new_connection_origin)
@@ -240,8 +239,14 @@ class Organism(object):
                   to_remove = running.connected_pins[-1]
                   to_remove.available = True
                   running.connected_pins.remove(to_remove)
+                  connections_copy = [n for n in self.connections]  #deepcopy that we can manipulate with impunity
+                  #for n in self.connections:
+                  #    if (n.group_id == to_remove.group_id and n.number == to_remove.number):
+                  #        connections_copy.remove(n)
+                  #self.connections = connections_copy
                   self.connections.remove(to_remove)
-        
+                  #self.connection = [pin for pin in self.connections if pin.group_id != to_remove.group_id and pin.number != to_remove.number]
+          
       def is_viable(self):
           connected_pins = []
       
@@ -375,7 +380,7 @@ def reproduce(org1, org2, path):
         if dom.alt_mode:
             child1 = Organism(dom.generation + 1, count,dom.genome_size,2,True,dom.thread_length,dom.mutation_rate, dom, rec, child_instruction_set.genome,alt_mode=True)
         else:
-            child1 = Organism(dom.generation + 1, count,dom.genome_size,2,True,dom.thread_length,dom.mutation_rate, dom, rec, child_instruction_set.genome,alt_mode=False)
+            child1 = Organism(dom.generation + 1, count,dom.genome_size,2,True,dom.thread_length,dom.mutation_rate, dom, rec, child_instruction_set.genome,alt_mode=True)
     else:
         os.makedirs(path)
         child_instruction_set = InstructionSet(dom.genome_size, 2,True,dom.thread_length, dom.mutation_rate)
@@ -384,7 +389,7 @@ def reproduce(org1, org2, path):
         if dom.alt_mode:
             child1 = Organism(dom.generation + 1, count,dom.genome_size,2,True,dom.thread_length,dom.mutation_rate, dom, rec, child_instruction_set.genome,alt_mode=True)
         else:
-            child1 = Organism(dom.generation + 1, count,dom.genome_size,2,True,dom.thread_length,dom.mutation_rate, dom, rec, child_instruction_set.genome,alt_mode=False)
+            child1 = Organism(dom.generation + 1, count,dom.genome_size,2,True,dom.thread_length,dom.mutation_rate, dom, rec, child_instruction_set.genome,alt_mode=True)
         #print [i.char for i in child1.genome]
    # print 'child %s threads:' % child1.filename
    # for thread in child1.threads:

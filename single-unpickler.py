@@ -36,6 +36,7 @@ def unpickle_and_print(f):
         #org.__init__(org.generation, org.generational_index, org.genome_size,
         #    800, True, org.thread_length, org.mutation_rate, parent1=None, parent2=None,genome=genome)
         #print [i.crossover_point for i in org.genome]
+        print org.filename
         print "no. of threads: " + str(len(org.threads))
         print "length of genome: ", len(org.genome)
         print "no. collisions: ", org.collisions
@@ -54,7 +55,7 @@ def unpickle_and_print(f):
             #for thread in org.threads:
             #    print [i.group_id for i in thread.connected_pins]
             #    print "new thread connections:"
-            #    for connection in thread.connected_pins:
+            #    for connection in thread.connected_pins::
             #        print connection.group_id, connection.number
             #    print "-------------------------------------//"
             #break
@@ -62,8 +63,8 @@ def unpickle_and_print(f):
         print 'error'
 
 
-unpickle_and_print('/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Collisions/Gen10/10_9_9_5_9_4/10_9_9_5_9_4.txt')
-
+#unpickle_and_print('/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Collisions/Gen10/10_9_9_5_9_4/10_9_9_5_9_4.txt')
+unpickle_and_print('/Users/Aaron/Projects/ShakingJakeyBakey/Braitenbot_Data/Robot_Data/Development/Gen1/1_1_ _ _ _/1_1_ _ _ _.txt')
 #quickly load and print a single organism
 def run(f):
     try:
@@ -75,6 +76,5 @@ def run(f):
     except IOError:
         print 'IOError encountered'
     print "thread collisions: ", org.collisions
-
 #run('/Users/Aaron/Projects/Bbot/Random_Selection/Random_1/Gen10/last_one_testing.txt')
-g = generate_viable()
+#g = generate_viable()

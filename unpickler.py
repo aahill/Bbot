@@ -57,10 +57,16 @@ def fix_crossover_points(old_directory, new_directory, crossover_prob):
 #unpickle_and_print('/Users/Aaron/Projects/ShakingJakeyBakey/Braitenbot_Data/Robot_Data/Non_Development/Gen2')
 
 #path = '/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1'
+<<<<<<< HEAD
 
 
 path2 = '/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen4'
+=======
+path = '/Users/Aaron/Projects/Braitenbot_Data/Robot_Data/Development/Gen4'
+>>>>>>> 3810efc65b6b7767554d72860a31e159f5beedf2
 
+#path2 = '/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1'
+path2 = '/Users/Aaron/Projects/Braitenbot_Data/Robot_Data/Non_Development/Gen4'
 print "--------------------- NO DEVO------------------------------"
 #unpickle_and_print(path)
 print "----------------------------------------------------------------------------------------------------"

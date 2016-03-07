@@ -243,7 +243,10 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
     crossAndSaveGeneration(path_to_new_gen, new_gen_size)
     #calculateRankings(gen_directory)
     writeQuartilesToCsv(global_quartiles, experiment_directory)
+<<<<<<< HEAD
 
 
 path = '/home/jake/org/Thesis_Stuff/Robot_Data/Development'
 thresholdedCrossGeneration(path, path+'/Gen3', path+'/Gen4')
+=======
+>>>>>>> 3810efc65b6b7767554d72860a31e159f5beedf2
