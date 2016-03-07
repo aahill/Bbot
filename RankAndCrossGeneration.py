@@ -246,4 +246,4 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
 
 
 path = '/home/jake/org/Thesis_Stuff/Robot_Data/Development'
-thresholdedCrossGeneration(path, path+'/Gen1', path+'/Gen2')
+thresholdedCrossGeneration(path, path+'/Gen3', path+'/Gen4')

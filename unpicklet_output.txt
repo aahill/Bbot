@@ -1,0 +1,678 @@
+--------------------- NO DEVO------------------------------
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/gen1_baseline.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_6_ _ _ _ /1_6_ _ _ _ .txt
+[(2, 2), (2, 7, 3), (7, 3, 3)]
+-------------------------------------//
+Org: 1_6_ _ _ _ 
+connections: 
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['br', 'bl', 'bl', 'pr']
+new thread connections:
+br 1
+bl 1
+bl 3
+pr 1
+-------------------------------------//
+['pl', 'pl', 'pl', 'i2']
+new thread connections:
+pl 0
+pl 3
+pl 3
+i2 1
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_6_ _ _ _ /no_devo_1_6_0_0_0_0.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_1_ _ _ _ /1_1_ _ _ _ .txt
+[(0, 2), (8, 2, 2), (2, 6, 9)]
+-------------------------------------//
+Org: 1_1_ _ _ _ 
+connections: 
+['bl', 'br', 'br', 'i2']
+new thread connections:
+bl 2
+br 2
+br 2
+i2 2
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['pl', 'br']
+new thread connections:
+pl 3
+br 3
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_1_ _ _ _ /no_devo1_1_0_0_0_0.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_9_ _ _ _ /1_9_ _ _ _ .txt
+[(3, 3)]
+-------------------------------------//
+Org: 1_9_ _ _ _ 
+connections: 
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['pl', 'bl']
+new thread connections:
+pl 3
+bl 3
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['pl', 'br']
+new thread connections:
+pl 4
+br 3
+-------------------------------------//
+['i2', 'i5', 't5', 'e6', 't6', 'pr']
+new thread connections:
+i2 2
+i5 2
+t5 0
+e6 3
+t6 1
+pr 3
+-------------------------------------//
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_9_ _ _ _ /no_devo1_9_0_0_0_0.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_5_ _ _ _ /1_5_ _ _ _ .txt
+[(9, 5)]
+-------------------------------------//
+Org: 1_5_ _ _ _ 
+connections: 
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['pl', 'i4', 'n4', 'br']
+new thread connections:
+pl 5
+i4 1
+n4 3
+br 0
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['bl', 'pl']
+new thread connections:
+bl 2
+pl 2
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_5_ _ _ _ /no_devo1_5_0_0_0_0.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_0_ _ _ _ /no_devo_1_0_0_0_0_0.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_0_ _ _ _ /1_0_ _ _ _ .txt
+[(3, 0), (11, 8, 3)]
+-------------------------------------//
+Org: 1_0_ _ _ _ 
+connections: 
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['rl', 'pl']
+new thread connections:
+rl 3
+pl 3
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['rl', 'pl', 'pl', 'e3', 't3', 'fr']
+new thread connections:
+rl 1
+pl 1
+pl 2
+e3 2
+t3 0
+fr 2
+-------------------------------------//
+['fl', 'rl']
+new thread connections:
+fl 0
+rl 0
+-------------------------------------//
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_4_ _ _ _ /no_devo_1_4_0_0_0_0.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_4_ _ _ _ /1_4_ _ _ _ .txt
+[(0, 1), (8, 9, 10)]
+-------------------------------------//
+Org: 1_4_ _ _ _ 
+connections: 
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['br', 'pr']
+new thread connections:
+br 1
+pr 1
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['bl', 'br']
+new thread connections:
+bl 3
+br 3
+-------------------------------------//
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_2_ _ _ _ /1_2_ _ _ _ .txt
+[(0, 3), (0, 11, 2), (1, 10, 7)]
+-------------------------------------//
+Org: 1_2_ _ _ _ 
+connections: 
+[]
+new thread connections:
+-------------------------------------//
+['br', 'pl', 'pl', 'br']
+new thread connections:
+br 1
+pl 1
+pl 4
+br 1
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['bl', 'pl', 'pl', 'pr']
+new thread connections:
+bl 0
+pl 0
+pl 5
+pr 0
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_2_ _ _ _ /no_devo_1_2_0_0_0_0.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_7_ _ _ _ /no_devo_1_7_0_0_0_0.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_7_ _ _ _ /1_7_ _ _ _ .txt
+[(6, 5), (6, 8, 4), (7, 5, 9)]
+-------------------------------------//
+Org: 1_7_ _ _ _ 
+connections: 
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['br', 'pl', 'pl', 'bl']
+new thread connections:
+br 3
+pl 4
+pl 2
+bl 2
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['e2', 'bl']
+new thread connections:
+e2 1
+bl 3
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_3_ _ _ _ /no_devo1_3_0_0_0_0.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_3_ _ _ _ /1_3_ _ _ _ .txt
+[(4, 1), (9, 1, 0)]
+-------------------------------------//
+Org: 1_3_ _ _ _ 
+connections: 
+['fl', 'pl']
+new thread connections:
+fl 1
+pl 1
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['i6', 'rr', 'rr', 'i6']
+new thread connections:
+i6 1
+rr 5
+rr 5
+i6 1
+-------------------------------------//
+['bl', 'br']
+new thread connections:
+bl 3
+br 3
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_8_ _ _ _ /1_8_ _ _ _ .txt
+[(3, 0)]
+-------------------------------------//
+Org: 1_8_ _ _ _ 
+connections: 
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['br', 'pl', 'pl', 'bl']
+new thread connections:
+br 3
+pl 3
+pl 2
+bl 1
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_8_ _ _ _ /no_devo_1_8_0_0_0_0.csv
+----------------------------------------------------------------------------------------------------
+-----------------------------------DEVO STARTS HERE------------------------------------------------
+----------------------------------------------------------------------------------------------------
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/gen1_baseline.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_6_ _ _ _ /1_6_ _ _ _ .txt
+[(2, 2), (2, 7, 3), (7, 3, 3)]
+-------------------------------------//
+Org: 1_6_ _ _ _ 
+connections: 
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['br', 'bl', 'bl', 'pr']
+new thread connections:
+br 1
+bl 1
+bl 3
+pr 1
+-------------------------------------//
+['pl', 'pl']
+new thread connections:
+pl 0
+pl 3
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_6_ _ _ _ /devo_1_6_0_0_0_0.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_1_ _ _ _ /1_1_ _ _ _ .txt
+[(0, 2), (8, 2, 2), (2, 6, 9)]
+-------------------------------------//
+Org: 1_1_ _ _ _ 
+connections: 
+['bl', 'br']
+new thread connections:
+bl 2
+br 2
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['pl', 'br']
+new thread connections:
+pl 3
+br 3
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_1_ _ _ _ /devo_1_1_0_0_0_0.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_9_ _ _ _ /1_9_ _ _ _ .txt
+[(3, 3)]
+-------------------------------------//
+Org: 1_9_ _ _ _ 
+connections: 
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['pl', 'bl']
+new thread connections:
+pl 3
+bl 3
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['pl', 'br']
+new thread connections:
+pl 4
+br 3
+-------------------------------------//
+['i2', 'i5', 't5', 'e6', 't6', 'pr']
+new thread connections:
+i2 2
+i5 2
+t5 0
+e6 3
+t6 1
+pr 3
+-------------------------------------//
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_9_ _ _ _ /devo_1_9_0_0_0_0.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_5_ _ _ _ /1_5_ _ _ _ .txt
+[(9, 5)]
+-------------------------------------//
+Org: 1_5_ _ _ _ 
+connections: 
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['pl', 'i4', 'n4', 'br']
+new thread connections:
+pl 5
+i4 1
+n4 3
+br 0
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['bl', 'pl']
+new thread connections:
+bl 2
+pl 2
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_5_ _ _ _ /devo1_5_0_0_0_0.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_0_ _ _ _ /1_0_ _ _ _ .txt
+[(3, 0), (11, 8, 3)]
+-------------------------------------//
+Org: 1_0_ _ _ _ 
+connections: 
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['rl', 'pl']
+new thread connections:
+rl 3
+pl 3
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['rl', 'pl', 'pl', 'e3', 't3', 'fr']
+new thread connections:
+rl 1
+pl 1
+pl 2
+e3 2
+t3 0
+fr 2
+-------------------------------------//
+['fl', 'rl']
+new thread connections:
+fl 0
+rl 0
+-------------------------------------//
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_0_ _ _ _ /devo_1_0_0_0_0_0.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_4_ _ _ _ /devo_1_4_0_0_0_0.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_4_ _ _ _ /1_4_ _ _ _ .txt
+[(0, 1), (8, 9, 10)]
+-------------------------------------//
+Org: 1_4_ _ _ _ 
+connections: 
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['br', 'pr']
+new thread connections:
+br 1
+pr 1
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['bl', 'br']
+new thread connections:
+bl 3
+br 3
+-------------------------------------//
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_2_ _ _ _ /1_2_ _ _ _ .txt
+[(0, 3), (0, 11, 2), (1, 10, 7)]
+-------------------------------------//
+Org: 1_2_ _ _ _ 
+connections: 
+[]
+new thread connections:
+-------------------------------------//
+['br', 'pl']
+new thread connections:
+br 1
+pl 1
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['bl', 'pl', 'pl', 'pr']
+new thread connections:
+bl 0
+pl 0
+pl 5
+pr 0
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_2_ _ _ _ /devo_1_2_0_0_0_0.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_7_ _ _ _ /devo_1_7_0_0_0_0.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_7_ _ _ _ /1_7_ _ _ _ .txt
+[(6, 5), (6, 8, 4), (7, 5, 9)]
+-------------------------------------//
+Org: 1_7_ _ _ _ 
+connections: 
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['br', 'pl', 'pl', 'bl']
+new thread connections:
+br 3
+pl 4
+pl 2
+bl 2
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['e2', 'bl']
+new thread connections:
+e2 1
+bl 3
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_3_ _ _ _ /devo_1_3_0_0_0_0.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_3_ _ _ _ /1_3_ _ _ _ .txt
+[(4, 1), (9, 1, 0)]
+-------------------------------------//
+Org: 1_3_ _ _ _ 
+connections: 
+['fl', 'pl']
+new thread connections:
+fl 1
+pl 1
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['i6', 'rr']
+new thread connections:
+i6 1
+rr 5
+-------------------------------------//
+['bl', 'br']
+new thread connections:
+bl 3
+br 3
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_8_ _ _ _ /devo_1_8_0_0_0_0.csv
+/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1/1_8_ _ _ _ /1_8_ _ _ _ .txt
+[(3, 0)]
+-------------------------------------//
+Org: 1_8_ _ _ _ 
+connections: 
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+['br', 'pl', 'pl', 'bl']
+new thread connections:
+br 3
+pl 3
+pl 2
+bl 1
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
+[]
+new thread connections:
+-------------------------------------//
