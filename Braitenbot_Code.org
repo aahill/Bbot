@@ -2348,7 +2348,7 @@ Same as RankAndCrossGeneration, only the orgs are randomly ranked.
 #+BEGIN_SRC python :noweb yes :results output
   import Organism
   import RandomRankAndCrossGeneration
-  path = '/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Collisions'
+  path = '/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Development'
 
   def gen():
       count = 0
@@ -3665,3 +3665,7 @@ Today we re-ran all of Gen1
 - Replaced 1_1 and 1_3 with an interaction genome
 - Reran 1_5 and 1_9 becaause they were the biggest outliers
 - 
+** <2016-03-07 Mon>
+- No_devo_4_2... robot moving in a way that should not happen based on it wiring.
+  - This makes me think that evolution is exploiting quirks in the hardware
+of the bot.
