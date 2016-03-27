@@ -890,18 +890,22 @@ import string
 *Output:* A Base object with two binary attributes, char and crossover_point.Char has $1/2$ chance of being 1 or 0, crossover_point is initialized to 0.\\
 #+NAME: Base
 #+BEGIN_SRC python 
-class Base:
-    def __init__(self):
-        self.char = random.randint(0, 1)
-        self.crossover_point = 0 # Crossover hotspots are set later by InstructionSet
-            
-    def set_crossover_point(self, new_val):
-            self.crossover_point = new_val
-            return self.crossover_point
-
-    def set_char(self, new_val):
-            self.char = new_val
-            return self.char
+  #*input:* None\\
+  #*Output:* A Base object with two binary attributes, char and crossover_point.Char has $1/2$ chance of being 1 or 0, crossover_point is initialized to 0.\\
+  class Base:
+      def __init__(self):
+          #the binary nucleobase analog 
+          self.char = random.randint(0, 1)
+          #the binary crossover point value, for use in reproduction
+          self.crossover_point = 0 # Crossover hotspots are set later by InstructionSet
+      #sets the crossover point value to a new value
+      def set_crossover_point(self, new_val):
+              self.crossover_point = new_val
+              return self.crossover_point
+      #sets the char value to a new value
+      def set_char(self, new_val):
+              self.char = new_val
+              return self.char
 
 #+END_SRC
 ** TODO Class: InstructionSet
@@ -909,6 +913,15 @@ class Base:
 *Output:* An InstructionSet object with a genome attribute. A genome is a list containing 2000 Base objects of which at least one has a crossover_point value == 1.\\
 #+NAME: InstructionSet
 #+BEGIN_SRC python :noweb yes
+
+  #*Input:* size, the length of the genome
+  # crossover_point_number, the number of allowed crossover points
+  # unrestricted_distribution, a boolean for whether
+  #gene_length
+
+  #*Output:* An InstructionSet object with a genome attribute.
+  #A genome is a list containing 2000 Base objects of which at least one has a crossover_point value == 1.\\
+
   class InstructionSet:
       def __init__(self, size, crossover_point_number,unrestricted_distribution, gene_length, mutation_rate ):
           self.genome = []
@@ -1163,7 +1176,6 @@ For each Base in InstructionSet, there is 2/20000 of the Base being mutated.
 #+BEGIN_SRC python 
 from BaseAndInstructionSet import *
 from Decoder import Decoder
-#from PinAndPinGroup import *
 import random
 import os
 import jsonpickle
@@ -1173,16 +1185,24 @@ import jsonpickle
 *Output:* a Thread, stores a section of an Organism’s InstructionSet and builds connections from it, whcih are also stored.\\
 #+NAME: Thread
 #+BEGIN_SRC python :noweb yes
-class Thread(object):
-    def __init__(self, thread_decoder):
-        self.binary = []
-        self.decoded_instructions = []
-        self.connected_pins = []
-        self.decoder = thread_decoder
+  #*Input:* thread_decoder, a Decoder object\\
+  #*Output:* a Thread, stores a section of an Organism’s InstructionSet and builds connections from it, whcih are also stored.\\
 
-    # simply calls the decoder to decode the thread's instructions
-    def decode(self):
-        self.decoded_instructions = self.decoder.generate_coords(self.binary)
+  class Thread(object):
+      def __init__(self, thread_decoder):
+          #stores the binary of the thread
+          self.binary = []
+          #list of tuples containing the directional movement instructions encoded in the thread
+          #(once the thread has been decodex)
+          self.decoded_instructions = []
+          #the connected pins as a result of the decoded instructions
+          self.connected_pins = []
+          #the decoder object to be used by the Thread
+          self.decoder = thread_decoder
+
+      # simply calls the decoder to decode the thread's instructions
+      def decode(self):
+          self.decoded_instructions = self.decoder.generate_coords(self.binary)
 #+END_SRC 
 *** Test
 
@@ -1195,6 +1215,7 @@ class Thread(object):
     
 #+END_SRC
 ** Class: Organism
+
 *Input:* generation, int,  the generation the org belongs to.\\
 \indent generational index, int, tracks the order in which the orgs in a gen were created\\
 \indent parent1=None, Organism, One of the orgs parents, defaults to None\\
@@ -1204,6 +1225,13 @@ class Thread(object):
 
 #+NAME: Organism
 #+BEGIN_SRC python :noweb yes 
+  """*Input:* generation, int,  the generation the org belongs to.
+   generational index, int, tracks the order in which the orgs in a gen were created
+   parent1=None, Organism, One of the orgs parents, defaults to None
+   parent2=None, Organism, The other parent, also defaults to none
+   genome=None: An InstructionSet, defaults to None.
+  ,*Output:* An Organism object. It keeps track of an individual’s genome, lineage,
+  and experimental performance, as well as builds its phenotype from the genome."""
   class Organism(object):
         def __init__(self, generation, generational_index,genome_size, num_crossover_points, unrestricted_crossover_point_distribution, thread_length,mutation_rate, parent1=None, parent2=None, genome=None, alt_mode=False):
             #conditionally import the correct pin groups
@@ -1212,12 +1240,14 @@ class Thread(object):
                   from AlternatePinAndPinGroup import *
             else:
                   from PinAndPinGroup import *
-            # store perfromance on behavioral task
+            # store perfromance on behavioral task: raw performance and normalized performance
             self.performance_1 = None
             self.performance_2 = None
+            #lists where collisions occur
             self.collision_events = []
             self.reproduction_possibilities = None
             self.generation = generation
+            #variables to track lineage info and generate file name
             self.generational_index = generational_index
             self.thread_length = thread_length
             self.genome_size = genome_size
@@ -1306,26 +1336,26 @@ class Thread(object):
 *Output:* A unique string for identifying a particular organism, containing generational info as well as the name of the Organism’s parents.\\
 #+NAME: set_file_name
 #+BEGIN_SRC python 
-    """
-    creates the string for the organism's filename
-    """
-    def set_file_name(self):
-        #if self.parent1 is not None and self.parent2 is not None:
-        try:
-            filename = (str(self.generation) + "_" +
-                        str(self.generational_index) + "_" +
-                        str(self.parent1_generation) + "_" +
-                        str(self.parent1_generational_index) + "_" +
-                        str(self.parent2_generation) + "_" +
-                        str(self.parent2_generational_index))
-        except AttributeError:
-            filename = (str(self.generation) + "_" +
-                        str(self.generational_index) + "_" +
-                        str(" ") + "_" +
-                        str(" ") + "_" +
-                        str(" ") + "_" +
-                        str(" "))
-        return filename
+  """
+  creates the string for the organism's filename
+  """
+  def set_file_name(self):
+      # create the filename based on the generational and lineage data
+      try:
+          filename = (str(self.generation) + "_" +
+                      str(self.generational_index) + "_" +
+                      str(self.parent1_generation) + "_" +
+                      str(self.parent1_generational_index) + "_" +
+                      str(self.parent2_generation) + "_" +
+                      str(self.parent2_generational_index))
+      except AttributeError:
+          filename = (str(self.generation) + "_" +
+                      str(self.generational_index) + "_" +
+                      str(" ") + "_" +
+                      str(" ") + "_" +
+                      str(" ") + "_" +
+                      str(" "))
+      return filename
 
 #+END_SRC
 **** save to file
@@ -1333,6 +1363,7 @@ class Thread(object):
 *Output:* a new directory named after the Organism, containing a pickled instantiation of the Organism. \\
 #+NAME: save_to_file
 #+BEGIN_SRC python 
+  # save the Organism file using jsonpickle and a prespecified path
   def save_to_file(self, path):
       if not os.path.exists(path+"/"+self.filename):
           dir = os.mkdir(path+"/"+self.filename)
@@ -1343,34 +1374,35 @@ class Thread(object):
 **** create threads
 #+NAME: create_threads
 #+BEGIN_SRC python 
-    def create_threads(self, thread_length):
-        for genome_index in range(0, len(self.genome), thread_length):
-            # iteratively create lists of base chars of size 'thread_length'
-            # these lists will become the binary for the threads
-            new_thread = Thread(self.decoder)
-            try:
-                # get the chars from each base in the segment of the instruction code being examined
-                thread_binary = ([self.genome[i].char for i in range(genome_index,  genome_index+thread_length)])
-                new_thread.binary = thread_binary
-                self.threads.append(new_thread)
-            # in the event of not having enough bases to create an entire thread
-            # let the thread be truncated, and stop copying over bases, and append it to the list of threads
-            except IndexError:
-                thread_binary = ([self.genome[i].char for i in range(genome_index, len(self.genome))])
-                new_thread.binary = thread_binary
-                self.threads.append(new_thread)
+  # divides an organism's genome into threads of 'thread_length'
+  def create_threads(self, thread_length):
+      for genome_index in range(0, len(self.genome), thread_length):
+          # iteratively create lists of base chars of size 'thread_length'
+          # these lists will become the binary for the threads
+          new_thread = Thread(self.decoder)
+          try:
+              # get the chars from each base in the segment of the instruction code being examined
+              thread_binary = ([self.genome[i].char for i in range(genome_index,  genome_index+thread_length)])
+              new_thread.binary = thread_binary
+              self.threads.append(new_thread)
+          # in the event of not having enough bases to create an entire thread
+          # let the thread be truncated, and stop copying over bases, and append it to the list of threads
+          except IndexError:
+              thread_binary = ([self.genome[i].char for i in range(genome_index, len(self.genome))])
+              new_thread.binary = thread_binary
+              self.threads.append(new_thread)
 #+END_SRC
 **** generate thread instructions
-*Input:* Nothing\\
-*Output:* Nothing\\
-*Side Effect:* The binary instructions for each Thread in self.threads (see above) is decoded into corresponding coordinate instructions (see Decoder).\\
 #+NAME: generate_thread_instructions
 #+BEGIN_SRC python
-    def generate_thread_instructions(self):
-        for thread in self.threads:
-            # instructions are xy coordinate points to plug into the pinGroups
-            thread.decode()
-            #print thread.decoded_instructions
+  #*Input:* Nothing\\
+  #*Output:* Nothing\\
+  #*Side Effect:* The binary instructions for each Thread in self.threads (see above) is decoded into corresponding coordinate instructions (see Decoder).\\
+  def generate_thread_instructions(self):
+      for thread in self.threads:
+          # instructions are xy coordinate points to plug into the pinGroups
+          thread.decode()
+          #print thread.decoded_instructions
 
 #+END_SRC
 **** build_thread_coordinates       		
@@ -1390,6 +1422,19 @@ class Thread(object):
       
 #+NAME: build_thread_coordinates
 #+BEGIN_SRC python
+  #*Input:* Nothing   
+  #*Output:* Nothing    
+  #*Side Effect:* Determines the pins connected as dictated by the coordinates of each thread.    
+  #*Process:* Each Thread is built (i.e.  their decoded_instructions are used to accesses PinGroups and Pins (see below))   
+  # using a round-robin approach. This done by simultaneously building each thread, one index at a    
+  # time. Threads that are actively being built are stored in the list active_threads. Threads are    
+  # removed from active_threads if they collided with with a previously built Thread, for trying    
+  #to accesses out of bounds Pins, for having only one valid pin, etc. Pins are accessed using the    
+  # xyz coordinates stored in Thread.decoded_instructions, where x corresponds to the PinGroup, y   
+  # corresponds to a specific Pin in the PinGroup, and z corresponding to another Pin within that   
+  # same PinGroup-- the origin of the next wire. After each Thread is built, and therefore    
+  #active_threads is empty, threads are checked to make sure there are no connections without a   
+  # terminal pin.
   def build_thread_coordinates(self):
       # threads will be temporarily copied into a separate list of running threads, to determine when the process of
       # making their connections is completed
@@ -1501,7 +1546,7 @@ class Thread(object):
               to_remove.available = True
               running.connected_pins.remove(to_remove)
               self.connections.remove(to_remove)
-    
+  
 #+END_SRC
 **** is viable
 *Input:* Nothing\\
@@ -1582,41 +1627,6 @@ the set of all connected pins in a given thread.\\
 
 
 #+END_SRC
-**** is viable 2
-#+NAME: is_viable_2
-#+BEGIN_SRC python :noweb yes
-def generate_viable():
-    # writes a 'progress bar' to the console
-    def progress(x):
-        out = '\r %s organisms tested' % x  # The output
-        print out,
-
-    genomes_tested = 0
-    finished = False
-    while not finished:
-        test = Organism(0, 0,560,2,True,80,2000)
-        if test.collisions > 0 and test.is_viable():
-            good_org = True
-            for thread in test.threads:
-                for triple in thread.decoded_instructions:
-                    if triple[-1] == triple[-2]:
-                        good_org = False
-                        break
-            if good_org:
-                print "-------------------------------------//"
-                print "connections: "
-                for thread in test.threads:
-                    print "new thread connections:"
-                    for connection in thread.connected_pins:
-                        print connection.group_id, connection.number
-                print "-------------------------------------//"
-                finished = True
-                return test
-        genomes_tested += 1
-        progress(genomes_tested)
-
-
-#+END_SRC
 *** Other Methods
 #+NAME: OtherMethods
 #+BEGIN_SRC python :noewb yes
@@ -1648,22 +1658,10 @@ from the successive locus in recessive parent’s InstructionSet. This switch wi
       index = 0
       # This is how the offsprings genome is made
       #allows for crossing over at nonhotspots at 1/100000 chance.
-      """"while index < len(dom.genome):
-          child1_genome.append(dom.genome[index])
-          if dom.genome[index].crossover_point == 1:
-              while dom.genome[index + 1].crossover_point != 1 and \
-                      index + 1 < len(dom.genome) - 1:
-                          child1_genome.append(rec.genome[index + 1])
-                          index += 1
-          index += 1"""
-
       dom_genome_copy = True
       dom_stuff =[]
       rec_stuff=[]
       while index <= len(dom.genome) - 1:
-          """if index  % 4 == 0:
-              dom_stuff.append('')
-              #rec_stuff.append('|')"""
           if dom_genome_copy:
               child1_genome.append(dom.genome[index])
               dom_stuff.append(dom.genome[index].char)
@@ -1682,10 +1680,6 @@ from the successive locus in recessive parent’s InstructionSet. This switch wi
                   rec_stuff.append('HERE')
                   dom_genome_copy = True
               index +=1
-      #for i in range (0, len(dom_stuff)- 1):
-          #print '%s  %s' %  (dom_stuff[i], rec_stuff[i])
-      #print dom_stuff
-
 
       # This takes care of  of saving the Org.
       # if the path specified does not exist a new directory
@@ -1712,23 +1706,14 @@ from the successive locus in recessive parent’s InstructionSet. This switch wi
               child1 = Organism(dom.generation + 1, count,dom.genome_size,2,True,dom.thread_length,dom.mutation_rate, dom, rec, child_instruction_set.genome,alt_mode=True)
           else:
               child1 = Organism(dom.generation + 1, count,dom.genome_size,2,True,dom.thread_length,dom.mutation_rate, dom, rec, child_instruction_set.genome,alt_mode=False)
-          #print [i.char for i in child1.genome]
-     # print 'child %s threads:' % child1.filename
-     # for thread in child1.threads:
-     #     print thread.decoded_instructions
-     #     print [i.group_id for i in thread.connected_pins]
       child1.save_to_file(path)
-     # print 'Dom  Rec  Crossover  real_offspring'
-     # for i in range(len(child1_genome) - 1):
-     #     print '%s      %s      %s          %s' % (dom.genome[i].char, rec.genome[i].char, child1_genome[i].crossover_point,child1_genome[i].char)
-      #if is_same_genome(dom, child1): print 'THEYRE SAME'
-      #else: print 'THYRE DIFF'
       return child1
 #+END_SRC
 **** Method: generate viable
 Generates a viable organism 
 #+NAME: generate_viable
 #+BEGIN_SRC python
+  #Generates a viable organism based on the is_viable check
   def generate_viable():
       # writes a 'progress bar' to the console
       def progress(x):
