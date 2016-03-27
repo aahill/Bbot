@@ -1,4 +1,6 @@
-#unpickles the or organisms in a directory and compares the output to the current code
+#a utility that unpickles all pickled organisms in a directory, and prints each threads' connections.
+#The genome is then 
+#and compares the output to the current code
 
 import json_load_file
 import os
@@ -35,19 +37,11 @@ def compare(directory):
 			                for connection in thread.connected_pins:
 			                    print connection.group_id, connection.number
 			            print "-------------------------------------//"
-			            #print "Org: %s" % org.filename
-			            print "connections: "
-			            #for thread in org.threads:
-			            #    print [i.group_id for i in thread.connected_pins]
-			            #    print "new thread connections:"
-			            #    for connection in thread.connected_pins:
-			            #        print connection.group_id, connection.number
-			            #    print "-------------------------------------//"
-			            #break
+	
 			        print "++++++++++++++++++++newly generated organism+++++++++++++++++++++++++++++++++++++\n"
 			        genome = devo_org.genome
-			        #new_devo_org = Organism(devo_org.generation, devo_org.generational_index, devo_org.genome_size,
-			        #    800, True, devo_org.thread_length, devo_org.mutation_rate, parent1=None, parent2=None,genome=genome,alt_mode=True)
+			        new_devo_org = Organism(devo_org.generation, devo_org.generational_index, devo_org.genome_size,
+			            800, True, devo_org.thread_length, devo_org.mutation_rate, parent1=None, parent2=None,genome=genome,alt_mode=False)
 
 			        print "no. of threads: " + str(len(new_devo_org.threads))
 			        print "length of genome: ", len(new_devo_org.genome)
@@ -71,14 +65,5 @@ def compare(directory):
 			            print "-------------------------------------//"
 			    except IOError:
 			        print 'IO error'
-#for x in range(30000):
-#    #g = generate_viable()
-#    g = Organism(0, 0,560,2,True,80,2000)
-#    compare(g)
-#    print (str(x) +" completed")#, end="\r")
-#g = Organism(0, 0,560,2,True,80,2000)
-#g = generate_viable()
-#compare(g)
-#compare('/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Collisions/Gen10/10_9_9_5_9_4/10_9_9_5_9_4.txt')
-#compare("/Users/Aaron/Projects/ShakingJakeyBakey/Braitenbot_Data/Robot_Data/Non_Development/Gen2/2_2_1_1_1_0/2_2_1_1_1_0.txt")
-compare("/Users/Aaron/Projects/Braitenbot_Data/Robot_Data/Development/Gen4/")
+
+compare("/Users/Aaron/Projects/Braitenbot_Data/Robot_Data/Development/Gen1/")
