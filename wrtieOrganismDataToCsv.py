@@ -18,6 +18,7 @@ def writeOrganismDataToCsv(pop_dir, outfile):
                     collisions = org.collisions
                     num_wires = len(org.connections)/2
                     num_co_points = len([i.crossover_point for i in org.genome if i.crossover_point ==1])
+                    num_active_threads = len([i for i in org.threads if len(i.connected_pens) > 0])
                     print filename
                     print  raw_performance, collisions, num_wires, num_co_points
                 except AttributeError:
@@ -28,24 +29,26 @@ def writeOrganismDataToCsv(pop_dir, outfile):
                                     'Normalzied Performance': normalzied_performance, \
                                     'Number of Collisions': collisions, \
                                     'Number of Wires': num_wires, \
-                                    'Number of Crossover Points': num_co_points
+                                    'Number of Crossover Points': num_co_points, \
+                                    'Number of Active Threads': num_active_threads
                 }
                 print performance_dict
                 if os.path.isfile(pop_dir +'/'+outfile+'.csv'):
                     with open(pop_dir + '/' + outfile+'.csv' , 'a') as f:
                         fieldnames = ['Filename', 'Raw Performance', 'Normalzied Performance', 'Number of Collisions', \
-                                        'Number of Wires', 'Number of Crossover Points']
+                                        'Number of Wires', 'Number of Crossover Points', 'Number of Active Threads']
                         writer = csv.DictWriter(f, fieldnames=fieldnames)
                         writer.writerow(performance_dict)
                 else:
                     with open(pop_dir + '/' + outfile+'.csv' , 'wb') as f:
                         fieldnames = ['Filename', 'Raw Performance', 'Normalzied Performance', 'Number of Collisions', \
-                                        'Number of Wires', 'Number of Crossover Points']
+                                        'Number of Wires', 'Number of Crossover Points', 'Number of Active Threads']
                         writer = csv.DictWriter(f, fieldnames=fieldnames)
 
                         writer.writeheader()
                         writer.writerow(performance_dict)
 writeOrganismDataToCsv('/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Non_Development', 'Simulation_Non_Development_Data')
+
 
 def baselineCsv(infile, outfile):
     for root, dir, files in os.walk(infile, topdown = True):
