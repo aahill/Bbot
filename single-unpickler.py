@@ -36,11 +36,15 @@ def unpickle_and_print(f):
         #org.__init__(org.generation, org.generational_index, org.genome_size,
         #    800, True, org.thread_length, org.mutation_rate, parent1=None, parent2=None,genome=genome)
         #print [i.crossover_point for i in org.genome]
+        co_points =0
+        for i in org.genome:
+            co_points += i.crossover_point
         print org.filename
         print "no. of threads: " + str(len(org.threads))
         print "length of genome: ", len(org.genome)
         print "no. collisions: ", org.collisions
         print "connected_pins: ", [str(pin.number)+pin.group_id for pin in org.connections]
+        print "co points:", co_points
         assert(len(org.genome) == len(org.instruction_set.genome))
         for thread in org.threads:
             if len(thread.decoded_instructions) == 0: 
@@ -64,7 +68,8 @@ def unpickle_and_print(f):
 
 
 #unpickle_and_print('/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Collisions/Gen10/10_9_9_5_9_4/10_9_9_5_9_4.txt')
-unpickle_and_print('/Users/Aaron/Projects/ShakingJakeyBakey/Braitenbot_Data/Robot_Data/Development/Gen1/1_1_ _ _ _/1_1_ _ _ _.txt')
+unpickle_and_print('/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1/1_0_ _ _ _ /1_0_ _ _ _ .txt')
+unpickle_and_print('/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Non_Development/Gen1/1_0_ _ _ _ /1_0_ _ _ _ .txt')
 #quickly load and print a single organism
 def run(f):
     try:

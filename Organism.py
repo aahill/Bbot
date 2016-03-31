@@ -321,14 +321,6 @@ def reproduce(org1, org2, path):
     index = 0
     # This is how the offsprings genome is made
     #allows for crossing over at nonhotspots at 1/100000 chance.
-    """"while index < len(dom.genome):
-        child1_genome.append(dom.genome[index])
-        if dom.genome[index].crossover_point == 1:
-            while dom.genome[index + 1].crossover_point != 1 and \
-                    index + 1 < len(dom.genome) - 1:
-                        child1_genome.append(rec.genome[index + 1])
-                        index += 1
-        index += 1"""
 
     dom_genome_copy = True
     dom_stuff =[]

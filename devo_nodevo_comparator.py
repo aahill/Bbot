@@ -83,23 +83,16 @@ def compare(devo_file):
 #    compare(g)
 #    print (str(x) +" completed")#, end="\r")
 #g = Organism(0, 0,560,2,True,80,2000)
-<<<<<<< HEAD
 path = '/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen2'
 #g = generate_viable()
 #compare(g)
 #compare('/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Collisions/Gen10/10_9_9_5_9_4/10_9_9_5_9_4.txt')
 path = '/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1'
-=======
 
 path = "/Users/Aaron/Projects/Braitenbot_Data/Robot_Data/Development/Gen4"
->>>>>>> 3810efc65b6b7767554d72860a31e159f5beedf2
 for root, dirs, files in os.walk(path):
     for f in files:
         if f.endswith('.txt'):
             compare(root+'/'+f)
-<<<<<<< HEAD
 #compare('/home/jake/org/Thesis_Stuff/Robot_Data/Development')
 #compare("/Users/Aaron/Projects/ShakingJakeyBakey/Braitenbot_Data/Simulation_Data/Random_Selection_Collisions/Gen10/10_1_9_6_9_3/10_1_9_6_9_3.txt")
-=======
-
->>>>>>> 3810efc65b6b7767554d72860a31e159f5beedf2

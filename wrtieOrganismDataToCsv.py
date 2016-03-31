@@ -18,11 +18,11 @@ def writeOrganismDataToCsv(pop_dir, outfile):
                     collisions = org.collisions
                     num_wires = len(org.connections)/2
                     num_co_points = len([i.crossover_point for i in org.genome if i.crossover_point ==1])
-                    num_active_threads = len([i for i in org.threads if len(i.connected_pens) > 0])
+                    num_active_threads = len([i for i in org.threads if len(i.connected_pins) > 0])
                     print filename
                     print  raw_performance, collisions, num_wires, num_co_points
                 except AttributeError:
-                    print error
+                    print 'error'
 
                 performance_dict = {'Filename': filename, \
                                     'Raw Performance': raw_performance, \
@@ -47,7 +47,7 @@ def writeOrganismDataToCsv(pop_dir, outfile):
 
                         writer.writeheader()
                         writer.writerow(performance_dict)
-writeOrganismDataToCsv('/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Non_Development', 'Simulation_Non_Development_Data')
+writeOrganismDataToCsv('/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Development_Old_Genomes', 'Simulation_No_Selection_Non_Development_Data_Num_Threads_NEW')
 
 
 def baselineCsv(infile, outfile):

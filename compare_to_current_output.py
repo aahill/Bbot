@@ -81,4 +81,4 @@ def compare(directory):
 #compare(g)
 #compare('/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Collisions/Gen10/10_9_9_5_9_4/10_9_9_5_9_4.txt')
 #compare("/Users/Aaron/Projects/ShakingJakeyBakey/Braitenbot_Data/Robot_Data/Non_Development/Gen2/2_2_1_1_1_0/2_2_1_1_1_0.txt")
-compare("/Users/Aaron/Projects/Braitenbot_Data/Robot_Data/Development/Gen4/")
+compare("/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen5/")
