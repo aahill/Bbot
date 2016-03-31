@@ -2304,24 +2304,25 @@ Same as RankAndCrossGeneration, only the orgs are randomly ranked.
 
 #+RESULTS:
 
-#+BEGIN_SRC python :results output
+#+BEGIN_SRC python :results output :tangle genOrgs.py
   import Organism
-  viable = False
-  path_devo = '/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1'
-  path_no_devo = '/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1'
-  while(not viable):
-      org = Organism.Organism(1, 3, 560, 2, True, 80, 2000)
-      genome =org.genome 
-      non_devo_org = Organism.Organism(1,3, 560, 2, True, 80, 2000, None, None,genome, True)
-      if org.is_viable() and (len(org.connections) != len(non_devo_org.connections)):
-          devo_connecions = [i.group_id for i in org.connections]
-          nodevo_connecions = [i.group_id for i in non_devo_org.connections]
-          print "devo",devo_connecions
-          print "nodevo", nodevo_connecions
-          org.save_to_file(path_devo)
-          non_devo_org.save_to_file(path_no_devo)
-          print "Huzzah"
-          viable =True
+  def gen_orgs():
+      viable = False
+      path_devo = '/home/jake/org/Thesis_Stuff/Robot_Data/Development/Gen1'
+      path_no_devo = '/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Gen1'
+      while(not viable):
+          org = Organism.Organism(1, 3, 560, 2, True, 80, 2000)
+          genome =org.genome 
+          non_devo_org = Organism.Organism(1,3, 560, 2, True, 80, 2000, None, None,genome, True)
+          if org.is_viable() and (len(org.connections) != len(non_devo_org.connections)):
+              devo_connecions = [i.group_id for i in org.connections]
+              nodevo_connecions = [i.group_id for i in non_devo_org.connections]
+              print "devo",devo_connecions
+              print "nodevo", nodevo_connecions
+              org.save_to_file(path_devo)
+              non_devo_org.save_to_file(path_no_devo)
+              print "Huzzah"
+              viable =True
 #+END_SRC
 
 #+RESULTS:
