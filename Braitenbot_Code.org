@@ -943,7 +943,7 @@ import string
           else:
               xover_indices =[i for i in potential_locations]
               while counter != crossover_point_number:
-                  rand_index = random.choice(potential_locations)
+                  rand_index = random.choice(xover_indices)
                   self.genome[rand_index].set_crossover_point(1)
                   xover_indices.remove(rand_index)
                   counter +=1

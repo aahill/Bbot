@@ -1,20 +1,34 @@
 # -*- coding: utf-8 -*-
 from BaseAndInstructionSet import *
 from Decoder import Decoder
-#from PinAndPinGroup import *
 import random
 import os
 import jsonpickle
+#*Input:* thread_decoder, a Decoder object\\
+#*Output:* a Thread, stores a section of an Organism’s InstructionSet and builds connections from it, whcih are also stored.\\
+
 class Thread(object):
     def __init__(self, thread_decoder):
+        #stores the binary of the thread
         self.binary = []
+        #list of tuples containing the directional movement instructions encoded in the thread
+        #(once the thread has been decodex)
         self.decoded_instructions = []
+        #the connected pins as a result of the decoded instructions
         self.connected_pins = []
+        #the decoder object to be used by the Thread
         self.decoder = thread_decoder
 
     # simply calls the decoder to decode the thread's instructions
     def decode(self):
         self.decoded_instructions = self.decoder.generate_coords(self.binary)
+"""*Input:* generation, int,  the generation the org belongs to.
+ generational index, int, tracks the order in which the orgs in a gen were created
+ parent1=None, Organism, One of the orgs parents, defaults to None
+ parent2=None, Organism, The other parent, also defaults to none
+ genome=None: An InstructionSet, defaults to None.
+*Output:* An Organism object. It keeps track of an individual’s genome, lineage,
+and experimental performance, as well as builds its phenotype from the genome."""
 class Organism(object):
       def __init__(self, generation, generational_index,genome_size, num_crossover_points, unrestricted_crossover_point_distribution, thread_length,mutation_rate, parent1=None, parent2=None, genome=None, alt_mode=False):
           #conditionally import the correct pin groups
@@ -23,12 +37,14 @@ class Organism(object):
                 from AlternatePinAndPinGroup import *
           else:
                 from PinAndPinGroup import *
-          # store perfromance on behavioral task
+          # store perfromance on behavioral task: raw performance and normalized performance
           self.performance_1 = None
           self.performance_2 = None
+          #lists where collisions occur
           self.collision_events = []
           self.reproduction_possibilities = None
           self.generation = generation
+          #variables to track lineage info and generate file name
           self.generational_index = generational_index
           self.thread_length = thread_length
           self.genome_size = genome_size
@@ -85,7 +101,7 @@ class Organism(object):
       creates the string for the organism's filename
       """
       def set_file_name(self):
-          #if self.parent1 is not None and self.parent2 is not None:
+          # create the filename based on the generational and lineage data
           try:
               filename = (str(self.generation) + "_" +
                           str(self.generational_index) + "_" +
@@ -102,12 +118,14 @@ class Organism(object):
                           str(" "))
           return filename
       
+      # save the Organism file using jsonpickle and a prespecified path
       def save_to_file(self, path):
           if not os.path.exists(path+"/"+self.filename):
               dir = os.mkdir(path+"/"+self.filename)
           with open(path+"/"+self.filename+"/"+self.filename+".txt", 'wb') as output:
               data = jsonpickle.encode(self)
               output.write(data)
+      # divides an organism's genome into threads of 'thread_length'
       def create_threads(self, thread_length):
           for genome_index in range(0, len(self.genome), thread_length):
               # iteratively create lists of base chars of size 'thread_length'
@@ -124,12 +142,28 @@ class Organism(object):
                   thread_binary = ([self.genome[i].char for i in range(genome_index, len(self.genome))])
                   new_thread.binary = thread_binary
                   self.threads.append(new_thread)
+      #*Input:* Nothing\\
+      #*Output:* Nothing\\
+      #*Side Effect:* The binary instructions for each Thread in self.threads (see above) is decoded into corresponding coordinate instructions (see Decoder).\\
       def generate_thread_instructions(self):
           for thread in self.threads:
               # instructions are xy coordinate points to plug into the pinGroups
               thread.decode()
               #print thread.decoded_instructions
       
+      #*Input:* Nothing   
+      #*Output:* Nothing    
+      #*Side Effect:* Determines the pins connected as dictated by the coordinates of each thread.    
+      #*Process:* Each Thread is built (i.e.  their decoded_instructions are used to accesses PinGroups and Pins (see below))   
+      # using a round-robin approach. This done by simultaneously building each thread, one index at a    
+      # time. Threads that are actively being built are stored in the list active_threads. Threads are    
+      # removed from active_threads if they collided with with a previously built Thread, for trying    
+      #to accesses out of bounds Pins, for having only one valid pin, etc. Pins are accessed using the    
+      # xyz coordinates stored in Thread.decoded_instructions, where x corresponds to the PinGroup, y   
+      # corresponds to a specific Pin in the PinGroup, and z corresponding to another Pin within that   
+      # same PinGroup-- the origin of the next wire. After each Thread is built, and therefore    
+      #active_threads is empty, threads are checked to make sure there are no connections without a   
+      # terminal pin.
       def build_thread_coordinates(self):
           # threads will be temporarily copied into a separate list of running threads, to determine when the process of
           # making their connections is completed
@@ -241,7 +275,7 @@ class Organism(object):
                   to_remove.available = True
                   running.connected_pins.remove(to_remove)
                   self.connections.remove(to_remove)
-        
+      
       def is_viable(self):
           connected_pins = []
       
@@ -321,14 +355,10 @@ def reproduce(org1, org2, path):
     index = 0
     # This is how the offsprings genome is made
     #allows for crossing over at nonhotspots at 1/100000 chance.
-
     dom_genome_copy = True
     dom_stuff =[]
     rec_stuff=[]
     while index <= len(dom.genome) - 1:
-        """if index  % 4 == 0:
-            dom_stuff.append('')
-            #rec_stuff.append('|')"""
         if dom_genome_copy:
             child1_genome.append(dom.genome[index])
             dom_stuff.append(dom.genome[index].char)
@@ -347,10 +377,6 @@ def reproduce(org1, org2, path):
                 rec_stuff.append('HERE')
                 dom_genome_copy = True
             index +=1
-    #for i in range (0, len(dom_stuff)- 1):
-        #print '%s  %s' %  (dom_stuff[i], rec_stuff[i])
-    #print dom_stuff
-
 
     # This takes care of  of saving the Org.
     # if the path specified does not exist a new directory
@@ -377,18 +403,9 @@ def reproduce(org1, org2, path):
             child1 = Organism(dom.generation + 1, count,dom.genome_size,2,True,dom.thread_length,dom.mutation_rate, dom, rec, child_instruction_set.genome,alt_mode=True)
         else:
             child1 = Organism(dom.generation + 1, count,dom.genome_size,2,True,dom.thread_length,dom.mutation_rate, dom, rec, child_instruction_set.genome,alt_mode=False)
-        #print [i.char for i in child1.genome]
-   # print 'child %s threads:' % child1.filename
-   # for thread in child1.threads:
-   #     print thread.decoded_instructions
-   #     print [i.group_id for i in thread.connected_pins]
     child1.save_to_file(path)
-   # print 'Dom  Rec  Crossover  real_offspring'
-   # for i in range(len(child1_genome) - 1):
-   #     print '%s      %s      %s          %s' % (dom.genome[i].char, rec.genome[i].char, child1_genome[i].crossover_point,child1_genome[i].char)
-    #if is_same_genome(dom, child1): print 'THEYRE SAME'
-    #else: print 'THYRE DIFF'
     return child1
+#Generates a viable organism based on the is_viable check
 def generate_viable():
     # writes a 'progress bar' to the console
     def progress(x):

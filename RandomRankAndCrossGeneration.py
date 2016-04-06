@@ -51,7 +51,7 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
             performance = 0
             for f in files:
                 if f.startswith("baseline"):
-                    baseline_performance = HoboAnalysis.energyAcquired(root + '/' + f, 2)
+                    baseline_performance = HoboAnalysis.energyAquired(root + '/' + f)
     
         #walks through files belonging to an organism, one org at a time
         print "All the org files in this directory:"
@@ -76,11 +76,9 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
                                 #rooty denotes the path to subdir, f a file in root. Concatenating
                                 # the two results in the full path to file
                                 #divide performance by the baseline for normalization
-                                pass
-                                #performance_1 = HoboAnalysis.energyAcquired(root +'/' + f,2)/baseline_performance
+                                performance_1 = HoboAnalysis.energyAcquired(root +'/' + f)/baseline_performance 
                             else:
-                                #performance_2 = HoboAnalysis.energyAcquired(root + '/' + f, 2)/baseline_performance
-                                pass
+                                performance_2 = HoboAnalysis.energyAcquired(root + '/' + f)/baseline_performance
                 except AttributeError:
                     pass
             try:
@@ -240,22 +238,3 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
     crossAndSaveGeneration(path_to_new_gen, new_gen_size)
     #calculateRankings(gen_directory)
     writeQuartilesToCsv(global_quartiles, experiment_directory)
-
-path = '/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Development_Old_Genomes'
-
-def gen():
-    count = 0
-    while(count < 10):
-        org = Organism(1, count, 560, 2, True, 80, 2000, None, None,None, True)
-        if org.is_viable():
-            print 'hi'
-            org.save_to_file(path+'/Gen1')
-            count += 1
-
-num1 = 1
-num2 = 2
-
-while(num2 < 12):
-    thresholdedCrossGeneration(path, path+'/Gen'+str(num1),path+'/Gen'+str(num2))
-    num1+= 1
-    num2 += 1
