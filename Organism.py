@@ -406,6 +406,7 @@ def reproduce(org1, org2, path):
     child1.save_to_file(path)
     return child1
 #Generates a viable organism based on the is_viable check
+#Generates a viable organism based on the is_viable check
 def generate_viable():
     # writes a 'progress bar' to the console
     def progress(x):
@@ -415,8 +416,11 @@ def generate_viable():
     genomes_tested = 0
     finished = False
     while not finished:
-        test = Organism(0, 0,560,2,True,80,2000)
-        if test.is_viable():
+        test = Organism(0, 0,560,2,False,80,2000)
+        if True:#test.is_viable():
+            for x in range(len(test.genome)):
+                if test.genome[x].crossover_point == 1:
+                    assert x % 80 == 0, "actualx = "+str(x%80)
             print "-------------------------------------//"
             print "connections: "
             for thread in test.threads:
@@ -429,3 +433,4 @@ def generate_viable():
             del test
             genomes_tested += 1
             progress(genomes_tested)
+generate_viable()
