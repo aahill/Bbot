@@ -1,7 +1,7 @@
 import re
 import csv
 
-def compare_offspring_to_parent(filename, offspring_gen):
+def compare_offspring_to_parent(filename, offspring_gen, outfile):
     with open(filename, 'rU') as f:
         #the rows of the csv
         mean_dic = find_avgs(filename)
@@ -70,13 +70,13 @@ def compare_offspring_to_parent(filename, offspring_gen):
                                parent2_name, parent2_fitness, parent2_xovers,mean_parent_co_points,selection_differential_co,
                                mean_parent_fitness,selection_differential_fitness]
                     csv_rows.append(org_row)
-        results_file = open('no_devo_highest_rank_child_offspring_comparison.csv', 'a')
+        results_file = open(outfile, 'a')
         wr = csv.writer(results_file, dialect='excel')
         #wr.writerow(['child','child_fitness','child_xover''parent1', 'parent_1_fitness','parent1_co_points','parent2','parent2_fitness', 'parent2_co_points',
         #'mean_parent_co_points','selection_differential_co_points','mean_parents_fitness','selection_differential_fitness'])
         for x in csv_rows:
-            if x[0][2] == '0':
-                wr.writerow(x)
+            #if x[0][2] == '0':
+            wr.writerow(x)
 #Calculates average fitness and co points for given gen
 def find_avgs(filename):
     with open(filename, 'rU') as f:
@@ -89,19 +89,19 @@ def find_avgs(filename):
                 try:
                     performance = float(split[2])
                     co_points = float(split[5])
+                    try:
+                        output_dic[curr_gen][0] += performance/10.0
+                        output_dic[curr_gen][1] += co_points/10.0
+                    except KeyError:
+                        output_dic[curr_gen] = [(performance/10.0),(co_points/10.0)]
                 except ValueError:
                     pass
-                try:
-                    output_dic[curr_gen][0] += performance/10.0
-                    output_dic[curr_gen][1] += co_points/10.0
-                except KeyError:
-                    output_dic[curr_gen] = [(performance/10.0),(co_points/10.0)]
 
     return output_dic
 #compare_offspring_to_parent('/home/jake/org/Thesis_Stuff/Robot_Data/Development/Robot_Development_Data_Num_Threads.csv', 2)
-f = '/home/jake/org/Thesis_Stuff/Robot_Data/Non_Development/Robot_Non_Development_Data_Num_Threads.csv'
-results_file = open('no_devo_highest_rank_child_offspring_comparison.csv', 'a')
+f = '/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Fixed_Xover_Devo/Fixed_Xover_Simulation_No_Selection_Devo.csv'
+results_file = open('devo_fixed_xover_child_offspring_comparison.csv', 'a')
 wr = csv.writer(results_file, dialect='excel')
 wr.writerow(['child','child_fitness','child_xover''parent1', 'parent_1_fitness','parent1_co_points','parent2','parent2_fitness', 'parent2_co_points' , 'mean_parent_co_points','selection_differential_co_points','mean_parents_fitness','selection_differential_fitness'])
 for i in range(2,10):
-    compare_offspring_to_parent(f, i)
+    compare_offspring_to_parent(f, i, results_file)

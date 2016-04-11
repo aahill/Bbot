@@ -411,7 +411,7 @@ def generate_viable():
     # writes a 'progress bar' to the console
     def progress(x):
         out = '\r %s organisms tested' % x  # The output
-        print out,
+        print(out,)
 
     genomes_tested = 0
     finished = False

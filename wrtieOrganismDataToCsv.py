@@ -47,7 +47,7 @@ def writeOrganismDataToCsv(pop_dir, outfile):
 
                         writer.writeheader()
                         writer.writerow(performance_dict)
-writeOrganismDataToCsv('/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Development_Old_Genomes', 'Simulation_No_Selection_Non_Development_Data_Num_Threads_NEW')
+writeOrganismDataToCsv('/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Fixed_Xover_No_Devo', 'Fixed_Xover_Simulation_No_Selection_No_Devo')
 
 
 def baselineCsv(infile, outfile):
