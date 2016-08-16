@@ -1,5 +1,5 @@
 from unittest import TestCase
-from ..PinAndPinGroup import *
+from code.PinAndPinGroup import *
 #from PinAndPinGroup import *
 from nose import *
 from nose.tools import *

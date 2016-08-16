@@ -1,4 +1,4 @@
-from ..Decoder import *
+from code.Decoder import *
 
 from nose.tools import *
 

@@ -1,4 +1,5 @@
-from ..Organism import *
+from code.Organism import *
+from code.PinAndPinGroup import *
 from nose.tools import *
 
 #paramters for organism generation
