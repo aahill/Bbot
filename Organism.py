@@ -344,8 +344,6 @@ class Organism(object):
               return False
       
       
-      
-      
 
 def reproduce(org1, org2, path):
     dom = random.choice([org1, org2])  # Parent whose crossover points are being used
