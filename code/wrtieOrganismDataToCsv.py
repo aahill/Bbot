@@ -50,6 +50,7 @@ def writeOrganismDataToCsv(pop_dir, outfile):
 writeOrganismDataToCsv('/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Fixed_Xover_No_Devo', 'Fixed_Xover_Simulation_No_Selection_No_Devo')
 
 
+#Creates as csv of data for baseline vehicle IIb robots
 def baselineCsv(infile, outfile):
     for root, dir, files in os.walk(infile, topdown = True):
         for f in files:

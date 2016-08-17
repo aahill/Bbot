@@ -31,6 +31,7 @@ def calculateStdError(list_of_vals, average):
     print 'Stddv: %s  StdErr: %s\n------------------------------------------------------------\n ' % (stddev, stderror)
     #print(numpy.sqrt(numpy.var(list_of_vals)))
     return stderror
+
 def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_gen,*new_gen_size):
     unpickled_orgs = []# temporarily holds unpickled orgs
     try:
@@ -61,14 +62,10 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
             #will store the amount of light collected on both trials
             performance_1 = 0
             performance_2 = 0
-            y.append(root)
             for f in files:
                 try:
-                    y.append(f)
                     if f.endswith('.txt'):
                         org = json_load_file(root + '/' + f)
-                        #print  rooty + '/'+ f
-                        #print [i.crossover_point for i in org.genome]
                     elif f.endswith('.csv'):
                         if f == 'quartile_data.csv':
                             pass
@@ -222,6 +219,7 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
                 chooseTwoToCross(path_to_new_gen)
                 count += 1
             print '\nNumber of Orgs in new gen: %s' % count
+
     def writeQuartilesToCsv(data_dict, dir):
     #os.mkdir(dir)
         data_file =  dir + '/' + 'experiment_data.csv' 
@@ -242,4 +240,4 @@ def thresholdedCrossGeneration(experiment_directory, gen_directory,path_to_new_g
 
     crossAndSaveGeneration(path_to_new_gen, new_gen_size)
     #calculateRankings(gen_directory)
-    writeQuartilesToCsv(global_quartiles, experiment_directory)
+    #writeQuartilesToCsv(global_quartiles, experiment_directory)

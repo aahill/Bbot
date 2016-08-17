@@ -6,7 +6,7 @@ def compare_offspring_to_parent(filename, offspring_gen, outfile):
         #the rows of the csv
         mean_dic = find_avgs(filename)
         file_rows = [row for row in f]
-        #rows to create teh eresultant csv with
+        #rows to create the resultant csv with
         csv_rows = []
         #iterate through each entry in the csv
         for org in file_rows:
@@ -28,7 +28,6 @@ def compare_offspring_to_parent(filename, offspring_gen, outfile):
                 org_row = []
                 #try: 
                 child_name_split = child_name.split('_')
-                #print child_name_split
                 #check the first character of the first entry to see if it matches the 
                 #desired gen
                 if child_name_split[0][0] == str(offspring_gen):
@@ -37,15 +36,11 @@ def compare_offspring_to_parent(filename, offspring_gen, outfile):
                     parent1_name = child_name_split[2]+'_'+child_name_split[3] 
                     parent2_name = child_name_split[4]+'_'+child_name_split[5] 
 
-                #except IndexError:
-                #    pass
                 #get the data for the two partents of the org
                     for org_parent in file_rows:
                         #print org_parent
                         org_list_parent = org_parent.split(',')
-                        #print org_list_parent
                         if org_list_parent[0].startswith(parent1_name) or org_list_parent[0].startswith(parent2_name):
-                            #print ">>>",org_list_parent[0]
                            #check if current org list is the parent in question
                             if org_list_parent[0].startswith(parent1_name):
                                 parent1_name = org_list_parent[0]
@@ -72,8 +67,6 @@ def compare_offspring_to_parent(filename, offspring_gen, outfile):
                     csv_rows.append(org_row)
         results_file = open(outfile, 'a')
         wr = csv.writer(results_file, dialect='excel')
-        #wr.writerow(['child','child_fitness','child_xover''parent1', 'parent_1_fitness','parent1_co_points','parent2','parent2_fitness', 'parent2_co_points',
-        #'mean_parent_co_points','selection_differential_co_points','mean_parents_fitness','selection_differential_fitness'])
         for x in csv_rows:
             #if x[0][2] == '0':
             wr.writerow(x)
@@ -99,9 +92,3 @@ def find_avgs(filename):
 
     return output_dic
 #compare_offspring_to_parent('/home/jake/org/Thesis_Stuff/Robot_Data/Development/Robot_Development_Data_Num_Threads.csv', 2)
-f = '/home/jake/org/Thesis_Stuff/Simulation_Data/Random_Selection_Fixed_Xover_Devo/Fixed_Xover_Simulation_No_Selection_Devo.csv'
-results_file = open('devo_fixed_xover_child_offspring_comparison.csv', 'a')
-wr = csv.writer(results_file, dialect='excel')
-wr.writerow(['child','child_fitness','child_xover''parent1', 'parent_1_fitness','parent1_co_points','parent2','parent2_fitness', 'parent2_co_points' , 'mean_parent_co_points','selection_differential_co_points','mean_parents_fitness','selection_differential_fitness'])
-for i in range(2,10):
-    compare_offspring_to_parent(f, i, results_file)

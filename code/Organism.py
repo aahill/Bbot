@@ -430,4 +430,3 @@ def generate_viable():
             del test
             genomes_tested += 1
             progress(genomes_tested)
-generate_viable()
